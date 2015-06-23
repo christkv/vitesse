@@ -1,0 +1,32 @@
+{
+  "name": "vitesse",
+  "version": "1.0.0",
+  "description": "Vitesse is a high performance object validation library",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/christkv/vitesse.git"
+  },
+  "keywords": [
+    "validation",
+    "performance",
+    "optimized"
+  ],
+  "author": "Christian Amor Kvalheim",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/christkv/vitesse/issues"
+  },
+  "homepage": "https://github.com/christkv/vitesse",
+  "devDependencies": {
+    "benchmark": "^1.0.0",
+    "mocha": "^2.2.5",
+    "co": "^4.5.4",
+    "joi": "^6.4.3"
+  },
+  "dependencies": {
+  }
+}
