@@ -76,16 +76,23 @@ suite.add('Validator compile', function() {
   };
 
   if(object.number == null && true) {
-    errors.push(new ValidationError('field .number does not exist'));
+    errors.push(new ValidationError('field .number does not exist', rules[0]));
   } else if(object.number == null) {
-    throw new ValidationError('field .number does not exist');
+    throw new ValidationError('field .number does not exist', rules[0]);
+  }
+
+  if(object.number != null && !(object.number.constructor.name == "Number") && true) {
+    errors.push(new ValidationError('field .number is not of expected type function Number() { [native code] }', rules[0]));
+  } else if(object.number != null && !(object.number.constructor.name == "Number")) {
+    throw new ValidationError('field .number is not of expected type function Number() { [native code] }', rules[0]);
   }
 
   if(!(object.number > 100 && object.number < 1000) && true) {
-    errors.push(new ValidationError('field .number fails validation'));
+    errors.push(new ValidationError('field .number fails validation', rules[0]));
   } else if(!(object.number > 100 && object.number < 1000)) {
-    throw new ValidationError('field .number fails validation');
+    throw new ValidationError('field .number fails validation', rules[0]);
   }
+
 })
 .on('cycle', function(event) {
   console.log(String(event.target));

@@ -1,6 +1,6 @@
 {
   "name": "vitesse",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Vitesse is a high performance object validation library",
   "main": "index.js",
   "scripts": {
@@ -24,8 +24,7 @@
   "devDependencies": {
     "benchmark": "^1.0.0",
     "mocha": "^2.2.5",
-    "co": "^4.5.4",
-    "joi": "^6.4.3"
+    "co": "^4.5.4"
   },
   "dependencies": {
   }
