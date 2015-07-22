@@ -39,21 +39,21 @@ describe('Number', function() {
 
       // Top level document
       var topLevelDocument = new AST({
-        'number' : {
-          type: Number, exists:true, validation: {
-            $gt: 100, $lt: 1000, $in: [100, 200]
-          }
-        },
+        // 'number' : {
+        //   type: Number, exists:true, validation: {
+        //     $gt: 100, $lt: 1000, $in: [100, 200]
+        //   }
+        // },
         // 'string' : {
         //   type: String, exists: true, validation: {
         //     $gt: 0, $lte: 255, $in: ['plane', '']
         //   }
         // },
-        // 'array': {
-        //   type: Array, exists: true, validation: {
-        //     $gt:0, $lte: 10
-        //   }, of: arrayDocument
-        // },
+        'array': {
+          type: Array, exists: true, validation: {
+            $gt:0, $lte: 10
+          }, of: arrayDocument
+        },
         // 'object': {
         //   type: Object, exists:false, of: embeddedDocument
         // }
@@ -70,7 +70,7 @@ describe('Number', function() {
       // Compile the AST
       var func = compiler.compile(topLevelDocument);
       try {
-      console.dir(func.validate({number: 999}, {}))
+      console.dir(func.validate({array:[{user:'t', users:[{field:'t1'}]}]}, {}))
 
     } catch(err) {
       console.log("#####################")
