@@ -139,19 +139,19 @@ describe('Number', function() {
       assert.equal(1, results.length);
       assert.equal('field', results[0].field)
       assert.equal('object.array[1].users[0]', results[0].parent)
-      // assert.equal('field', results[1].field)
-      // assert.equal('object.array[0].users[1]', results[1].parent)
 
-      // assert.equal('array', results[0].field)
-      // assert.equal('object', results[0].parent)
 
-      // // // console.dir(func)
-      // var results = func.validate({number: 1, string: 'hello', array:[{user:2, users: [{t:1}]}]})
-      //
-      // // Get all the results
-      console.log("------------------------------------------------------------ final results")
-      // console.log(JSON.stringify(results, null, 2))
-      console.dir(results)
+      try {
+        func.validate({}, {failOnFirst:true});        
+      } catch(err) {
+        assert.equal('number', err.field)
+        assert.equal('object', err.parent)        
+      }
+
+      // // // Get all the results
+      // console.log("------------------------------------------------------------ final results")
+      // // console.log(JSON.stringify(results, null, 2))
+      // console.dir(results)
     });
   });
 });
