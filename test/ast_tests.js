@@ -44,19 +44,19 @@ describe('Number', function() {
             $gt: 100, $lt: 1000, $in: [100, 200]
           }
         },
-        'string' : {
-          type: String, exists: true, validation: {
-            $gt: 0, $lte: 255, $in: ['plane', '']
-          }
-        },
-        'array': {
-          type: Array, exists: true, validation: {
-            $gt:0, $lte: 10
-          }, of: arrayDocument
-        },
-        'object': {
-          type: Object, exists:false, of: embeddedDocument
-        }
+        // 'string' : {
+        //   type: String, exists: true, validation: {
+        //     $gt: 0, $lte: 255, $in: ['plane', '']
+        //   }
+        // },
+        // 'array': {
+        //   type: Array, exists: true, validation: {
+        //     $gt:0, $lte: 10
+        //   }, of: arrayDocument
+        // },
+        // 'object': {
+        //   type: Object, exists:false, of: embeddedDocument
+        // }
       });
 
       var compiler = new Compiler({
@@ -69,84 +69,92 @@ describe('Number', function() {
 
       // Compile the AST
       var func = compiler.compile(topLevelDocument);
-      // Execute validations
-      var results = func.validate({});
-      assert.equal(3, results.length);
-      assert.equal('number', results[0].field)
-      assert.equal('object', results[0].parent)
-      
-      assert.equal('string', results[1].field)
-      assert.equal('object', results[1].parent)
-      
-      assert.equal('array', results[2].field)
-      assert.equal('object', results[2].parent)
-
-      var results = func.validate({number:1});
-      assert.equal(2, results.length);
-      assert.equal('string', results[0].field)
-      assert.equal('object', results[0].parent)
-      
-      assert.equal('array', results[1].field)
-      assert.equal('object', results[1].parent)
-
-      var results = func.validate({number:1, string: 'hello'});
-      assert.equal(1, results.length);
-      assert.equal('array', results[0].field)
-      assert.equal('object', results[0].parent)
-
-      var results = func.validate({number:1, string: 'hello', array: []});
-      assert.equal(0, results.length);
-
-      var results = func.validate({number:1, string: 'hello', array: [{}]});
-      assert.equal(2, results.length);
-      assert.equal('user', results[0].field)
-      assert.equal('object.array[0]', results[0].parent)
-      assert.equal('users', results[1].field)
-      assert.equal('object.array[0]', results[1].parent)
-
-      var results = func.validate({number:1, string: 'hello', array: [{}, {}]});
-      assert.equal(4, results.length);
-      assert.equal('user', results[0].field)
-      assert.equal('object.array[0]', results[0].parent)
-      assert.equal('users', results[1].field)
-      assert.equal('object.array[0]', results[1].parent)
-      assert.equal('user', results[2].field)
-      assert.equal('object.array[1]', results[2].parent)
-      assert.equal('users', results[3].field)
-      assert.equal('object.array[1]', results[3].parent)
-
-      var results = func.validate({number:1, string: 'hello', array: [{user:'user'}]});
-      assert.equal(1, results.length);
-      assert.equal('users', results[0].field)
-      assert.equal('object.array[0]', results[0].parent)
-
-      var results = func.validate({number:1, string: 'hello', array: [{user:'user', users:[]}]});
-      assert.equal(0, results.length);
-
-      var results = func.validate({number:1, string: 'hello', array: [{user:'user', users:[{}]}]});
-      assert.equal(1, results.length);
-      assert.equal('field', results[0].field)
-      assert.equal('object.array[0].users[0]', results[0].parent)
-
-      var results = func.validate({number:1, string: 'hello', array: [{user:'user', users:[{}, {}]}]});
-      assert.equal(2, results.length);
-      assert.equal('field', results[0].field)
-      assert.equal('object.array[0].users[0]', results[0].parent)
-      assert.equal('field', results[1].field)
-      assert.equal('object.array[0].users[1]', results[1].parent)
-
-      var results = func.validate({number:1, string: 'hello', array: [{user:'user', users:[]}, {user:'user', users:[{}]}]});
-      assert.equal(1, results.length);
-      assert.equal('field', results[0].field)
-      assert.equal('object.array[1].users[0]', results[0].parent)
-
-
       try {
-        func.validate({}, {failOnFirst:true});        
-      } catch(err) {
-        assert.equal('number', err.field)
-        assert.equal('object', err.parent)        
-      }
+      console.dir(func.validate({number: 999}, {}))
+
+    } catch(err) {
+      console.log("#####################")
+      console.dir(err)
+    }
+      // Execute validations
+      // var results = func.validate({});
+      // assert.equal(3, results.length);
+      // assert.equal('number', results[0].field)
+      // assert.equal('object', results[0].parent)
+      
+      // assert.equal('string', results[1].field)
+      // assert.equal('object', results[1].parent)
+      
+      // assert.equal('array', results[2].field)
+      // assert.equal('object', results[2].parent)
+
+      // var results = func.validate({number:1});
+      // assert.equal(2, results.length);
+      // assert.equal('string', results[0].field)
+      // assert.equal('object', results[0].parent)
+      
+      // assert.equal('array', results[1].field)
+      // assert.equal('object', results[1].parent)
+
+      // var results = func.validate({number:1, string: 'hello'});
+      // assert.equal(1, results.length);
+      // assert.equal('array', results[0].field)
+      // assert.equal('object', results[0].parent)
+
+      // var results = func.validate({number:1, string: 'hello', array: []});
+      // console.dir(results)
+      // assert.equal(0, results.length);
+
+      // var results = func.validate({number:1, string: 'hello', array: [{}]});
+      // assert.equal(2, results.length);
+      // assert.equal('user', results[0].field)
+      // assert.equal('object.array[0]', results[0].parent)
+      // assert.equal('users', results[1].field)
+      // assert.equal('object.array[0]', results[1].parent)
+
+      // var results = func.validate({number:1, string: 'hello', array: [{}, {}]});
+      // assert.equal(4, results.length);
+      // assert.equal('user', results[0].field)
+      // assert.equal('object.array[0]', results[0].parent)
+      // assert.equal('users', results[1].field)
+      // assert.equal('object.array[0]', results[1].parent)
+      // assert.equal('user', results[2].field)
+      // assert.equal('object.array[1]', results[2].parent)
+      // assert.equal('users', results[3].field)
+      // assert.equal('object.array[1]', results[3].parent)
+
+      // var results = func.validate({number:1, string: 'hello', array: [{user:'user'}]});
+      // assert.equal(1, results.length);
+      // assert.equal('users', results[0].field)
+      // assert.equal('object.array[0]', results[0].parent)
+
+      // var results = func.validate({number:1, string: 'hello', array: [{user:'user', users:[]}]});
+      // assert.equal(0, results.length);
+
+      // var results = func.validate({number:1, string: 'hello', array: [{user:'user', users:[{}]}]});
+      // assert.equal(1, results.length);
+      // assert.equal('field', results[0].field)
+      // assert.equal('object.array[0].users[0]', results[0].parent)
+
+      // var results = func.validate({number:1, string: 'hello', array: [{user:'user', users:[{}, {}]}]});
+      // assert.equal(2, results.length);
+      // assert.equal('field', results[0].field)
+      // assert.equal('object.array[0].users[0]', results[0].parent)
+      // assert.equal('field', results[1].field)
+      // assert.equal('object.array[0].users[1]', results[1].parent)
+
+      // var results = func.validate({number:1, string: 'hello', array: [{user:'user', users:[]}, {user:'user', users:[{}]}]});
+      // assert.equal(1, results.length);
+      // assert.equal('field', results[0].field)
+      // assert.equal('object.array[1].users[0]', results[0].parent)
+
+
+      // try {
+      //   func.validate({}, {failOnFirst:true});        
+      // } catch(err) {
+      //   assert.equal('number', err.field)
+      //   assert.equal('object', err.parent)        
+      // }
 
       // // // Get all the results
       // console.log("------------------------------------------------------------ final results")
