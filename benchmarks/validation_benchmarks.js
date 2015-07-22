@@ -7,18 +7,18 @@ var Joi = require('joi');
 // Create a benchmark suite
 var suite = new Benchmark.Suite;
 
-// Create a schema instance
-var schema = new Builder();
-// Set up schema rule for the number field
-schema.rule('.number')
-  .type(Number)
-  .exists(true)
-  .validate({
-    $gt: 100, $lt: 1000
-  });
-
-// Complile the expression
-var expression = new Compiler().compile(schema);
+// // Create a schema instance
+// var schema = new Builder();
+// // Set up schema rule for the number field
+// schema.rule('.number')
+//   .type(Number)
+//   .exists(true)
+//   .validate({
+//     $gt: 100, $lt: 1000
+//   });
+//
+// // Complile the expression
+// var expression = new Compiler().compile(schema);
 
 // var schema = Joi.obj ect().keys({
 //     username: Joi.string().alphanum().min(3).max(30).required(),
@@ -32,10 +32,10 @@ var expression = new Compiler().compile(schema);
 //   console.dir(err)
 // });
 
-// Create Joi expression
-var joiSchema = Joi.object().keys({
-  number: Joi.number().integer().min(100).max(1000)
-}).requiredKeys('number');
+// // Create Joi expression
+// var joiSchema = Joi.object().keys({
+//   number: Joi.number().integer().min(100).max(1000)
+// }).requiredKeys('number');
 
 // Joi.validate({number:15}, joiSchema, function(err, value) {
 //   console.dir(err)
@@ -58,17 +58,17 @@ var joiSchema = Joi.object().keys({
 
 //
 
-suite.add('Validator compile', function() {
-  var object = {
-    number: 150
-  };
-  expression.validate(object);
-})
-.add('Joi validator', function() {
-  Joi.validate({number:105}, joiSchema, {abortEarly:false}, function(err, value) {})
-})
+// suite.add('Validator compile', function() {
+//   var object = {
+//     number: 150
+//   };
+//   expression.validate(object);
+// })
+// .add('Joi validator', function() {
+//   Joi.validate({number:105}, joiSchema, {abortEarly:false}, function(err, value) {})
+// })
 
-.add('Handcoded validation', function() {
+suite.add('Handcoded validation', function() {
   var errors = [];
   var rules = [];
   var object = {
@@ -94,6 +94,31 @@ suite.add('Validator compile', function() {
   }
 
 })
+
+.add('Handcoded validation func', function() {
+  var errors = [];
+  var rules = [];
+  var object = {
+    number: 150
+  };
+
+  // functions.func1(object);
+  //
+  // functions.func2(object);
+  //
+  // functions.func3(object);
+
+  // functions[0](object);
+  //
+  // functions[1](object);
+  //
+  // functions[2](object);
+
+  func1(object);
+  func2(object);
+  func3(object);
+})
+
 .on('cycle', function(event) {
   console.log(String(event.target));
 })
@@ -102,3 +127,79 @@ suite.add('Validator compile', function() {
 })
 // run async
 .run({ 'async': true });
+var functions = [
+  function(object) {
+    if(object.number == null && true) {
+      errors.push(new ValidationError('field .number does not exist', rules[0]));
+    } else if(object.number == null) {
+      throw new ValidationError('field .number does not exist', rules[0]);
+    }
+  },
+
+  function(object) {
+    if(object.number != null && !(object.number.constructor.name == "Number") && true) {
+      errors.push(new ValidationError('field .number is not of expected type function Number() { [native code] }', rules[0]));
+    } else if(object.number != null && !(object.number.constructor.name == "Number")) {
+      throw new ValidationError('field .number is not of expected type function Number() { [native code] }', rules[0]);
+    }
+  },
+
+  function(object) {
+    if(!(object.number > 100 && object.number < 1000) && true) {
+      errors.push(new ValidationError('field .number fails validation', rules[0]));
+    } else if(!(object.number > 100 && object.number < 1000)) {
+      throw new ValidationError('field .number fails validation', rules[0]);
+    }
+  }
+]
+
+var func1 = function(object) {
+  if(object.number == null && true) {
+    errors.push(new ValidationError('field .number does not exist', rules[0]));
+  } else if(object.number == null) {
+    throw new ValidationError('field .number does not exist', rules[0]);
+  }
+}
+
+var func2 = function(object) {
+  if(object.number != null && !(object.number.constructor.name == "Number") && true) {
+    errors.push(new ValidationError('field .number is not of expected type function Number() { [native code] }', rules[0]));
+  } else if(object.number != null && !(object.number.constructor.name == "Number")) {
+    throw new ValidationError('field .number is not of expected type function Number() { [native code] }', rules[0]);
+  }
+}
+
+var func3 = function(object) {
+  if(!(object.number > 100 && object.number < 1000) && true) {
+    errors.push(new ValidationError('field .number fails validation', rules[0]));
+  } else if(!(object.number > 100 && object.number < 1000)) {
+    throw new ValidationError('field .number fails validation', rules[0]);
+  }
+}
+
+
+// var functions = {
+//   func1: function(object) {
+//     if(object.number == null && true) {
+//       errors.push(new ValidationError('field .number does not exist', rules[0]));
+//     } else if(object.number == null) {
+//       throw new ValidationError('field .number does not exist', rules[0]);
+//     }
+//   },
+//
+//   func2: function(object) {
+//     if(object.number != null && !(object.number.constructor.name == "Number") && true) {
+//       errors.push(new ValidationError('field .number is not of expected type function Number() { [native code] }', rules[0]));
+//     } else if(object.number != null && !(object.number.constructor.name == "Number")) {
+//       throw new ValidationError('field .number is not of expected type function Number() { [native code] }', rules[0]);
+//     }
+//   },
+//
+//   func3: function(object) {
+//     if(!(object.number > 100 && object.number < 1000) && true) {
+//       errors.push(new ValidationError('field .number fails validation', rules[0]));
+//     } else if(!(object.number > 100 && object.number < 1000)) {
+//       throw new ValidationError('field .number fails validation', rules[0]);
+//     }
+//   }
+// }
