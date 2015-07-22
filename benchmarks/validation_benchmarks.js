@@ -1,11 +1,24 @@
 var Benchmark = require('benchmark'),
   Compiler = require('../lib/compiler'),
+  AST = require('../lib/ast'),
   Builder = require('../lib/builder');
 
 var Joi = require('joi');
 
 // Create a benchmark suite
 var suite = new Benchmark.Suite;
+
+// Top level document
+var topLevelDocument = new AST({
+  'number' : {
+    type: Number, exists:true, validation: {
+      $gt: 100, $lt: 1000
+    }
+  }
+});
+
+// Compile to validator
+var validator = new Compiler().compile(topLevelDocument);
 
 // // Create a schema instance
 // var schema = new Builder();
@@ -32,10 +45,10 @@ var suite = new Benchmark.Suite;
 //   console.dir(err)
 // });
 
-// // Create Joi expression
-// var joiSchema = Joi.object().keys({
-//   number: Joi.number().integer().min(100).max(1000)
-// }).requiredKeys('number');
+// Create Joi expression
+var joiSchema = Joi.object().keys({
+  number: Joi.number().integer().min(100).max(1000)
+}).requiredKeys('number');
 
 // Joi.validate({number:15}, joiSchema, function(err, value) {
 //   console.dir(err)
@@ -64,9 +77,10 @@ var suite = new Benchmark.Suite;
 //   };
 //   expression.validate(object);
 // })
-// .add('Joi validator', function() {
-//   Joi.validate({number:105}, joiSchema, {abortEarly:false}, function(err, value) {})
-// })
+
+suite.add('Joi validator', function() {
+  Joi.validate({number:150}, joiSchema, {abortEarly:false}, function(err, value) {})
+})
 
 suite.add('Handcoded validation', function() {
   var errors = [];
@@ -95,29 +109,33 @@ suite.add('Handcoded validation', function() {
 
 })
 
-.add('Handcoded validation func', function() {
-  var errors = [];
-  var rules = [];
-  var object = {
-    number: 150
-  };
-
-  // functions.func1(object);
-  //
-  // functions.func2(object);
-  //
-  // functions.func3(object);
-
-  // functions[0](object);
-  //
-  // functions[1](object);
-  //
-  // functions[2](object);
-
-  func1(object);
-  func2(object);
-  func3(object);
+.add('Compiler test', function() {
+  validator.validate({number:150});
 })
+
+// .add('Handcoded validation func', function() {
+//   var errors = [];
+//   var rules = [];
+//   var object = {
+//     number: 150
+//   };
+
+//   // functions.func1(object);
+//   //
+//   // functions.func2(object);
+//   //
+//   // functions.func3(object);
+
+//   // functions[0](object);
+//   //
+//   // functions[1](object);
+//   //
+//   // functions[2](object);
+
+//   func1(object);
+//   func2(object);
+//   func3(object);
+// })
 
 .on('cycle', function(event) {
   console.log(String(event.target));

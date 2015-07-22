@@ -27,6 +27,7 @@
     "markup-js": "^1.5.21"
   },
   "devDependencies": {
+    "joi": "^6.6.0",
     "benchmark": "^1.0.0",
     "mocha": "^2.2.5",
     "co": "^4.5.4"
