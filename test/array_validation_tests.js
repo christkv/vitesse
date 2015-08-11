@@ -254,7 +254,10 @@ describe('Array', function() {
       // Top level document
       var topLevelDocument = new DocumentType({
         'childArray': new NestedArrayType({
-          exists:true, depth: 3, of: embeddedDocument
+          exists:true, depth: 3, of: embeddedDocument, validations: {
+            1: {$gte:0, $lte:100},
+            3: {$gte:5, $lte:10},
+          }
         })
       });
 
