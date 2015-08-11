@@ -266,7 +266,7 @@ describe('Array', function() {
       var func = compiler.compile(topLevelDocument, {debug:true});
       console.log("##################################################################")
       // var results = func.validate({childArray:[[[1]]]})
-      var results = func.validate({childArray:[[[1]]]})
+      var results = func.validate({childArray:[[[1, {field:2}, 2]]]})
       console.dir(results)
 
       // var results = func.validate({childArray: [[[{}]]]}, {failOnFirst:false});
