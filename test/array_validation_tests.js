@@ -264,6 +264,10 @@ describe('Array', function() {
       var compiler = new Compiler({});
       // Compile the AST
       var func = compiler.compile(topLevelDocument, {debug:true});
+      console.log("##################################################################")
+      // var results = func.validate({childArray:[[[1]]]})
+      var results = func.validate({childArray:[[[1]]]})
+      console.dir(results)
 
       // var results = func.validate({childArray: [[[{}]]]}, {failOnFirst:false});
       // console.log("----------------------------------------------------------------")
