@@ -1,98 +1,72 @@
 var assert = require("assert"),
   co = require('co'),
   f = require('util').format,
-  AST = require('../lib/ast'),
+  ArrayType = require('../lib/ast').ArrayType,
+  NestedArrayType = require('../lib/ast').NestedArrayType,
+  StringType = require('../lib/ast').StringType,
+  NumberType = require('../lib/ast').NumberType,
+  DocumentType = require('../lib/ast').DocumentType,
   Custom = require('../lib/custom'),
   Builder = require('../lib/builder'),
   Compiler = require('../lib/compiler');
 
 describe('Object', function() {
   describe('validation', function() {
-    it('should error due to missing object', function() {
-      // var embeddedDocument = new AST({
-      //   'field': {
-      //     type: String, exists:true
-      //   }
-      // });
+    it('should handle single level embedded document', function() {
+      var embeddedDocument = new DocumentType({
+        'field': new StringType({
+          exists:true
+        })
+      }, { exists:true });
 
-      // // Top level document
-      // var topLevelDocument = new AST({
-      //   'childObject': {
-      //     type: Object, exists:true, of: embeddedDocument
-      //   }
-      // });
+      // Top level document
+      var topLevelDocument = new DocumentType({
+        'child': embeddedDocument
+      });
 
-      // var compiler = new Compiler({});
-      // // Compile the AST
-      // var func = compiler.compile(topLevelDocument);
+      var compiler = new Compiler({});
+      // Compile the AST
+      var func = compiler.compile(topLevelDocument, {});
 
-      // // childObject field does not exist
-      // var results = func.validate({}, {failOnFirst:false});
-      // assert.equal(1, results.length);
-      // assert.equal('childObject', results[0].field);
-      // assert.equal('object', results[0].parent);
-      // assert.equal('field does not exist', results[0].message);
-      // assert.ok(results[0].rule.type === Object);
-      // assert.equal(true, results[0].rule.exists);
+      // Validate {}
+      var results = func.validate({});
+      assert.equal(2, results.length);
+      assert.equal('field does not exist', results[0].message);
+      assert.equal('object.child', results[0].path);
+      assert.ok(results[0].rule instanceof DocumentType);
 
-      // // childObject.field field does not exist
-      // var results = func.validate({childObject: {}}, {failOnFirst:false});
-      // assert.equal(1, results.length);
-      // assert.equal('field', results[0].field);
-      // assert.equal('object.childObject', results[0].parent);
-      // assert.equal('field does not exist', results[0].message);
-      // assert.ok(results[0].rule.type === String);
-      // assert.equal(true, results[0].rule.exists);
+      assert.equal('field is not an object', results[1].message);
+      assert.equal('object.child', results[1].path);
+      assert.ok(results[1].rule instanceof DocumentType);
 
-      // // childObject field is wrong type
-      // var results = func.validate({childObject: {field:1}}, {failOnFirst:false});
-      // assert.equal(1, results.length);
-      // assert.equal('field', results[0].field);
-      // assert.equal('object.childObject', results[0].parent);
-      // assert.equal('field does not have the correct type', results[0].message);
-      // assert.ok(results[0].rule.type === String);
-      // assert.equal(true, results[0].rule.exists);
+      // Validate {child:1}
+      var results = func.validate({child:1});
+      assert.equal(2, results.length);
+      assert.equal('field is not an object', results[0].message);
+      assert.equal('object.child', results[0].path);
+      assert.ok(results[0].rule instanceof DocumentType);
 
-      // // whole object is valid
-      // var results = func.validate({childObject: {field:'hello'}}, {failOnFirst:false});
-      // assert.equal(0, results.length);
+      assert.equal('field does not exist', results[1].message);
+      assert.equal('object.child.field', results[1].path);
+      assert.ok(results[1].rule instanceof DocumentType);
 
-      // // childObject field does not exist
-      // try {
-      //   var results = func.validate({}, {failOnFirst:true});
-      // } catch(err) {
-      //   assert.equal('childObject', err.field);
-      //   assert.equal('object', err.parent);
-      //   assert.equal('field does not exist', err.message);
-      //   assert.ok(err.rule.type === Object);
-      //   assert.equal(true, err.rule.exists);        
-      // }
+      // Validate {child:{}}
+      var results = func.validate({child:{}});
+      assert.equal(1, results.length);
+      assert.equal('field does not exist', results[0].message);
+      assert.equal('object.child.field', results[0].path);
+      assert.ok(results[0].rule instanceof DocumentType);
 
-      // // childObject.field field does not exist
-      // try {
-      //   var results = func.validate({childObject: {}}, {failOnFirst:true});
-      // } catch(err) {
-      //   assert.equal('field', err.field);
-      //   assert.equal('object.childObject', err.parent);
-      //   assert.equal('field does not exist', err.message);
-      //   assert.ok(err.rule.type === String);
-      //   assert.equal(true, err.rule.exists);        
-      // }
+      // Validate {child:{field:1}}
+      var results = func.validate({child:{field:1}});
+      assert.equal(1, results.length);
+      assert.equal('field is not a string', results[0].message);
+      assert.equal('object.child.field', results[0].path);
+      assert.ok(results[0].rule instanceof StringType);
 
-      // // childObject field is wrong type
-      // try {
-      //   var results = func.validate({childObject: { field: 1 }}, {failOnFirst:true});
-      // } catch(err) {
-      //   assert.equal('field', err.field);
-      //   assert.equal('object.childObject', err.parent);
-      //   assert.equal('field does not have the correct type', err.message);
-      //   assert.ok(err.rule.type === String);
-      //   assert.equal(true, err.rule.exists);
-      // }
-
-      // // childObject field is wrong type
-      // var results = func.validate({childObject: {field:'hello'}}, {failOnFirst:true});
-      // assert.equal(0, results.length);
+      // Validate {}
+      var results = func.validate({child:{field:''}});
+      assert.equal(0, results.length);
     });
   });
 });

@@ -38,11 +38,7 @@ describe('Array', function() {
       assert.equal(1, results.length);
       assert.equal('field does not exist', results[0].message);
       assert.equal('object.childArray', results[0].path);
-      assert.ok(results[0].rule instanceof NestedArrayType);
-      assert.equal(3, results[0].rule.object.depth);
-      assert.equal(true, results[0].rule.object.exists);
-      assert.deepEqual({$gte:0, $lte:100}, results[0].rule.object.validations[0]);
-      assert.deepEqual({$gte:5, $lte:10}, results[0].rule.object.validations[2]);
+      assert.ok(results[0].rule instanceof DocumentType);
 
       // Validate {childArray:[]}
       var results = func.validate({childArray:[]});
@@ -59,46 +55,45 @@ describe('Array', function() {
       // Validate {childArray:[[[]]]}
       var results = func.validate({childArray:[[[1, 2, 3, 4, 5]]]});
       assert.equal(10, results.length);
-
       assert.equal('field is not an object', results[0].message);
       assert.equal('object.childArray[0][0][0]', results[0].path);
-      assert.ok(results[0].rule instanceof DocumentType);
+      assert.ok(results[0].rule instanceof NestedArrayType);
       assert.equal(1, results[0].value);
       assert.equal('field does not exist', results[1].message);
       assert.equal('object.childArray[0][0][0].field', results[1].path);
-      assert.ok(results[1].rule instanceof StringType);
+      assert.ok(results[1].rule instanceof DocumentType);
 
       assert.equal('field is not an object', results[2].message);
       assert.equal('object.childArray[0][0][1]', results[2].path);
-      assert.ok(results[2].rule instanceof DocumentType);
+      assert.ok(results[2].rule instanceof NestedArrayType);
       assert.equal(2, results[2].value);
       assert.equal('field does not exist', results[3].message);
       assert.equal('object.childArray[0][0][1].field', results[3].path);
-      assert.ok(results[3].rule instanceof StringType);
+      assert.ok(results[3].rule instanceof DocumentType);
 
       assert.equal('field is not an object', results[4].message);
       assert.equal('object.childArray[0][0][2]', results[4].path);
-      assert.ok(results[4].rule instanceof DocumentType);
+      assert.ok(results[4].rule instanceof NestedArrayType);
       assert.equal(3, results[4].value);
       assert.equal('field does not exist', results[5].message);
       assert.equal('object.childArray[0][0][2].field', results[5].path);
-      assert.ok(results[5].rule instanceof StringType);
+      assert.ok(results[5].rule instanceof DocumentType);
 
       assert.equal('field is not an object', results[6].message);
       assert.equal('object.childArray[0][0][3]', results[6].path);
-      assert.ok(results[6].rule instanceof DocumentType);
+      assert.ok(results[6].rule instanceof NestedArrayType);
       assert.equal(4, results[6].value);
       assert.equal('field does not exist', results[7].message);
       assert.equal('object.childArray[0][0][3].field', results[7].path);
-      assert.ok(results[7].rule instanceof StringType);
+      assert.ok(results[7].rule instanceof DocumentType);
 
       assert.equal('field is not an object', results[8].message);
       assert.equal('object.childArray[0][0][4]', results[8].path);
-      assert.ok(results[8].rule instanceof DocumentType);
+      assert.ok(results[8].rule instanceof NestedArrayType);
       assert.equal(5, results[8].value);
       assert.equal('field does not exist', results[9].message);
       assert.equal('object.childArray[0][0][4].field', results[9].path);
-      assert.ok(results[9].rule instanceof StringType);
+      assert.ok(results[9].rule instanceof DocumentType);
     });
 
     it('should perform triple nested array validations with internal document with array', function() {
@@ -176,9 +171,7 @@ describe('Array', function() {
       assert.equal(1, results.length);
       assert.equal('field does not exist', results[0].message);
       assert.equal('object.childArray', results[0].path);
-      assert.ok(results[0].rule instanceof ArrayType);
-      assert.equal(true, results[0].rule.object.exists);
-      assert.deepEqual({ '$gte': 0, '$lte': 10 }, results[0].rule.object.validations);
+      assert.ok(results[0].rule instanceof DocumentType);
 
       // Validate {childArray:1}
       var results = func.validate({childArray:1});
@@ -198,9 +191,7 @@ describe('Array', function() {
       assert.equal(1, results.length);
       assert.equal('field does not exist', results[0].message);
       assert.equal('object.childArray[0].array', results[0].path);
-      assert.equal(true, results[0].rule.object.exists);
-      assert.ok(results[0].rule instanceof ArrayType);
-      assert.deepEqual({ '$gte': 5, '$lte': 10 }, results[0].rule.object.validations);
+      assert.ok(results[0].rule instanceof DocumentType);
 
       // Validate {childArray:[{array:1}]}
       var results = func.validate({childArray:[{array:1}]});
@@ -227,47 +218,47 @@ describe('Array', function() {
 
       assert.equal('field is not an object', results[0].message);
       assert.equal('object.childArray[0].array[0]', results[0].path);
-      assert.ok(results[0].rule instanceof DocumentType)
+      assert.ok(results[0].rule instanceof ArrayType)
       assert.equal('field does not exist', results[1].message);
       assert.equal('object.childArray[0].array[0].field', results[1].path);
-      assert.ok(results[1].rule instanceof StringType)
+      assert.ok(results[1].rule instanceof DocumentType)
 
       assert.equal('field is not an object', results[2].message);
       assert.equal('object.childArray[0].array[1]', results[2].path);
-      assert.ok(results[2].rule instanceof DocumentType)
+      assert.ok(results[2].rule instanceof ArrayType)
       assert.equal('field does not exist', results[3].message);
       assert.equal('object.childArray[0].array[1].field', results[3].path);
-      assert.ok(results[3].rule instanceof StringType)
+      assert.ok(results[3].rule instanceof DocumentType)
 
       assert.equal('field is not an object', results[4].message);
       assert.equal('object.childArray[0].array[2]', results[4].path);
-      assert.ok(results[4].rule instanceof DocumentType)
+      assert.ok(results[4].rule instanceof ArrayType)
       assert.equal('field does not exist', results[5].message);
       assert.equal('object.childArray[0].array[2].field', results[5].path);
-      assert.ok(results[5].rule instanceof StringType)
+      assert.ok(results[5].rule instanceof DocumentType)
 
       assert.equal('field is not an object', results[6].message);
       assert.equal('object.childArray[0].array[3]', results[6].path);
-      assert.ok(results[6].rule instanceof DocumentType)
+      assert.ok(results[6].rule instanceof ArrayType)
       assert.equal('field does not exist', results[7].message);
       assert.equal('object.childArray[0].array[3].field', results[7].path);
-      assert.ok(results[7].rule instanceof StringType)
+      assert.ok(results[7].rule instanceof DocumentType)
 
       assert.equal('field is not an object', results[8].message);
       assert.equal('object.childArray[0].array[4]', results[8].path);
-      assert.ok(results[8].rule instanceof DocumentType)
+      assert.ok(results[8].rule instanceof ArrayType)
       assert.equal('field does not exist', results[9].message);
       assert.equal('object.childArray[0].array[4].field', results[9].path);
-      assert.ok(results[9].rule instanceof StringType)
+      assert.ok(results[9].rule instanceof DocumentType)
 
       // Validate {childArray:[{array:[1, 2, 3, 4, 5]}]}
       var results = func.validate({childArray:[{array:[{field:''}, {field:''}, {field:''}, 4, {field:''}]}]});
       assert.equal('field is not an object', results[0].message);
       assert.equal('object.childArray[0].array[3]', results[0].path);
-      assert.ok(results[0].rule instanceof DocumentType)
+      assert.ok(results[0].rule instanceof ArrayType)
       assert.equal('field does not exist', results[1].message);
       assert.equal('object.childArray[0].array[3].field', results[1].path);
-      assert.ok(results[1].rule instanceof StringType)
+      assert.ok(results[1].rule instanceof DocumentType)
 
       // Validate {childArray:[{array:[{field:''}, {field:''}, {field:1}, {field:''}, {field:''}]}]}
       var results = func.validate({childArray:[{array:[{field:''}, {field:''}, {field:1}, {field:''}, {field:''}]}]});
@@ -313,7 +304,7 @@ describe('Array', function() {
 
       assert.equal('field does not exist', results[1].message);
       assert.equal('object.childArray[0].array1[0].array2[1].field', results[1].path);
-      assert.ok(results[1].rule instanceof StringType)
+      assert.ok(results[1].rule instanceof DocumentType)
     });
   });
 });
