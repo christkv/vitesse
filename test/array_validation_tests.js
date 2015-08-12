@@ -12,7 +12,7 @@ var assert = require("assert"),
 
 describe('Array', function() {
   describe('validation', function() {
-    it('should perform tripe nested array validations [][][]', function() {
+    it('should perform triple nested array validations [][][]', function() {
       var embeddedDocument = new DocumentType({
         'field': new StringType({
           exists:true
@@ -31,7 +31,7 @@ describe('Array', function() {
 
       var compiler = new Compiler({});
       // Compile the AST
-      var func = compiler.compile(topLevelDocument, {debug:true});
+      var func = compiler.compile(topLevelDocument, {});
 
       // Validate {}
       var results = func.validate({});
@@ -101,6 +101,52 @@ describe('Array', function() {
       assert.ok(results[9].rule instanceof StringType);
     });
 
+    it('should perform triple nested array validations with internal document with array', function() {
+      var embeddedDocument = new DocumentType({
+        'field': new StringType({
+          exists:true
+        })
+      });
+
+      var arrayDocument = new DocumentType({
+        'array': new ArrayType({
+          exists:true, of: embeddedDocument, validations: {$gte:1, $lte:10}
+        })
+      });
+
+      // Top level document
+      var topLevelDocument = new DocumentType({
+        'childArray': new NestedArrayType({
+          exists:true, depth: 3, of: arrayDocument, validations: {
+            0: {$gte:0, $lte:100},
+            2: {$gte:1, $lte:10},
+          }
+        })
+      });
+
+      var compiler = new Compiler({});
+      // Compile the AST
+      var func = compiler.compile(topLevelDocument, {});
+
+      // Validate {childArray: [[[{array:[]}]]]}
+      var results = func.validate({childArray: [[[{array:[]}]]]});
+      assert.equal(1, results.length);
+      assert.equal('array failed length validation {"$gte":1,"$lte":10}', results[0].message);
+      assert.equal('object.childArray[0][0][0].array', results[0].path);
+      assert.ok(results[0].rule instanceof ArrayType);
+      assert.equal(true, results[0].rule.object.exists);
+      assert.deepEqual({ '$gte': 1, '$lte': 10 }, results[0].rule.object.validations);
+
+      // Validate {childArray: [[[{array:[{field:1}]}]]]}
+      var results = func.validate({childArray: [[[{array:[{field:1}]}]]]});
+      assert.equal(1, results.length);
+      assert.equal('field is not a string', results[0].message);
+      assert.equal('object.childArray[0][0][0].array[0].field', results[0].path);
+      assert.ok(results[0].rule instanceof StringType);
+      assert.equal(true, results[0].rule.object.exists);
+      assert.equal(1, results[0].value);
+    });
+
     it('should perform complex nested objects and arrays', function() {
       var embeddedDocument = new DocumentType({
         'field': new StringType({
@@ -123,7 +169,7 @@ describe('Array', function() {
 
       var compiler = new Compiler({});
       // Compile the AST
-      var func = compiler.compile(topLevelDocument);
+      var func = compiler.compile(topLevelDocument, {});
 
       // Validate {}
       var results = func.validate({});
@@ -258,7 +304,7 @@ describe('Array', function() {
 
       var compiler = new Compiler({});
       // Compile the AST
-      var func = compiler.compile(topLevelDocument);
+      var func = compiler.compile(topLevelDocument, {});
       // Validate {childArray:[{array:[{field:''}, {field:''}, {field:1}, {field:''}, {field:''}]}]}
       var results = func.validate({childArray:[{array1:[{array2:[{field:1},{}]}]}]});
       assert.equal('field is not a string', results[0].message);
