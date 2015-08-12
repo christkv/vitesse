@@ -1,9 +1,8 @@
 var f = require('util').format;
 
-var ValidationError = function(message, field, parent, rule, value) {
+var ValidationError = function(message, path, rule, value) {
   this.message = message;
-  this.field = field;
-  this.parent = parent;
+  this.path = path;
   this.rule = rule;
   this.value = value;
 }
@@ -14,14 +13,6 @@ var validate = function(object, context) {
   context = context || {};
   var errors = [];
 
-  var exists_validation2 = function(path, object, context) {
-    if ((object == null || object == undefined) && context.failOnFirst) {
-      throw new ValidationError('field does not exist', path, rules[1], object);
-    } else if (object == null || object == undefined) {
-      errors.push(new ValidationError('field does not exist', path, rules[1], object));
-    }
-  }
-
   var generatePath = function(parent) {
     var args = Array.prototype.slice.call(arguments);
     args.shift();
@@ -30,12 +21,12 @@ var validate = function(object, context) {
     }).join(''));
   }
 
-  var generateField = function(field) {
-    var args = Array.prototype.slice.call(arguments);
-    args.shift();
-    return f('%s%s', field, args.map(function(x) {
-      return f('[%s]', x);
-    }).join(''));
+  var exists_validation2 = function(path, object, context) {
+    if ((object == null || object == undefined) && context.failOnFirst) {
+      throw new ValidationError('field does not exist', path, rules[1], object);
+    } else if (object == null || object == undefined) {
+      errors.push(new ValidationError('field does not exist', path, rules[1], object));
+    }
   }
 
   var exists_validation5 = function(path, object, context) {
@@ -46,12 +37,49 @@ var validate = function(object, context) {
     }
   }
 
-  var string_validation6 = function(path, object, context) {
+  var exists_validation8 = function(path, object, context) {
+    if ((object == null || object == undefined) && context.failOnFirst) {
+      throw new ValidationError('field does not exist', path, rules[7], object);
+    } else if (object == null || object == undefined) {
+      errors.push(new ValidationError('field does not exist', path, rules[7], object));
+    }
+  }
+
+  var string_validation9 = function(path, object, context) {
     if (!object) return;
     if (!(typeof object == 'string') && context.failOnFirst) {
-      throw new ValidationError('field is not an array', path, rules[5], object);
+      throw new ValidationError('field is not an array', path, rules[8], object);
     } else if (!(typeof object == 'string')) {
+      errors.push(new ValidationError('field is not an array', path, rules[8], object));
+    }
+  }
+
+  var object_validation7 = function(path, object, context) {
+    if ((object == null || typeof object != 'object') && context.failOnFirst) {
+      throw new ValidationError('field is not an object', path, rules[6], object);
+    } else if (object == null || typeof object != 'object') {
+      errors.push(new ValidationError('field is not an object', path, rules[6], object));
+    }
+    exists_validation8(f('%s.field', path), object.field, context);
+    string_validation9(f('%s.field', path), object.field, context);
+  }
+
+  var array_validation6 = function(path, object, context) {
+    if (!object) return;
+    if (!Array.isArray(object) && context.failOnFirst) {
+      throw new ValidationError('field is not an array', path, rules[5], object);
+    } else if (!Array.isArray(object)) {
       errors.push(new ValidationError('field is not an array', path, rules[5], object));
+    }
+
+    if ((object.length < 5 || object.length > 10) && context.failOnFirst) {
+      throw new ValidationError('array failed length validation {"$gte":5,"$lte":10}', path, rules[5], object);
+    } else if( (object.length < 5 || object.length > 10) ) {
+      errors.push(new ValidationError('array failed length validation {"$gte":5,"$lte":10}', path, rules[5], object));
+    }
+
+    for (var i = 0; i < object.length; i++) {
+      object_validation7(generatePath(path, i), object[i], context);
     }
   }
 
@@ -61,49 +89,26 @@ var validate = function(object, context) {
     } else if (object == null || typeof object != 'object') {
       errors.push(new ValidationError('field is not an object', path, rules[3], object));
     }
-    exists_validation5('object.childArray[i0][i1][i2].field', object.field, context);
-    string_validation6("object.childArray[i0][i1][i2]", "field", object.field, context);
+    exists_validation5(f('%s.array', path), object.array, context);
+    array_validation6(f('%s.array', path), object.array, context);
   }
 
-  var nested_array_validation3 = function(path, object, context) {
+  var array_validation3 = function(path, object, context) {
     if (!object) return;
     if (!Array.isArray(object) && context.failOnFirst) {
-      throw new ValidationError('field is not an array', 'object.childArray', rules[2], object);
+      throw new ValidationError('field is not an array', path, rules[2], object);
     } else if (!Array.isArray(object)) {
-      errors.push(new ValidationError('field is not an array', 'object.childArray', rules[2], object));
+      errors.push(new ValidationError('field is not an array', path, rules[2], object));
     }
 
-    if ((object.length < 0 || object.length > 100) && context.failOnFirst) {
-      throw new ValidationError('array failed length validation {"$gte":0,"$lte":100}', generatePath(path, i0), rules[2], object);
-    } else if( (object.length < 0 || object.length > 100) ) {
-      errors.push(new ValidationError('array failed length validation {"$gte":0,"$lte":100}', generatePath(path, i0), rules[2], object));
+    if ((object.length < 0 || object.length > 10) && context.failOnFirst) {
+      throw new ValidationError('array failed length validation {"$gte":0,"$lte":10}', path, rules[2], object);
+    } else if( (object.length < 0 || object.length > 10) ) {
+      errors.push(new ValidationError('array failed length validation {"$gte":0,"$lte":10}', path, rules[2], object));
     }
 
-    for (var i0 = 0; i0 < object.length; i0++) {
-      if (!Array.isArray(object[i0]) && context.failOnFirst) {
-        throw new ValidationError('field is not an array', generatePath(path, i0), rules[2], object[i0]);
-      } else if (!Array.isArray(object[i0])) {
-        errors.push(new ValidationError('field is not an array', generatePath(path, i0), rules[2], object[i0]));
-      }
-
-
-      for (var i1 = 0; i1 < object[i0].length; i1++) {
-        if (!Array.isArray(object[i0][i1]) && context.failOnFirst) {
-          throw new ValidationError('field is not an array', generatePath(path, i0, i1), rules[2], object[i0][i1]);
-        } else if (!Array.isArray(object[i0][i1])) {
-          errors.push(new ValidationError('field is not an array', generatePath(path, i0, i1), rules[2], object[i0][i1]));
-        }
-
-        if ((object[i0][i1].length < 5 || object[i0][i1].length > 10) && context.failOnFirst) {
-          throw new ValidationError('array failed length validation {"$gte":5,"$lte":10}', "", rules[2], object);
-        } else if( (object[i0][i1].length < 5 || object[i0][i1].length > 10) ) {
-          errors.push(new ValidationError('array failed length validation {"$gte":5,"$lte":10}', "", rules[2], object));
-        }
-
-        for (var i2 = 0; i2 < object[i0][i1].length; i2++) {
-          object_validation4(generateField(path, i0, i1, i2), object[i0][i1][i2], context);
-        }
-      }
+    for (var i = 0; i < object.length; i++) {
+      object_validation4(generatePath(path, i), object[i], context);
     }
   }
 
@@ -113,12 +118,12 @@ var validate = function(object, context) {
     } else if (object == null || typeof object != 'object') {
       errors.push(new ValidationError('field is not an object', path, rules[0], object));
     }
-    exists_validation2('object.childArray', object.childArray, context);
-    nested_array_validation3('object.childArray', object.childArray, context);
+    exists_validation2(f('%s.childArray', path), object.childArray, context);
+    array_validation3(f('%s.childArray', path), object.childArray, context);
   }
 
-  object_validation1('object', objectobject, context);
+  object_validation1('object', object, context);
   return errors;
 };
 
-console.dir(validate({childArray:[[[1,2,3,4,5]]]}))
+console.dir(validate({childArray:[{array:[{field:''}, {field:''}, {field:1}, {field:''}, {field:''}]}]}))
