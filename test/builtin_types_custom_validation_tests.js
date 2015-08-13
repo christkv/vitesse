@@ -36,7 +36,7 @@ describe('Custom', function() {
 
       var compiler = new Compiler({});
       // Compile the AST
-      var func = compiler.compile(schema, {debug:true});
+      var func = compiler.compile(schema, {});
 
       // Validate {field: ''}
       var results = func.validate({field: ''});
@@ -52,6 +52,49 @@ describe('Custom', function() {
 
       // Validate {field: 'dog'}
       var results = func.validate({field: 'dog'});
+      assert.equal(0, results.length);
+    });
+
+    it('simple number type validation extended with custom validation functions', function() {
+      var schema = new DocumentType({
+        'field': new NumberType({
+          custom: [new CustomType({
+            context: {valid: 5}, 
+            func: function(object, context) {
+              if(object != context.valid) {
+                return new Error('field was not 5');
+              }
+            }
+          }), new CustomType({
+            context: {}, 
+            func: function(object, context) {
+              console.dir((object % 5))
+              if((object % 5) != 0) {
+                return new Error('field must be divisible by 5');
+              }
+            }
+          })]
+        }, {})
+      });
+
+      var compiler = new Compiler({});
+      // Compile the AST
+      var func = compiler.compile(schema, {debug:true});
+
+      // Validate {field: 0}
+      var results = func.validate({field: 1});
+      assert.equal(2, results.length);
+      assert.equal('field was not 5', results[0].message);
+      assert.equal('object.field', results[0].path);
+      assert.equal(1, results[0].value);
+      assert.ok(results[0].rule instanceof DocumentType);
+      assert.equal('field must be divisible by 5', results[1].message);
+      assert.equal('object.field', results[1].path);
+      assert.equal(1, results[1].value);
+      assert.ok(results[1].rule instanceof DocumentType);
+
+      // Validate {field: 5}
+      var results = func.validate({field: 5});
       assert.equal(0, results.length);
     });
   });
