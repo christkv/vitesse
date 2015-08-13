@@ -7,8 +7,6 @@ var assert = require("assert"),
   StringType = require('../lib/ast').StringType,
   NumberType = require('../lib/ast').NumberType,
   DocumentType = require('../lib/ast').DocumentType,
-  Custom = require('../lib/custom'),
-  Builder = require('../lib/builder'),
   Compiler = require('../lib/compiler');
 
 describe('Custom', function() {
