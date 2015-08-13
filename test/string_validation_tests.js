@@ -159,5 +159,28 @@ describe('String', function() {
       var results = func.validate({field: 'husband'});
       assert.equal(0, results.length);
     });
+
+    it('simple string type validation using regular expression', function() {
+      var schema = new DocumentType({
+        'field': new StringType({
+          validations: { $regexp: /dog/i }
+        }, {})
+      });
+
+      var compiler = new Compiler({});
+      // Compile the AST
+      var func = compiler.compile(schema, {});
+
+      // Validate {field: ''}
+      var results = func.validate({field: ''});
+      assert.equal(1, results.length);
+      assert.equal('string fails validation {"$regexp":"/dog/i"}', results[0].message);
+      assert.equal('object.field', results[0].path);
+      assert.equal('', results[0].value);
+      assert.ok(results[0].rule instanceof DocumentType);
+
+      var results = func.validate({field: 'Dog'});
+      assert.equal(0, results.length);
+    });
   });
 });
