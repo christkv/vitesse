@@ -15,7 +15,7 @@ describe('Custom', function() {
   describe('builtin custom validations', function() {
     it('simple string type validation extended with custom validation functions', function() {
       var schema = new DocumentType({
-        'field': new StringType({
+        'field': new StringType({}, {
           custom: [new CustomType({
             context: {valid: 'dog'}, 
             func: function(object, context) {
@@ -30,8 +30,8 @@ describe('Custom', function() {
                 return new Error('field must have 3 characters');
               }
             }
-          })]
-        }, {})
+          })]          
+        })
       });
 
       var compiler = new Compiler({});
@@ -57,7 +57,7 @@ describe('Custom', function() {
 
     it('simple number type validation extended with custom validation functions', function() {
       var schema = new DocumentType({
-        'field': new NumberType({
+        'field': new NumberType({}, {
           custom: [new CustomType({
             context: {valid: 5}, 
             func: function(object, context) {
@@ -72,8 +72,8 @@ describe('Custom', function() {
                 return new Error('field must be divisible by 5');
               }
             }
-          })]
-        }, {})
+          })]                  
+        })
       });
 
       var compiler = new Compiler({});
@@ -120,7 +120,7 @@ describe('Custom', function() {
 
       var compiler = new Compiler({});
       // Compile the AST
-      var func = compiler.compile(schema, {debug:true});
+      var func = compiler.compile(schema, {});
 
       // Validate {field: 0}
       var results = func.validate({field: 1, illegal:1});
@@ -141,22 +141,22 @@ describe('Custom', function() {
 
     it('simple array type validation extended with custom validation functions', function() {
       var schema = new DocumentType({
-        'field': new ArrayType({
+        'field': new ArrayType({}, {
           custom: [new CustomType({
             context: {totalKeys: 1}, 
             func: function(object, context) {
-              // if(Object.keys(object).length != 1) {
-              //   return new Error('object must only contain a single field');
-              // }
+              if(object.length != 3) {
+                return new Error('array length must be 3');
+              }
             }
           }), new CustomType({
             context: {}, 
             func: function(object, context) {
-              // if((object.field % 5) != 0) {
-              //   return new Error('field must be divisible by 5');
-              // }
+              if(object.length % 3 != 0) {
+                return new Error('array length must be divisible by 3');
+              }
             }
-          })]
+          })]         
         })
       });
 
@@ -165,22 +165,20 @@ describe('Custom', function() {
       var func = compiler.compile(schema, {debug:true});
 
       // Validate {field: 0}
-      var results = func.validate({field: 1, illegal:1});
-      console.log("----------------------------------------------------------------")
-      console.dir(results)
-      // assert.equal(2, results.length);
-      // assert.equal('object must only contain a single field', results[0].message);
-      // assert.equal('object', results[0].path);
-      // assert.deepEqual({field: 1, illegal:1}, results[0].value);
-      // assert.ok(results[0].rule instanceof DocumentType);
-      // assert.equal('field must be divisible by 5', results[1].message);
-      // assert.equal('object', results[1].path);
-      // assert.deepEqual({field: 1, illegal:1}, results[1].value);
-      // assert.ok(results[1].rule instanceof DocumentType);
+      var results = func.validate({field: [1, 2]});
+      assert.equal(2, results.length);
+      assert.equal('array length must be 3', results[0].message);
+      assert.equal('object.field', results[0].path);
+      assert.deepEqual([1, 2], results[0].value);
+      assert.ok(results[0].rule instanceof DocumentType);
+      assert.equal('array length must be divisible by 3', results[1].message);
+      assert.equal('object.field', results[1].path);
+      assert.deepEqual([1, 2], results[1].value);
+      assert.ok(results[1].rule instanceof DocumentType);
 
-      // // Validate {field: 5}
-      // var results = func.validate({field: 5});
-      // assert.equal(0, results.length);
+      // Validate {field: 5}
+      var results = func.validate({field: [1, 2, 3]});
+      assert.equal(0, results.length);
     });
   });
 });
