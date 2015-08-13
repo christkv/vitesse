@@ -23,7 +23,8 @@
   "homepage": "https://github.com/christkv/vitesse",
   "dependencies": {
     "markup-js": "^1.5.21",
-    "mstring": "latest"
+    "mstring": "0.1.2",
+    "jsfmt": "0.4.1"
   },
   "devDependencies": {
     "joi": "^6.6.0",
