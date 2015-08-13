@@ -21,42 +21,19 @@ var validate = function(object, context) {
     }).join(''));
   }
 
-  var exists_validation2 = function(path, object, context) {
-    if ((object == null || object == undefined) && context.failOnFirst) {
-      throw new ValidationError('field does not exist', path, rules[1], object);
-    } else if (object == null || object == undefined) {
-      errors.push(new ValidationError('field does not exist', path, rules[1], object));
-    }
-  }
-
-  var exists_validation4 = function(path, object, context) {
-    if ((object == null || object == undefined) && context.failOnFirst) {
-      throw new ValidationError('field does not exist', path, rules[3], object);
-    } else if (object == null || object == undefined) {
-      errors.push(new ValidationError('field does not exist', path, rules[3], object));
-    }
-  }
-
-  var string_validation5 = function(path, object, context) {
+  var string_validation2 = function(path, object, context) {
     if (!object) return;
     if (!(typeof object == 'string') && context.failOnFirst) {
-      throw new ValidationError('field is not a string', path, rules[4], object);
+      throw new ValidationError('field is not a string', path, rules[1], object);
     } else if (!(typeof object == 'string')) {
-      errors.push(new ValidationError('field is not a string', path, rules[4], object));
+      errors.push(new ValidationError('field is not a string', path, rules[1], object));
     }
-  }
 
-  var object_validation3 = function(path, object, context) {
-    if ((object == null || typeof object != 'object') && context.failOnFirst) {
-      throw new ValidationError('field is not an object', path, rules[2], object);
-    } else if (object == null || typeof object != 'object') {
-      errors.push(new ValidationError('field is not an object', path, rules[2], object));
+    if (typeof object == 'string' && (object.length < 1 || object.length > 25) && context.failOnFirst) {
+      throw new ValidationError('string fails validation {"$gte":1,"$lte":25}', path, rules[1], object);
+    } else if (typeof object == 'string' && (object.length < 1 || object.length > 25)) {
+      errors.push(new ValidationError('string fails validation {"$gte":1,"$lte":25}', path, rules[1], object));
     }
-    // Not possible to perform any validations on the object as it does not exist
-    if (object == null) return;
-    // Perform validations on object fields
-    exists_validation4(f('%s.field', path), object.field, context);
-    string_validation5(f('%s.field', path), object.field, context);
   }
 
   var object_validation1 = function(path, object, context) {
@@ -68,14 +45,11 @@ var validate = function(object, context) {
     // Not possible to perform any validations on the object as it does not exist
     if (object == null) return;
     // Perform validations on object fields
-    exists_validation2(f('%s.child', path), object.child, context);
-    object_validation3('object', object.child, context);
+    string_validation2(f('%s.field', path), object.field, context);
   }
 
   object_validation1('object', object, context);
   return errors;
 };
 
-
-
-console.dir(validate({}))
+console.dir(validate({field:''}))

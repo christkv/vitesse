@@ -388,6 +388,15 @@ describe('Array', function() {
       assert.ok(results[0].rule instanceof NestedArrayType);
       assert.equal(1, results[0].value);
 
+      try {
+        func.validate({childArray: [[1]]}, {failOnFirst:true});
+      } catch(err) {
+        assert.equal('field is not a string', err.message);
+        assert.equal('object.childArray[0][0]', err.path);
+        assert.ok(err.rule instanceof NestedArrayType);
+        assert.equal(1, err.value);
+      }
+
       // Validate {childArray: [['', 1, '']]}
       var results = func.validate({childArray: [['', 1, '']]});
       assert.equal(1, results.length);
@@ -395,6 +404,15 @@ describe('Array', function() {
       assert.equal('object.childArray[0][1]', results[0].path);
       assert.ok(results[0].rule instanceof NestedArrayType);
       assert.equal(1, results[0].value);
+
+      try {
+        func.validate({childArray: [['', 1, '']]}, {failOnFirst:true});
+      } catch(err) {
+        assert.equal('field is not a string', err.message);
+        assert.equal('object.childArray[0][1]', err.path);
+        assert.ok(err.rule instanceof NestedArrayType);
+        assert.equal(1, err.value);
+      }
     });
   });
 });
