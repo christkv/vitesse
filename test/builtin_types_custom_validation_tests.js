@@ -143,9 +143,9 @@ describe('Custom', function() {
       var schema = new DocumentType({
         'field': new ArrayType({}, {
           custom: [new CustomType({
-            context: {totalKeys: 1}, 
+            context: {totalKeys: 3}, 
             func: function(object, context) {
-              if(object.length != 3) {
+              if(object.length != context.totalKeys) {
                 return new Error('array length must be 3');
               }
             }
@@ -162,7 +162,7 @@ describe('Custom', function() {
 
       var compiler = new Compiler({});
       // Compile the AST
-      var func = compiler.compile(schema, {debug:true});
+      var func = compiler.compile(schema, {});
 
       // Validate {field: 0}
       var results = func.validate({field: [1, 2]});
@@ -178,6 +178,39 @@ describe('Custom', function() {
 
       // Validate {field: 5}
       var results = func.validate({field: [1, 2, 3]});
+      assert.equal(0, results.length);
+    });
+
+    it('simple nested array type validation extended with custom validation functions', function() {
+      var schema = new DocumentType({
+        'field': new NestedArrayType({depth:2}, {
+          custom: [new CustomType({
+            context: {size:1}, 
+            func: function(object, context) {
+              for(var i = 0; i < object.length; i++) {
+                if(object[i].length != context.size) {
+                  return new Error(f('array at [%s] is not of size %s', i, context.size));
+                }
+              }
+            }
+          })]         
+        })
+      });
+
+      var compiler = new Compiler({});
+      // Compile the AST
+      var func = compiler.compile(schema, {});
+
+      // Validate {field: 0}
+      var results = func.validate({field: [[1, 2]]});
+      assert.equal(1, results.length);
+      assert.equal('array at [0] is not of size 1', results[0].message);
+      assert.equal('object.field', results[0].path);
+      assert.deepEqual([[1, 2]], results[0].value);
+      assert.ok(results[0].rule instanceof DocumentType);
+
+      // Validate {field: 5}
+      var results = func.validate({field: [[1]]});
       assert.equal(0, results.length);
     });
   });
