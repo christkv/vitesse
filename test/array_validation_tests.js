@@ -306,5 +306,95 @@ describe('Array', function() {
       assert.equal('object.childArray[0].array1[0].array2[1].field', results[1].path);
       assert.ok(results[1].rule instanceof DocumentType)
     });
+
+    it('array validation using string validation', function() {
+      var arrayDocument = new ArrayType({
+        exists:true, of: new StringType({}), validations: {$gte:1, $lte:10}
+      });
+
+      // Top level document
+      var topLevelDocument = new DocumentType({
+        'childArray': arrayDocument
+      });
+
+      var compiler = new Compiler({});
+      // Compile the AST
+      var func = compiler.compile(topLevelDocument, {});
+
+      // Validate {childArray: [1]}
+      var results = func.validate({childArray: [1]});
+      assert.equal(1, results.length);
+      assert.equal('field is not a string', results[0].message);
+      assert.equal('object.childArray[0]', results[0].path);
+      assert.ok(results[0].rule instanceof ArrayType);
+
+      // Validate {childArray: ['', 1, '']}
+      var results = func.validate({childArray: ['', 1, '']});
+      assert.equal(1, results.length);
+      assert.equal('field is not a string', results[0].message);
+      assert.equal('object.childArray[1]', results[0].path);
+      assert.ok(results[0].rule instanceof ArrayType);
+    });
+
+    it('nested simple array validation using string validation', function() {
+      var arrayDocument2 = new ArrayType({
+        exists:true, of: new StringType({}), validations: {$gte:1, $lte:10}
+      });
+
+      var subDocument = new DocumentType({
+        'childArray1': arrayDocument2
+      });
+
+      var arrayDocument1 = new ArrayType({
+        exists:true, of: subDocument, validations: {$gte:1, $lte:10}
+      });
+
+      // Top level document
+      var topLevelDocument = new DocumentType({
+        'childArray': arrayDocument1
+      });
+
+      var compiler = new Compiler({});
+      // Compile the AST
+      var func = compiler.compile(topLevelDocument, {});
+
+      // Validate {childArray: [{childArray1:['', 1, '']}]}
+      var results = func.validate({childArray: [{childArray1:['', 1, '']}]});
+      assert.equal(1, results.length);
+      assert.equal('field is not a string', results[0].message);
+      assert.equal('object.childArray[0].childArray1[1]', results[0].path);
+      assert.ok(results[0].rule instanceof ArrayType);
+    });
+
+    it('nested array validation using string validation', function() {
+      var arrayDocument = new NestedArrayType({
+        exists:true, of: new StringType({}), depth:2
+      });
+
+      // Top level document
+      var topLevelDocument = new DocumentType({
+        'childArray': arrayDocument
+      });
+
+      var compiler = new Compiler({});
+      // Compile the AST
+      var func = compiler.compile(topLevelDocument, {});
+
+      // Validate {childArray: [[1]]}
+      var results = func.validate({childArray: [[1]]});
+      assert.equal(1, results.length);
+      assert.equal('field is not a string', results[0].message);
+      assert.equal('object.childArray[0][0]', results[0].path);
+      assert.ok(results[0].rule instanceof NestedArrayType);
+      assert.equal(1, results[0].value);
+
+      // Validate {childArray: [['', 1, '']]}
+      var results = func.validate({childArray: [['', 1, '']]});
+      assert.equal(1, results.length);
+      assert.equal('field is not a string', results[0].message);
+      assert.equal('object.childArray[0][1]', results[0].path);
+      assert.ok(results[0].rule instanceof NestedArrayType);
+      assert.equal(1, results[0].value);
+    });
   });
 });
