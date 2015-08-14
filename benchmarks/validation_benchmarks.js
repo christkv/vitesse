@@ -1,93 +1,39 @@
 var Benchmark = require('benchmark'),
   Compiler = require('../lib/compiler'),
-  AST = require('../lib/ast'),
-  Builder = require('../lib/builder');
+  NumberType = require('../lib/ast').NumberType,
+  DocumentType = require('../lib/ast').DocumentType
+  f = require('util').format;
 
 var Joi = require('joi');
 
 // Create a benchmark suite
 var suite = new Benchmark.Suite;
 
-// Top level document
-var topLevelDocument = new AST({
-  'number' : {
-    type: Number, exists:true, validation: {
-      $gt: 100, $lt: 1000
-    }
-  }
-});
-
 // Compile to validator
-var validator = new Compiler().compile(topLevelDocument);
-
-// // Create a schema instance
-// var schema = new Builder();
-// // Set up schema rule for the number field
-// schema.rule('.number')
-//   .type(Number)
-//   .exists(true)
-//   .validate({
-//     $gt: 100, $lt: 1000
-//   });
-//
-// // Complile the expression
-// var expression = new Compiler().compile(schema);
-
-// var schema = Joi.obj ect().keys({
-//     username: Joi.string().alphanum().min(3).max(30).required(),
-//     password: Joi.string().regex(/[a-zA-Z0-9]{3,30}/),
-//     access_token: [Joi.string(), Joi.number()],
-//     birthyear: Joi.number().integer().min(1900).max(2013),
-//     email: Joi.string().email()
-// }).with('username', 'birthyear').without('password', 'access_token');
-//
-// Joi.validate({ username: 'abc', birthyear: 2994 }, schema, function (err, value) {
-//   console.dir(err)
-// });
+var validator = new Compiler().compile(new DocumentType({
+  'number': new NumberType({validations: {
+    $gt: 100, $lt: 1000
+  }}, {exists:true})
+}), {debug:false});
 
 // Create Joi expression
 var joiSchema = Joi.object().keys({
   number: Joi.number().integer().min(100).max(1000)
 }).requiredKeys('number');
 
-// Joi.validate({number:15}, joiSchema, function(err, value) {
-//   console.dir(err)
-// })
-//
-// process.exit(0)
-
-// process.exit(0)
-// add tests
-// suite.add('RegExp#test', function() {
-//   /o/.test('Hello World!');
-// })
-// .add('String#indexOf', function() {
-//   'Hello World!'.indexOf('o') > -1;
-// })
-// .add('String#match', function() {
-//   !!'Hello World!'.match(/o/);
-// })
-// add listeners
-
-//
-
-// suite.add('Validator compile', function() {
-//   var object = {
-//     number: 150
-//   };
-//   expression.validate(object);
+// // Joi validator
+// suite.add('Joi validator', function() {
+//   Joi.validate({number:150}, joiSchema, {abortEarly:false}, function(err, value) {})
 // })
 
-suite.add('Joi validator', function() {
-  Joi.validate({number:150}, joiSchema, {abortEarly:false}, function(err, value) {})
-})
+// // Hand coded
+// suite.add('Handcoded validation', function() {
+//   manual({number:150})
+// });
 
-suite.add('Handcoded validation', function() {
+var manual = function(object) {
   var errors = [];
   var rules = [];
-  var object = {
-    number: 150
-  };
 
   if(object.number == null && true) {
     errors.push(new ValidationError('field .number does not exist', rules[0]));
@@ -106,118 +52,137 @@ suite.add('Handcoded validation', function() {
   } else if(!(object.number > 100 && object.number < 1000)) {
     throw new ValidationError('field .number fails validation', rules[0]);
   }
+}
 
-})
-
-.add('Compiler test', function() {
+// Vitesse test
+suite.add('Compiler test', function() {
   validator.validate({number:150});
-})
+});
 
-// .add('Handcoded validation func', function() {
-//   var errors = [];
-//   var rules = [];
-//   var object = {
-//     number: 150
-//   };
+// // Manual test
+// suite.add('Manual vitesse test', function() {
+//   validate({number:150});
+// });
 
-//   // functions.func1(object);
-//   //
-//   // functions.func2(object);
-//   //
-//   // functions.func3(object);
-
-//   // functions[0](object);
-//   //
-//   // functions[1](object);
-//   //
-//   // functions[2](object);
-
-//   func1(object);
-//   func2(object);
-//   func3(object);
-// })
-
-.on('cycle', function(event) {
+// Each cycle
+suite.on('cycle', function(event) {
   console.log(String(event.target));
-})
-.on('complete', function() {
+});
+
+// On complete
+suite.on('complete', function() {
   console.log('Fastest is ' + this.filter('fastest').pluck('name'));
-})
-// run async
-.run({ 'async': true });
-var functions = [
-  function(object) {
-    if(object.number == null && true) {
-      errors.push(new ValidationError('field .number does not exist', rules[0]));
-    } else if(object.number == null) {
-      throw new ValidationError('field .number does not exist', rules[0]);
-    }
-  },
+});
 
-  function(object) {
-    if(object.number != null && !(object.number.constructor.name == "Number") && true) {
-      errors.push(new ValidationError('field .number is not of expected type function Number() { [native code] }', rules[0]));
-    } else if(object.number != null && !(object.number.constructor.name == "Number")) {
-      throw new ValidationError('field .number is not of expected type function Number() { [native code] }', rules[0]);
-    }
-  },
+var rules = [];
 
-  function(object) {
-    if(!(object.number > 100 && object.number < 1000) && true) {
-      errors.push(new ValidationError('field .number fails validation', rules[0]));
-    } else if(!(object.number > 100 && object.number < 1000)) {
-      throw new ValidationError('field .number fails validation', rules[0]);
-    }
-  }
-]
-
-var func1 = function(object) {
-  if(object.number == null && true) {
-    errors.push(new ValidationError('field .number does not exist', rules[0]));
-  } else if(object.number == null) {
-    throw new ValidationError('field .number does not exist', rules[0]);
-  }
+var ValidationError = function(message, path, rule, value) {
+  this.message = message;
+  this.path = path;
+  this.rule = rule;
+  this.value = value;
 }
 
-var func2 = function(object) {
-  if(object.number != null && !(object.number.constructor.name == "Number") && true) {
-    errors.push(new ValidationError('field .number is not of expected type function Number() { [native code] }', rules[0]));
-  } else if(object.number != null && !(object.number.constructor.name == "Number")) {
-    throw new ValidationError('field .number is not of expected type function Number() { [native code] }', rules[0]);
+var validate = function(object, context) {
+  var context = context == null ? {} : context;
+  var errors = [];
+  // var generatePath = function(parent) {
+  //   var args = Array.prototype.slice.call(arguments);
+  //   args.shift();
+  //   return f('%s%s', parent, args.map(function(x) {
+  //     return f('[%s]', x);
+  //   }).join(''));
+  // }
+  // var exists_validation2 = function(path, object, context) {
+  //   if (undefined == object && context.failOnFirst) {
+  //     throw new ValidationError('field does not exist', path, rules[1], object);
+  //   } else if (undefined == object) {
+  //     errors.push(new ValidationError('field does not exist', path, rules[1], object));
+  //   }
+  // }
+  // var number_validation3 = function(path, object, context) {
+  //   if (object == undefined) return;
+  //   if (!(typeof object == 'number') && context.failOnFirst) {
+  //     throw new ValidationError('field is not a number', path, rules[2], object);
+  //   } else if (!(typeof object == 'number')) {
+  //     errors.push(new ValidationError('field is not a number', path, rules[2], object));
+  //   }
+  //   if (typeof object == 'number' && (object <= 100 || object >= 1000) && context.failOnFirst) {
+  //     throw new ValidationError('number fails validation {"$gt":100,"$lt":1000}', path, rules[2], object);
+  //   } else if (typeof object == 'number' && (object <= 100 || object >= 1000)) {
+  //     errors.push(new ValidationError('number fails validation {"$gt":100,"$lt":1000}', path, rules[2], object));
+  //   }
+  // }
+
+  var object_validation1 = function(path, object, context) {
+    if ((object == null || typeof object != 'object') && context.failOnFirst) {
+      throw new ValidationError('field is not an object', path, rules[0], object);
+    } else if (object == null || typeof object != 'object') {
+      errors.push(new ValidationError('field is not an object', path, rules[0], object));
+    }
+    // Not possible to perform any validations on the object as it does not exist
+    if (object == null) return;
+    // Custom validations
+    // Perform validations on object fields
+    // exists_validation2(path + '.number', object.number, context);
+    // number_validation3(path + '.number', object.number, context);
+
+    var _object = object.number;
+    var _path = path + '.number';
+
+    if (undefined == _object && context.failOnFirst) {
+      throw new ValidationError('field does not exist', _path, rules[1], _object);
+    } else if (undefined == _object) {
+      errors.push(new ValidationError('field does not exist', _path, rules[1], _object));
+    }
+
+    if (_object == undefined) return;
+    if (!(typeof _object == 'number') && context.failOnFirst) {
+      throw new ValidationError('field is not a number', _path, rules[2], _object);
+    } else if (!(typeof _object == 'number')) {
+      errors.push(new ValidationError('field is not a number', _path, rules[2], _object));
+    }
+
+    if (typeof _object == 'number' && (_object <= 100 || _object >= 1000) && context.failOnFirst) {
+      throw new ValidationError('number fails validation {"$gt":100,"$lt":1000}', _path, rules[2], _object);
+    } else if (typeof _object == 'number' && (_object <= 100 || _object >= 1000)) {
+      errors.push(new ValidationError('number fails validation {"$gt":100,"$lt":1000}', _path, rules[2], _object));
+    }
+
   }
-}
 
-var func3 = function(object) {
-  if(!(object.number > 100 && object.number < 1000) && true) {
-    errors.push(new ValidationError('field .number fails validation', rules[0]));
-  } else if(!(object.number > 100 && object.number < 1000)) {
-    throw new ValidationError('field .number fails validation', rules[0]);
-  }
-}
+  object_validation1('object', object, context);
+  return errors;
+};
 
-
-// var functions = {
-//   func1: function(object) {
-//     if(object.number == null && true) {
-//       errors.push(new ValidationError('field .number does not exist', rules[0]));
-//     } else if(object.number == null) {
-//       throw new ValidationError('field .number does not exist', rules[0]);
+// var validate = function(b, e) {
+//   e = e || {};
+//   var c = [], d = e;
+//   if (null != b && "object" == typeof b || !d.failOnFirst) {
+//     null != b && "object" == typeof b || c.push(new ValidationError("field is not an object", "object", rules[0], b));
+//   } else {
+//     throw new ValidationError("field is not an object", "object", rules[0], b);
+//   }
+//   if (null != b) {
+//     var a = b.number;
+//     if (void 0 == a && d.failOnFirst) {
+//       throw new ValidationError("field does not exist", "object.number", rules[1], a);
 //     }
-//   },
-//
-//   func2: function(object) {
-//     if(object.number != null && !(object.number.constructor.name == "Number") && true) {
-//       errors.push(new ValidationError('field .number is not of expected type function Number() { [native code] }', rules[0]));
-//     } else if(object.number != null && !(object.number.constructor.name == "Number")) {
-//       throw new ValidationError('field .number is not of expected type function Number() { [native code] }', rules[0]);
-//     }
-//   },
-//
-//   func3: function(object) {
-//     if(!(object.number > 100 && object.number < 1000) && true) {
-//       errors.push(new ValidationError('field .number fails validation', rules[0]));
-//     } else if(!(object.number > 100 && object.number < 1000)) {
-//       throw new ValidationError('field .number fails validation', rules[0]);
+//     null != a && void 0 != a || c.push(new ValidationError("field does not exist", "object.number", rules[1], a));
+//     a = b.number;
+//     if (void 0 != a) {
+//       if ("number" != typeof a && d.failOnFirst) {
+//         throw new ValidationError("field is not a number", "object.number", rules[2], a);
+//       }
+//       "number" != typeof a && c.push(new ValidationError("field is not a number", "object.number", rules[2], a));
+//       if ("number" == typeof a && (100 >= a || 1E3 <= a) && d.failOnFirst) {
+//         throw new ValidationError('number fails validation {"$gt":100,"$lt":1000}', "object.number", rules[2], a);
+//       }
+//       "number" == typeof a && (100 >= a || 1E3 <= a) && c.push(new ValidationError('number fails validation {"$gt":100,"$lt":1000}', "object.number", rules[2], a));
 //     }
 //   }
-// }
+//   return c;
+// };
+
+// run benchmark
+suite.run({ 'async': true });

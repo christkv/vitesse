@@ -24,7 +24,7 @@ describe('Object', function() {
 
       var compiler = new Compiler({});
       // Compile the AST
-      var func = compiler.compile(topLevelDocument, {});
+      var func = compiler.compile(topLevelDocument, {debug:false});
 
       // Validate {}
       var results = func.validate({});
