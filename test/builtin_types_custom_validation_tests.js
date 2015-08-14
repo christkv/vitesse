@@ -34,7 +34,7 @@ describe('Custom', function() {
 
       var compiler = new Compiler({});
       // Compile the AST
-      var func = compiler.compile(schema, {});
+      var func = compiler.compile(schema, {debug:false});
 
       // Validate {field: ''}
       var results = func.validate({field: ''});

@@ -14,7 +14,7 @@ var validator = new Compiler().compile(new DocumentType({
   'number': new NumberType({validations: {
     $gt: 100, $lt: 1000
   }}, {exists:true})
-}), {debug:false});
+}), {debug:true});
 
 // Create Joi expression
 var joiSchema = Joi.object().keys({
@@ -59,10 +59,10 @@ suite.add('Compiler test', function() {
   validator.validate({number:150});
 });
 
-// // Manual test
-// suite.add('Manual vitesse test', function() {
-//   validate({number:150});
-// });
+// Manual test
+suite.add('Manual vitesse test', function() {
+  validate({number:150});
+});
 
 // Each cycle
 suite.on('cycle', function(event) {
