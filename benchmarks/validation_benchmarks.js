@@ -1,5 +1,6 @@
 var Benchmark = require('benchmark'),
   Compiler = require('../lib/compiler'),
+  ClosureCompiler = require('../lib/closure_compiler'),
   NumberType = require('../lib/ast').NumberType,
   DocumentType = require('../lib/ast').DocumentType
   f = require('util').format;
@@ -20,6 +21,19 @@ var validator = new Compiler().compile(new DocumentType({
 var joiSchema = Joi.object().keys({
   number: Joi.number().integer().min(100).max(1000)
 }).requiredKeys('number');
+
+// Compile to validator
+var validatorClosure = null;
+// Compile using closure compiler
+new ClosureCompiler().compile(new DocumentType({
+  'number': new NumberType({validations: {
+    $gt: 100, $lt: 1000
+  }}, {exists:true})
+}), {debug:true}, function(err, v) {
+  validatorClosure = v;
+  // run benchmark
+  suite.run({ 'async': true });
+});
 
 // // Joi validator
 // suite.add('Joi validator', function() {
@@ -57,6 +71,11 @@ var manual = function(object) {
 // Vitesse test
 suite.add('Compiler test', function() {
   validator.validate({number:150});
+});
+
+// Vitesse closure test
+suite.add('Closure compiler test', function() {
+  validatorClosure.validate({number:150});
 });
 
 // Manual test
@@ -184,5 +203,5 @@ var validate = function(object, context) {
 //   return c;
 // };
 
-// run benchmark
-suite.run({ 'async': true });
+// // run benchmark
+// suite.run({ 'async': true });

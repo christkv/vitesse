@@ -22,9 +22,10 @@
   },
   "homepage": "https://github.com/christkv/vitesse",
   "dependencies": {
+    "closure-compiler": "^0.2.7",
+    "jsfmt": "0.4.1",
     "markup-js": "^1.5.21",
-    "mstring": "0.1.2",
-    "jsfmt": "0.4.1"
+    "mstring": "0.1.2"
   },
   "devDependencies": {
     "joi": "^6.6.0",
