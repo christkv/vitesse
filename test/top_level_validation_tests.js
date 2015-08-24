@@ -4,7 +4,7 @@ var assert = require("assert"),
   ArrayType = require('../lib/ast').ArrayType,
   NestedArrayType = require('../lib/ast').NestedArrayType,
   StringType = require('../lib/ast').StringType,
-  OfOneType = require('../lib/ast').OfOneType,
+  OneOfType = require('../lib/ast').OneOfType,
   NumberType = require('../lib/ast').NumberType,
   IntegerType = require('../lib/ast').IntegerType,
   DocumentType = require('../lib/ast').DocumentType,
@@ -125,35 +125,31 @@ describe('TopLevel', function() {
       assert.equal(0, results.length);
     });
 
-    it('should correctly validate top level array value', function() {
-      // Embedded document
-      var embeddedDocument = new IntegerType({
-        validations: {$gte:2}
-      });
-
+    it('should correctly validate top level ofOne', function() {
       // Top level document
-      var topLevelDocument = new NestedArrayType({
-        depth: 3, of: embeddedDocument
+      var topLevelDocument = new OneOfType({
+        validations: [
+          new IntegerType({}),
+          new IntegerType({ validations: { $gte: 2 } }),
+          new IntegerType({ validations: { $gte: 5 } })        
+        ]
       });
 
       // Create a compiler
       var compiler = new Compiler({});
       // Compile the AST
-      var func = compiler.compile(topLevelDocument, {debug:true});
+      var func = compiler.compile(topLevelDocument, {});
 
       // Execute validation
-      var results = func.validate([[[2, 1]]]);
-      assert.equal(1, results.length);
-      assert.equal("number fails validation {\"$gte\":2}", results[0].message);
-      assert.equal('object[0][0][1]', results[0].path);
-      assert.ok(results[0].rule === embeddedDocument);
-      assert.deepEqual(1, results[0].value);
+      var results = func.validate(3);
+      assert.equal(2, results.length);
+      assert.equal("more than one schema matched ofOne rule", results[1].message);
+      assert.equal('object', results[1].path);
+      assert.ok(results[1].rule === topLevelDocument);
 
       // Valid response
-      var results = func.validate([[[2]]]);
+      var results = func.validate(1);
       assert.equal(0, results.length);
-
-      // console.log(JSON.stringify(results, null, 2))
     });
   });
 });
