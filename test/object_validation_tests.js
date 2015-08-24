@@ -69,6 +69,8 @@ describe('Object', function() {
     });
 
     it('should handle single level embedded document using closure compiler', function(done) {
+      if(process.env[TRAVIS_JOB_ID]) return done();
+
       var embeddedDocument = new DocumentType({
         'field': new StringType({
           exists:true
