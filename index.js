@@ -2,7 +2,7 @@
 var ex = {
   // Compilers
   Compiler: require('./lib/compiler'),
-  ClosureCompiler: require('./lib/closure_compiler')
+  ClosureCompiler: require('./lib/closure_compiler'),
 
   // AST classes
   NestedArrayType: require('./lib/ast').NestedArrayType,

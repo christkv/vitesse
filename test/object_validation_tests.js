@@ -80,7 +80,6 @@ describe('Object', function() {
         'child': embeddedDocument
       });
 
-      console.log("###########################30")
       var compiler = new ClosureCompiler({});
       // Compile the AST
       compiler.compile(topLevelDocument, {debug:false}, function(err, func) {
