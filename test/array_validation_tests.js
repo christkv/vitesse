@@ -484,7 +484,6 @@ describe('Array', function() {
 
       // Validate {childArray: [1, 2, 1]}
       var results = func.validate({childArray: [['1', '2', '3'],['1', '2', '1']]});
-      console.log(JSON.stringify(results, null, 2));     
       assert.equal(1, results.length);
       assert.equal("array contains duplicate values", results[0].message);
       assert.equal("object.childArray[1]", results[0].path);
