@@ -145,10 +145,10 @@ describe('TopLevel', function() {
 
       // Execute validation
       var results = func.validate(3);
-      assert.equal(2, results.length);
-      assert.equal("more than one schema matched ofOne rule", results[1].message);
-      assert.equal('object', results[1].path);
-      assert.ok(results[1].rule === topLevelDocument);
+      assert.equal(1, results.length);
+      assert.equal("more than one schema matched ofOne rule", results[0].message);
+      assert.equal('object', results[0].path);
+      assert.ok(results[0].rule === topLevelDocument);
 
       // Valid response
       var results = func.validate(1);

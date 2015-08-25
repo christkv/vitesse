@@ -71,9 +71,14 @@ describe('OneOf', function() {
       // Attempt to validate
       var results = func.validate({field:''});
       assert.equal(1, results.length);
-      assert.equal('string fails validation {\"$gte\":2}', results[0].message);
-      assert.equal('object.field', results[0].path);
-      assert.ok(string2 === results[0].rule);
+      assert.equal('more than one schema matched ofOne rule', results[0].message);
+      assert.equal('object', results[0].path);
+      assert.ok(topLevelDocument === results[0].rule);
+
+      // Validate other errors
+      assert.equal('string fails validation {\"$gte\":2}', results[0].errors[0].message);
+      assert.equal('object.field', results[0].errors[0].path);
+      assert.ok(string2 === results[0].errors[0].rule);
 
       // Attempt to validate
       var results = func.validate({field:'  '});
