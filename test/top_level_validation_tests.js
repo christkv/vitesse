@@ -239,7 +239,6 @@ describe('TopLevel', function() {
 
       // Valid response
       var results = func.validate('');
-      // console.log(JSON.stringify(results, null, 2))
       assert.equal(0, results.length);
     });    
   });
