@@ -13,14 +13,22 @@ describe('Object', function() {
   describe('validation', function() {
     it('should handle single level embedded document', function() {
       var embeddedDocument = new DocumentType({
-        'field': new StringType({
-          exists:true
-        })
-      }, { exists:true });
+        // Document fields
+        fields: {
+          'field': new StringType({
+            exists:true
+          })
+        },
+        
+        // Exists
+        exists: true
+      });
 
       // Top level document
       var topLevelDocument = new DocumentType({
-        'child': embeddedDocument
+        fields: {
+          'child': embeddedDocument
+        }
       });
 
       var compiler = new Compiler({});
@@ -72,14 +80,18 @@ describe('Object', function() {
       if(process.env["TRAVIS_JOB_ID"]) return done();
 
       var embeddedDocument = new DocumentType({
-        'field': new StringType({
-          exists:true
-        })
-      }, { exists:true });
+        fields: {
+          'field': new StringType({ exists:true })
+        },
+
+        exists:true
+      });
 
       // Top level document
       var topLevelDocument = new DocumentType({
-        'child': embeddedDocument
+        fields: {
+          'child': embeddedDocument
+        }
       });
 
       var compiler = new ClosureCompiler({});

@@ -27,7 +27,9 @@ describe('Not', function() {
 
       // Top level document
       var topLevelDocument = new DocumentType({
-        'child': embeddedDocument
+        fields: {
+          'child': embeddedDocument
+        }
       });
 
       var compiler = new Compiler({});
@@ -43,15 +45,21 @@ describe('Not', function() {
 
     it('should handle situation where validation is a document', function() {
       var doc1 = new DocumentType({
-            'field': new StringType({})
-          }, { exists:true });
+            fields: {
+              'field': new StringType({})
+            },
+            exists:true
+          });
 
       // String
       var string2 = new StringType({validations: {$gte:2}});
       // Get the document
       var doc2 = new DocumentType({
-            'field': string2
-          }, { exists:true });
+            fields: {
+              'field': string2
+            },
+            exists:true
+          });
 
       // Top level document
       var topLevelDocument = new NotType({

@@ -13,23 +13,25 @@ describe('Custom', function() {
   describe('builtin custom validations', function() {
     it('simple string type validation extended with custom validation functions', function() {
       var schema = new DocumentType({
-        'field': new StringType({}, {
-          custom: [new CustomType({
-            context: {valid: 'dog'}, 
-            func: function(object, context) {
-              if(object != context.valid) {
-                return new Error('field did not contain dog');
+        fields: {
+          'field': new StringType({
+            custom: [new CustomType({
+              context: {valid: 'dog'}, 
+              func: function(object, context) {
+                if(object != context.valid) {
+                  return new Error('field did not contain dog');
+                }
               }
-            }
-          }), new CustomType({
-            context: {}, 
-            func: function(object, context) {
-              if(object.length != 3) {
-                return new Error('field must have 3 characters');
+            }), new CustomType({
+              context: {}, 
+              func: function(object, context) {
+                if(object.length != 3) {
+                  return new Error('field must have 3 characters');
+                }
               }
-            }
-          })]          
-        })
+            })]          
+          })
+        }
       });
 
       var compiler = new Compiler({});
@@ -55,23 +57,25 @@ describe('Custom', function() {
 
     it('simple number type validation extended with custom validation functions', function() {
       var schema = new DocumentType({
-        'field': new NumberType({}, {
-          custom: [new CustomType({
-            context: {valid: 5}, 
-            func: function(object, context) {
-              if(object != context.valid) {
-                return new Error('field was not 5');
+        fields: {
+          'field': new NumberType({
+            custom: [new CustomType({
+              context: {valid: 5}, 
+              func: function(object, context) {
+                if(object != context.valid) {
+                  return new Error('field was not 5');
+                }
               }
-            }
-          }), new CustomType({
-            context: {}, 
-            func: function(object, context) {
-              if((object % 5) != 0) {
-                return new Error('field must be divisible by 5');
+            }), new CustomType({
+              context: {}, 
+              func: function(object, context) {
+                if((object % 5) != 0) {
+                  return new Error('field must be divisible by 5');
+                }
               }
-            }
-          })]                  
-        })
+            })]                  
+          })
+        }
       });
 
       var compiler = new Compiler({});
@@ -97,8 +101,9 @@ describe('Custom', function() {
 
     it('simple object type validation extended with custom validation functions', function() {
       var schema = new DocumentType({
-        'field': new NumberType({})
-      }, {
+        fields: {
+          'field': new NumberType({})
+        },
         custom: [new CustomType({
           context: {totalKeys: 1}, 
           func: function(object, context) {
@@ -139,23 +144,25 @@ describe('Custom', function() {
 
     it('simple array type validation extended with custom validation functions', function() {
       var schema = new DocumentType({
-        'field': new ArrayType({}, {
-          custom: [new CustomType({
-            context: {totalKeys: 3}, 
-            func: function(object, context) {
-              if(object.length != context.totalKeys) {
-                return new Error('array length must be 3');
+        fields: {
+          'field': new ArrayType({
+            custom: [new CustomType({
+              context: {totalKeys: 3}, 
+              func: function(object, context) {
+                if(object.length != context.totalKeys) {
+                  return new Error('array length must be 3');
+                }
               }
-            }
-          }), new CustomType({
-            context: {}, 
-            func: function(object, context) {
-              if(object.length % 3 != 0) {
-                return new Error('array length must be divisible by 3');
+            }), new CustomType({
+              context: {}, 
+              func: function(object, context) {
+                if(object.length % 3 != 0) {
+                  return new Error('array length must be divisible by 3');
+                }
               }
-            }
-          })]         
-        })
+            })]         
+          })
+        }
       });
 
       var compiler = new Compiler({});
@@ -181,18 +188,20 @@ describe('Custom', function() {
 
     it('simple nested array type validation extended with custom validation functions', function() {
       var schema = new DocumentType({
-        'field': new NestedArrayType({depth:2}, {
-          custom: [new CustomType({
-            context: {size:1}, 
-            func: function(object, context) {
-              for(var i = 0; i < object.length; i++) {
-                if(object[i].length != context.size) {
-                  return new Error(f('array at [%s] is not of size %s', i, context.size));
+        fields: {
+          'field': new NestedArrayType({depth:2,
+            custom: [new CustomType({
+              context: {size:1}, 
+              func: function(object, context) {
+                for(var i = 0; i < object.length; i++) {
+                  if(object[i].length != context.size) {
+                    return new Error(f('array at [%s] is not of size %s', i, context.size));
+                  }
                 }
               }
-            }
-          })]         
-        })
+            })]         
+          })
+        }
       });
 
       var compiler = new Compiler({});

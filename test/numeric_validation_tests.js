@@ -12,7 +12,9 @@ describe('Number', function() {
   describe('validation', function() {
     it('simple number type validation', function() {
       var schema = new DocumentType({
-        'field': new NumberType({}, {exists:true})
+        fields: {
+          'field': new NumberType({exists:true})
+        }
       });
 
       var compiler = new Compiler({});
@@ -36,11 +38,16 @@ describe('Number', function() {
 
     it('simple number nested object type validation', function() {
       var doc1 = new DocumentType({
-        'field': new NumberType({}, {exists:true})
-      }, {exists:true});
+        fields: {
+          'field': new NumberType({exists:true})
+        },
+        exists:true
+      });
 
       var schema = new DocumentType({
-        'doc': doc1
+        fields: {
+          'doc': doc1
+        }
       });
 
       var compiler = new Compiler({});
@@ -67,9 +74,11 @@ describe('Number', function() {
 
     it('simple number type validation using supported language and $gte/$lte', function() {
       var schema = new DocumentType({
-        'field': new NumberType({
-          validations: { $gte: 1, $lte: 25 }
-        }, {})
+        fields: {
+          'field': new NumberType({
+            validations: { $gte: 1, $lte: 25 }
+          }, {})
+        }
       });
 
       var compiler = new Compiler({});
@@ -98,9 +107,11 @@ describe('Number', function() {
 
     it('simple string type validation using supported language and $gt/$lt', function() {
       var schema = new DocumentType({
-        'field': new NumberType({
-          validations: { $gt: 1, $lt: 25 }
-        }, {})
+        fields: {
+          'field': new NumberType({
+            validations: { $gt: 1, $lt: 25 }
+          }, {})
+        }
       });
 
       var compiler = new Compiler({});
@@ -129,9 +140,11 @@ describe('Number', function() {
 
     it('simple string type validation using supported language and $in', function() {
       var schema = new DocumentType({
-        'field': new NumberType({
-          validations: { $in: [4, 6, 8, 10] }
-        }, {})
+        fields: {
+          'field': new NumberType({
+            validations: { $in: [4, 6, 8, 10] }
+          }, {})
+        }
       });
 
       var compiler = new Compiler({});

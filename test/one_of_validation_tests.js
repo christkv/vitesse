@@ -26,7 +26,9 @@ describe('OneOf', function() {
 
       // Top level document
       var topLevelDocument = new DocumentType({
-        'child': embeddedDocument
+        fields: {
+          'child': embeddedDocument
+        }
       });
 
       var compiler = new Compiler({});
@@ -42,13 +44,19 @@ describe('OneOf', function() {
 
     it('should handle OneOf where validation is a document', function() {
       var doc1 = new DocumentType({
-            'field': new StringType({})
-          }, { exists:true });
+            fields: {
+              'field': new StringType({})
+            },
+            exists:true
+          });
 
       var string2 = new StringType({validations: {$gte:2}});
       var doc2 = new DocumentType({
-            'field': string2
-          }, { exists:true });
+            fields: {
+              'field': string2
+            },
+            exists:true
+          });
 
       // Top level document
       var topLevelDocument = new OneOfType({

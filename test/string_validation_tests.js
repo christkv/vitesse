@@ -12,7 +12,9 @@ describe('String', function() {
   describe('validation', function() {
     it('simple string type validation', function() {
       var schema = new DocumentType({
-        'field': new StringType({}, {exists:true})
+        fields: {
+          'field': new StringType({exists:true})
+        }
       });
 
       var compiler = new Compiler({});
@@ -36,11 +38,16 @@ describe('String', function() {
 
     it('simple string nested object type validation', function() {
       var doc1 = new DocumentType({
-        'field': new StringType({}, {exists:true})
-      }, {exists:true});
+        fields: {
+          'field': new StringType({exists:true})
+        },
+        exists:true
+      });
 
       var schema = new DocumentType({
-        'doc': doc1
+        fields: {
+          'doc': doc1
+        }
       });
 
       var compiler = new Compiler({});
@@ -67,9 +74,11 @@ describe('String', function() {
 
     it('simple string type validation using supported language and $gte/$lte', function() {
       var schema = new DocumentType({
-        'field': new StringType({
-          validations: { $gte: 1, $lte: 25 }
-        }, {})
+        fields: {
+          'field': new StringType({
+            validations: { $gte: 1, $lte: 25 }
+          }, {})
+        }
       });
 
       var compiler = new Compiler({});
@@ -98,9 +107,11 @@ describe('String', function() {
 
     it('simple string type validation using supported language and $gt/$lt', function() {
       var schema = new DocumentType({
-        'field': new StringType({
-          validations: { $gt: 1, $lt: 25 }
-        }, {})
+        fields: {
+          'field': new StringType({
+            validations: { $gt: 1, $lt: 25 }
+          }, {})
+        }
       });
 
       var compiler = new Compiler({});
@@ -129,9 +140,11 @@ describe('String', function() {
 
     it('simple string type validation using supported language and $in', function() {
       var schema = new DocumentType({
-        'field': new StringType({
-          validations: { $in: ['man', 'boy', 'wife', 'husband', 'girl', 'woman'] }
-        }, {})
+        fields: {
+          'field': new StringType({
+            validations: { $in: ['man', 'boy', 'wife', 'husband', 'girl', 'woman'] }
+          }, {})
+        }
       });
 
       var compiler = new Compiler({});
@@ -160,9 +173,11 @@ describe('String', function() {
 
     it('simple string type validation using regular expression', function() {
       var schema = new DocumentType({
-        'field': new StringType({
-          validations: { $regexp: /dog/i }
-        }, {})
+        fields: {
+          'field': new StringType({
+            validations: { $regexp: /dog/i }
+          }, {})
+        }
       });
 
       var compiler = new Compiler({});

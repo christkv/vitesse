@@ -12,19 +12,21 @@ describe('Array', function() {
   describe('validation', function() {
     it('should perform triple nested array validations [][][]', function() {
       var embeddedDocument = new DocumentType({
-        'field': new StringType({
-          exists:true
-        })
+        fields: {
+          'field': new StringType({ exists:true })
+        }
       });
 
       // Top level document
       var topLevelDocument = new DocumentType({
-        'childArray': new NestedArrayType({
-          exists:true, depth: 3, of: embeddedDocument, validations: {
-            0: {$gte:0, $lte:100},
-            2: {$gte:5, $lte:10},
-          }
-        })
+        fields: {
+          'childArray': new NestedArrayType({
+            exists:true, depth: 3, of: embeddedDocument, validations: {
+              0: {$gte:0, $lte:100},
+              2: {$gte:5, $lte:10},
+            }
+          })
+        }
       });
 
       var compiler = new Compiler({});
@@ -96,25 +98,29 @@ describe('Array', function() {
 
     it('should perform triple nested array validations with internal document with array', function() {
       var embeddedDocument = new DocumentType({
-        'field': new StringType({
-          exists:true
-        })
+        fields: {
+          'field': new StringType({ exists:true })
+        }
       });
 
       var arrayDocument = new DocumentType({
-        'array': new ArrayType({
-          exists:true, of: embeddedDocument, validations: {$gte:1, $lte:10}
-        })
+        fields: {
+          'array': new ArrayType({
+            exists:true, of: embeddedDocument, validations: {$gte:1, $lte:10}
+          })
+        }
       });
 
       // Top level document
       var topLevelDocument = new DocumentType({
-        'childArray': new NestedArrayType({
-          exists:true, depth: 3, of: arrayDocument, validations: {
-            0: {$gte:0, $lte:100},
-            2: {$gte:1, $lte:10},
-          }
-        })
+        fields: {
+          'childArray': new NestedArrayType({
+            exists:true, depth: 3, of: arrayDocument, validations: {
+              0: {$gte:0, $lte:100},
+              2: {$gte:1, $lte:10},
+            }
+          })
+        }
       });
 
       var compiler = new Compiler({});
@@ -142,22 +148,26 @@ describe('Array', function() {
 
     it('should perform complex nested objects and arrays', function() {
       var embeddedDocument = new DocumentType({
-        'field': new StringType({
-          exists:true
-        })
+        fields: {
+          'field': new StringType({ exists:true })
+        }
       });
 
       var arrayDocument = new DocumentType({
-        'array': new ArrayType({
-          exists:true, of: embeddedDocument, validations: {$gte:5, $lte:10}
-        })
+        fields: {
+          'array': new ArrayType({
+            exists:true, of: embeddedDocument, validations: {$gte:5, $lte:10}
+          })
+        }
       });
 
       // Top level document
       var topLevelDocument = new DocumentType({
-        'childArray': new ArrayType({
-          exists:true, of: arrayDocument, validations: {$gte:0, $lte:10}
-        })
+        fields: {
+          'childArray': new ArrayType({
+            exists:true, of: arrayDocument, validations: {$gte:0, $lte:10}
+          })
+        }
       });
 
       var compiler = new Compiler({});
@@ -267,28 +277,36 @@ describe('Array', function() {
 
     it('should perform complex triple nested objects and arrays', function() {
       var embeddedDocument = new DocumentType({
-        'field': new StringType({
-          exists:true
-        })
+        fields: {
+          'field': new StringType({
+            exists:true
+          })
+        }
       });
 
       var arrayDocument2 = new DocumentType({
-        'array2': new ArrayType({
-          exists:true, of: embeddedDocument, validations: {$gte:2, $lte:10}
-        })
+        fields: {
+          'array2': new ArrayType({
+            exists:true, of: embeddedDocument, validations: {$gte:2, $lte:10}
+          })
+        }
       });
 
       var arrayDocument1 = new DocumentType({
-        'array1': new ArrayType({
-          exists:true, of: arrayDocument2, validations: {$gte:0, $lte:10}
-        })
+        fields: {
+          'array1': new ArrayType({
+            exists:true, of: arrayDocument2, validations: {$gte:0, $lte:10}
+          })
+        }
       });
 
       // Top level document
       var topLevelDocument = new DocumentType({
-        'childArray': new ArrayType({
-          exists:true, of: arrayDocument1, validations: {$gte:0, $lte:10}
-        })
+        fields: {
+          'childArray': new ArrayType({
+            exists:true, of: arrayDocument1, validations: {$gte:0, $lte:10}
+          })
+        }
       });
 
       var compiler = new Compiler({});
@@ -312,7 +330,9 @@ describe('Array', function() {
 
       // Top level document
       var topLevelDocument = new DocumentType({
-        'childArray': arrayDocument
+        fields: {
+          'childArray': arrayDocument
+        }
       });
 
       var compiler = new Compiler({});
@@ -340,7 +360,9 @@ describe('Array', function() {
       });
 
       var subDocument = new DocumentType({
-        'childArray1': arrayDocument2
+        fields: {
+          'childArray1': arrayDocument2
+        }
       });
 
       var arrayDocument1 = new ArrayType({
@@ -349,7 +371,9 @@ describe('Array', function() {
 
       // Top level document
       var topLevelDocument = new DocumentType({
-        'childArray': arrayDocument1
+        fields: {
+          'childArray': arrayDocument1
+        }
       });
 
       var compiler = new Compiler({});
@@ -371,7 +395,9 @@ describe('Array', function() {
 
       // Top level document
       var topLevelDocument = new DocumentType({
-        'childArray': arrayDocument
+        fields: {
+          'childArray': arrayDocument
+        }
       });
 
       var compiler = new Compiler({});
