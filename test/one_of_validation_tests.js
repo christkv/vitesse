@@ -45,8 +45,9 @@ describe('OneOf', function() {
             'field': new StringType({})
           }, { exists:true });
 
+      var string2 = new StringType({validations: {$gte:2}});
       var doc2 = new DocumentType({
-            'field': new StringType({validations: {$gte:2}})
+            'field': string2
           }, { exists:true });
 
       // Top level document
@@ -64,7 +65,7 @@ describe('OneOf', function() {
       assert.equal(1, results.length);
       assert.equal('string fails validation {\"$gte\":2}', results[0].message);
       assert.equal('object.field', results[0].path);
-      assert.ok(doc2 === results[0].rule);
+      assert.ok(string2 === results[0].rule);
 
       // Attempt to validate
       var results = func.validate({field:'  '});

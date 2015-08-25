@@ -5,6 +5,9 @@ var assert = require("assert"),
   NestedArrayType = require('../lib/ast').NestedArrayType,
   StringType = require('../lib/ast').StringType,
   OneOfType = require('../lib/ast').OneOfType,
+  AllOfType = require('../lib/ast').AllOfType,
+  AnyOfType = require('../lib/ast').AnyOfType,
+  NotType = require('../lib/ast').NotType,
   NumberType = require('../lib/ast').NumberType,
   IntegerType = require('../lib/ast').IntegerType,
   DocumentType = require('../lib/ast').DocumentType,
@@ -151,5 +154,93 @@ describe('TopLevel', function() {
       var results = func.validate(1);
       assert.equal(0, results.length);
     });
+
+    it('should correctly validate top level allOf', function() {
+      var doc3 = new IntegerType({ validations: { $lte: 10 } });
+
+      // Top level document
+      var topLevelDocument = new AllOfType({
+        validations: [
+          new IntegerType({}),
+          new IntegerType({ validations: { $gte: 2 } }),
+          doc3        
+        ]
+      });
+
+      // Create a compiler
+      var compiler = new Compiler({});
+      // Compile the AST
+      var func = compiler.compile(topLevelDocument, {});
+
+      // Execute validation
+      var results = func.validate(11);
+      assert.equal(2, results.length);
+      assert.equal("number fails validation {\"$lte\":10}", results[0].message);
+      assert.equal('object', results[0].path);
+      assert.ok(results[0].rule === doc3);
+      
+      assert.equal("one or more schema's did not match the allOf rule", results[1].message);
+      assert.equal('object', results[1].path);
+      assert.ok(results[1].rule === topLevelDocument);
+
+      // Valid response
+      var results = func.validate(3);
+      assert.equal(0, results.length);
+    });
+
+    it('should correctly validate top level anyOf', function() {
+      // Top level document
+      var topLevelDocument = new AnyOfType({
+        validations: [
+          new IntegerType({}),
+          new IntegerType({ validations: { $gte: 2 } }),
+          new IntegerType({ validations: { $lte: 5 } })        
+        ]
+      });
+
+      // Create a compiler
+      var compiler = new Compiler({});
+      // Compile the AST
+      var func = compiler.compile(topLevelDocument, {});
+
+      // Execute validation
+      var results = func.validate('');
+      assert.equal(4, results.length);
+      assert.equal("value does not match any of the schema's in the anyOf rule", results[3].message);
+      assert.equal('object', results[3].path);
+      assert.ok(results[3].rule === topLevelDocument);
+
+      // Valid response
+      var results = func.validate(3);
+      assert.equal(0, results.length);
+    });    
+
+    it('should correctly validate top level not', function() {
+      // Top level document
+      var topLevelDocument = new NotType({
+        validations: [
+          new IntegerType({}),
+          new IntegerType({ validations: { $gte: 2 } }),
+          new IntegerType({ validations: { $gte: 5 } })        
+        ]
+      });
+
+      // Create a compiler
+      var compiler = new Compiler({});
+      // Compile the AST
+      var func = compiler.compile(topLevelDocument, {});
+
+      // Execute validation
+      var results = func.validate(3);
+      assert.equal(1, results.length);
+      assert.equal("value failed not rule", results[0].message);
+      assert.equal('object', results[0].path);
+      assert.ok(results[0].rule === topLevelDocument);
+
+      // Valid response
+      var results = func.validate('');
+      // console.log(JSON.stringify(results, null, 2))
+      assert.equal(0, results.length);
+    });    
   });
 });
