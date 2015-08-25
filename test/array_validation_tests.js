@@ -438,5 +438,62 @@ describe('Array', function() {
         assert.equal(1, err.value);
       }
     });
+
+    it('array validation using unique constraint', function() {
+      var arrayDocument = new ArrayType({
+        exists:true, of: new StringType({}), validations: {$gte:1, $lte:10}, unique:true
+      });
+
+      // Top level document
+      var topLevelDocument = new DocumentType({
+        fields: {
+          'childArray': arrayDocument
+        }
+      });
+
+      var compiler = new Compiler({});
+      // Compile the AST
+      var func = compiler.compile(topLevelDocument, {});
+
+      // Validate {childArray: [1, 2, 1]}
+      var results = func.validate({childArray: ['1', '2', '1']});
+      assert.equal(1, results.length);
+      assert.equal("array contains duplicate values", results[0].message);
+      assert.equal("object.childArray", results[0].path);
+      assert.ok(arrayDocument === results[0].rule);
+
+      var results = func.validate({childArray: ['1', '2', '3']});
+      assert.equal(0, results.length);
+    });
+
+    it('nested array validation using unique constraint', function() {
+      var arrayDocument = new NestedArrayType({
+        exists:true, of: new StringType({}), validations: {$gte:1, $lte:10}, unique:true, depth: 2
+      });
+
+      // Top level document
+      var topLevelDocument = new DocumentType({
+        fields: {
+          'childArray': arrayDocument
+        }
+      });
+
+      var compiler = new Compiler({});
+      // Compile the AST
+      var func = compiler.compile(topLevelDocument, {});
+
+      // Validate {childArray: [1, 2, 1]}
+      var results = func.validate({childArray: [['1', '2', '3'],['1', '2', '1']]});
+      console.log(JSON.stringify(results, null, 2));     
+      assert.equal(1, results.length);
+      assert.equal("array contains duplicate values", results[0].message);
+      assert.equal("object.childArray[1]", results[0].path);
+      assert.ok(arrayDocument === results[0].rule);
+
+      var results = func.validate({childArray: [['1', '2', '3']]});
+      assert.equal(0, results.length);
+
+      // console.log(JSON.stringify(results, null, 2));     
+    });
   });
 });
