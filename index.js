@@ -6,9 +6,11 @@ var ex = {
 
   // AST classes
   NestedArrayType: require('./lib/ast').NestedArrayType,
+  ArrayType: require('./lib/ast').ArrayType,
   StringType: require('./lib/ast').StringType,
   NumberType: require('./lib/ast').NumberType,
   IntegerType: require('./lib/ast').IntegerType,
+  CustomType: require('./lib/ast').CustomType,
   DocumentType: require('./lib/ast').DocumentType,
   OneOfType: require('./lib/ast').OneOfType,
   AllOfType: require('./lib/ast').AllOfType,
