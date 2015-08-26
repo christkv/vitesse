@@ -38,10 +38,11 @@ describe('AllOf', function() {
       var func = compiler.compile(topLevelDocument, {});
       // Attempt to validate
       var results = func.validate({child: 11});
-      assert.equal(2, results.length);
-      assert.equal('one or more schema\'s did not match the allOf rule', results[1].message);
-      assert.equal('object.child', results[1].path);
-      assert.ok(topLevelDocument === results[1].rule);
+      assert.equal(1, results.length);
+      assert.equal('one or more schema\'s did not match the allOf rule', results[0].message);
+      assert.equal('object.child', results[0].path);
+      assert.ok(topLevelDocument === results[0].rule);
+      assert.equal(1, results[0].errors.length);
     });
 
     it('should handle situation where validation is a document', function() {
@@ -72,14 +73,14 @@ describe('AllOf', function() {
       var func = compiler.compile(topLevelDocument, {});
       // Attempt to validate
       var results = func.validate({field:''});
-      assert.equal(2, results.length);
-      assert.equal('string fails validation {\"$gte\":2}', results[0].message);
-      assert.equal('object.field', results[0].path);
-      assert.ok(string2 === results[0].rule);
-
-      assert.equal('one or more schema\'s did not match the allOf rule', results[1].message);
-      assert.equal('object', results[1].path);
-      assert.ok(topLevelDocument === results[1].rule);
+      assert.equal(1, results.length);
+      assert.equal('one or more schema\'s did not match the allOf rule', results[0].message);
+      assert.equal('object', results[0].path);
+      assert.ok(topLevelDocument === results[0].rule);
+      // Remaining error
+      assert.equal('string fails validation {\"$gte\":2}', results[0].errors[0].message);
+      assert.equal('object.field', results[0].errors[0].path);
+      assert.ok(string2 === results[0].errors[0].rule);
 
       // Attempt to validate
       var results = func.validate({field:'  '});

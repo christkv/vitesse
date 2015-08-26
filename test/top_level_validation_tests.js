@@ -174,14 +174,15 @@ describe('TopLevel', function() {
 
       // Execute validation
       var results = func.validate(11);
-      assert.equal(2, results.length);
-      assert.equal("number fails validation {\"$lte\":10}", results[0].message);
+      assert.equal(1, results.length);     
+      assert.equal("one or more schema's did not match the allOf rule", results[0].message);
       assert.equal('object', results[0].path);
-      assert.ok(results[0].rule === doc3);
-      
-      assert.equal("one or more schema's did not match the allOf rule", results[1].message);
-      assert.equal('object', results[1].path);
-      assert.ok(results[1].rule === topLevelDocument);
+      assert.ok(results[0].rule === topLevelDocument);
+
+      // Error doc
+      assert.equal("number fails validation {\"$lte\":10}", results[0].errors[0].message);
+      assert.equal('object', results[0].errors[0].path);
+      assert.ok(results[0].errors[0].rule === doc3);
 
       // Valid response
       var results = func.validate(3);
