@@ -206,10 +206,11 @@ describe('TopLevel', function() {
 
       // Execute validation
       var results = func.validate('');
-      assert.equal(4, results.length);
-      assert.equal("value does not match any of the schema's in the anyOf rule", results[3].message);
-      assert.equal('object', results[3].path);
-      assert.ok(results[3].rule === topLevelDocument);
+      assert.equal(1, results.length);
+      assert.equal("value does not match any of the schema's in the anyOf rule", results[0].message);
+      assert.equal('object', results[0].path);
+      assert.ok(results[0].rule === topLevelDocument);
+      assert.equal(3, results[0].errors.length);
 
       // Valid response
       var results = func.validate(3);

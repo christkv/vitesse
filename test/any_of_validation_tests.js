@@ -39,10 +39,11 @@ describe('AnyOf', function() {
       var func = compiler.compile(topLevelDocument, {});
       // Attempt to validate
       var results = func.validate({child: ''});
-      assert.equal(4, results.length);
-      assert.equal("value does not match any of the schema\'s in the anyOf rule", results[3].message);
-      assert.equal('object.child', results[3].path);
-      assert.ok(topLevelDocument === results[3].rule);
+      assert.equal(1, results.length);
+      assert.equal("value does not match any of the schema\'s in the anyOf rule", results[0].message);
+      assert.equal('object.child', results[0].path);
+      assert.ok(topLevelDocument === results[0].rule);
+      assert.equal(3, results[0].errors.length);
     });
 
     it('should handle situation where validation is a document', function() {
@@ -73,14 +74,15 @@ describe('AnyOf', function() {
       var func = compiler.compile(topLevelDocument, {});
       // Attempt to validate
       var results = func.validate({field:3});
-      assert.equal(2, results.length);
-      assert.equal("field is not a string", results[0].message);
-      assert.equal('object.field', results[0].path);
-      assert.ok(string2 === results[0].rule);
+      assert.equal(1, results.length);
+      assert.equal("value does not match any of the schema\'s in the anyOf rule", results[0].message);
+      assert.equal('object', results[0].path);
+      assert.ok(topLevelDocument === results[0].rule);
 
-      assert.equal("value does not match any of the schema\'s in the anyOf rule", results[1].message);
-      assert.equal('object', results[1].path);
-      assert.ok(topLevelDocument === results[1].rule);
+      // Error
+      assert.equal("field is not a string", results[0].errors[0].message);
+      assert.equal('object.field', results[0].errors[0].path);
+      assert.ok(string2 === results[0].errors[0].rule);
 
       // Attempt to validate
       var results = func.validate({field:'  '});
@@ -102,10 +104,11 @@ describe('AnyOf', function() {
 
       // Attempt to validate
       var results = func.validate({field:3});
-      assert.equal(3, results.length);
-      assert.equal("value does not match any of the schema\'s in the anyOf rule", results[2].message);
-      assert.equal('object', results[2].path);
-      assert.ok(topLevelDocument === results[2].rule);
+      assert.equal(1, results.length);
+      assert.equal("value does not match any of the schema\'s in the anyOf rule", results[0].message);
+      assert.equal('object', results[0].path);
+      assert.ok(topLevelDocument === results[0].rule);
+      assert.equal(2, results[0].errors.length);
     });
   });
 });
