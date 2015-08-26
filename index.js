@@ -13,6 +13,7 @@ var ex = {
   OneOfType: require('./lib/ast').OneOfType,
   AllOfType: require('./lib/ast').AllOfType,
   AnyOfType: require('./lib/ast').AnyOfType,
+  BooleanType: require('./lib/ast').BooleanType,
   NotType: require('./lib/ast').NotType,
 
   // Validators
@@ -20,6 +21,7 @@ var ex = {
   ObjectValidator: require('./lib/validators/object'),
   NumericValidator: require('./lib/validators/numeric'),
   IntegerValidator: require('./lib/validators/integer'),
+  BooleanValidator: require('./lib/validators/boolean'),
   NestedArrayValidator: require('./lib/validators/nested_array'),
   ExistsValidator: require('./lib/validators/exists'),
   ArrayValidator: require('./lib/validators/array'),

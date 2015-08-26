@@ -10,6 +10,7 @@ var assert = require("assert"),
   NotType = require('../lib/ast').NotType,
   NumberType = require('../lib/ast').NumberType,
   IntegerType = require('../lib/ast').IntegerType,
+  BooleanType = require('../lib/ast').BooleanType,
   DocumentType = require('../lib/ast').DocumentType,
   Compiler = require('../lib/compiler'),
   ClosureCompiler = require('../lib/closure_compiler');
@@ -53,6 +54,23 @@ describe('TopLevel', function() {
       assert.ok(results[0].rule === topLevelDocument);
       assert.equal(1, results[0].value);
       var results = func.validate(4);
+      assert.equal(0, results.length);
+    });
+
+    it('should correctly validate top level boolean value', function() {
+      // Top level document
+      var topLevelDocument = new BooleanType({});
+      // Create a compiler
+      var compiler = new Compiler({});
+      // Compile the AST
+      var func = compiler.compile(topLevelDocument, {});
+      // Attempt to validate
+      var results = func.validate(1);
+      assert.equal(1, results.length);
+      assert.equal('object', results[0].path);
+      assert.ok(results[0].rule === topLevelDocument);
+      assert.equal(1, results[0].value);
+      var results = func.validate(true);
       assert.equal(0, results.length);
     });
 
