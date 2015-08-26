@@ -12,6 +12,7 @@ var ex = {
   DocumentType: require('./lib/ast').DocumentType,
   OneOfType: require('./lib/ast').OneOfType,
   AllOfType: require('./lib/ast').AllOfType,
+  AnyOfType: require('./lib/ast').AnyOfType,
   NotType: require('./lib/ast').NotType,
 
   // Validators
