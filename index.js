@@ -17,6 +17,7 @@ var ex = {
   AnyOfType: require('./lib/ast').AnyOfType,
   BooleanType: require('./lib/ast').BooleanType,
   NotType: require('./lib/ast').NotType,
+  AnyType: require('./lib/ast').AnyType,
 
   // Validators
   StringValidator: require('./lib/validators/string'),
