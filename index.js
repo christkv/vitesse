@@ -16,8 +16,10 @@ var ex = {
   AllOfType: require('./lib/ast').AllOfType,
   AnyOfType: require('./lib/ast').AnyOfType,
   BooleanType: require('./lib/ast').BooleanType,
+  NullType: require('./lib/ast').NullType,
   NotType: require('./lib/ast').NotType,
   AnyType: require('./lib/ast').AnyType,
+  EnumType: require('./lib/ast').EnumType,
 
   // Validators
   StringValidator: require('./lib/validators/string'),
@@ -30,7 +32,9 @@ var ex = {
   ArrayValidator: require('./lib/validators/array'),
   OneOfValidator: require('./lib/validators/one_of'),
   AnyOfValidator: require('./lib/validators/any_of'),
-  NotValidator: require('./lib/validators/not')
+  NotValidator: require('./lib/validators/not'),
+  NullValidator: require('./lib/validators/null'),
+  NullValidator: require('./lib/validators/null')
 }
 
 module.exports = ex;

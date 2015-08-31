@@ -58,70 +58,16 @@ var validate = function(object, context) {
     }
     return true;
   }
-  var object_validation1 = function(path, object, context) {
-    if ((object == null || typeof object != 'object' || Array.isArray(object)) && false && context.failOnFirst) {
-      throw new ValidationError('field is not an object', path, rules[0], object);
-    } else if ((object == null || typeof object != 'object' || Array.isArray(object)) && false) {
-      errors.push(new ValidationError('field is not an object', path, rules[0], object));
-    }
-    if ((object == null || typeof object != 'object' || Array.isArray(object)) && !false) {
-      return;
-    }
-    // Not possible to perform any validations on the object as it does not exist
-    if (object == null) return;
-    // Prohibits fields override
-    // Requires fields override
-    // Validations
-    // Field name pattern validation
-    // Get the object field names
-    var propertyNames = Object.keys(object);
-    // Remove any specified fields
-    var fieldNames = [];
-    // Remove any fieldNames from properties
-    for (var i = 0; i < fieldNames.length; i++) {
-      var index = propertyNames.indexOf(fieldNames[i]);
-      if (index != -1) {
-        propertyNames.splice(index, 1);
-      }
-    }
-    // Iterate over all the keys
-    for (var i = 0; i < propertyNames.length; i++) {
-      var key = propertyNames[i];
-      var valid = false;
-      // Validate if it exists in the defined properties
-      if (fieldNames.indexOf(key) != -1) continue;
-      // All the regexp patterns
-      // Contain the validation pattern
-      var pattern = /f.*o/;
-      // Perform the validation
-      var match = key.match(pattern) != null;
-      valid = valid || match;
-      // We have a match validate the field object
-      if (match) {
-        var _object = object[key];
-        var _path = path + "." + key;
-        if (_object == undefined) return;
-        if (!(typeof _object == 'number' && (_object % 1) === 0) && true && context.failOnFirst) {
-          throw new ValidationError('field is not a number', _path, rules[1], _object);
-        } else if (!(typeof _object == 'number' && (_object % 1) === 0) && true) {
-          errors.push(new ValidationError('field is not a number', _path, rules[1], _object));
-        }
 
-      }
-      // If we are not valid print out an error
-      if (!valid && context.failOnFirst) {
-        throw new ValidationError('field ' + key + ' failed pattern validation', path, rules[0], object);
-      } else if (!valid) {
-        errors.push(new ValidationError('field ' + key + ' failed pattern validation', path, rules[0], object));
-      } else if (valid) {
-      }
-    }
-    // Custom validations
-    // Perform validations on object fields
-  }
-
-  object_validation1('object', object, context);
+  var _object = object;
+  var _path = object;
+  var _valid = false;
+  if (_object === undefined) return;
+  // Enum validations
+  if (object === 1) return;
+  if (object === 2) return;
+  if (object === 3) return;
   return errors;
 };
 
-console.dir(validate({child:3}))
+console.dir(validate(3))
