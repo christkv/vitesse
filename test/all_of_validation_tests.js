@@ -43,6 +43,7 @@ describe('AllOf', function() {
       assert.equal('object.child', results[0].path);
       assert.ok(topLevelDocument === results[0].rule);
       assert.equal(1, results[0].errors.length);
+
     });
 
     it('should handle situation where validation is a document', function() {

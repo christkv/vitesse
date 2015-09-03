@@ -65,13 +65,10 @@ describe('Boolean', function() {
 
       // Validate {}
       var results = func.validate({});
-      assert.equal(2, results.length);
+      assert.equal(1, results.length);
       assert.equal('field does not exist', results[0].message);
       assert.equal('object.doc', results[0].path);
       assert.ok(results[0].rule instanceof DocumentType);
-      assert.equal('field is not an object', results[1].message);
-      assert.equal('object.doc', results[1].path);
-      assert.ok(results[1].rule instanceof DocumentType);
 
       // Validate {doc: {field:''}}
       var results = func.validate({doc: {field:''}});

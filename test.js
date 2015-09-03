@@ -59,16 +59,15 @@ var validate = function(object, context) {
     return true;
   }
   var object_validation1 = function(path, object, context) {
-    if ((object == null || typeof object != 'object' || Array.isArray(object)) && false && context.failOnFirst) {
+    var errorsLength = errors.length;
+    if ((object == null || typeof object != 'object' || Array.isArray(object)) && true && context.failOnFirst) {
       throw new ValidationError('field is not an object', path, rules[0], object);
-    } else if ((object == null || typeof object != 'object' || Array.isArray(object)) && false) {
+    } else if ((object == null || typeof object != 'object' || Array.isArray(object)) && true) {
       errors.push(new ValidationError('field is not an object', path, rules[0], object));
     }
-
-    if ((object == null || typeof object != 'object' || Array.isArray(object)) && !false) {
+    if ((object == null || typeof object != 'object' || Array.isArray(object)) && errorsLength < errors.length) {
       return;
     }
-
     // Not possible to perform any validations on the object as it does not exist
     if (object === undefined || object == null) return;
     // Prohibits fields override
@@ -96,24 +95,28 @@ var validate = function(object, context) {
     }
     // Additional properties object
 
+    console.log("------------------------------------------ 1")
     // Additional properties false
     // Custom validations
     // Perform validations on object fields
     var _object = object.foo;
     var _path = path + '.foo';
     if (_object === undefined) return;
-    if (!(typeof _object == 'number' && (_object % 1) === 0) && true && context.failOnFirst) {
+    var errorLength = errors.length;
+    if ((!(typeof _object == 'number') || (typeof _object == 'number' && _object % 1 === 0)) && true && context.failOnFirst) {
       throw new ValidationError('field is not a number', _path, rules[1], _object);
-    } else if (!(typeof _object == 'number' && (_object % 1) === 0) && true) {
+    } else if ((!(typeof _object == 'number') || (typeof _object == 'number' && _object % 1 === 0)) && false) {
       errors.push(new ValidationError('field is not a number', _path, rules[1], _object));
     }
 
+    console.log("------------------------------------------")
     var _object = object.bar;
     var _path = path + '.bar';
     if (_object === undefined) return;
-    if (!(typeof _object == 'number' && (_object % 1) === 0) && true && context.failOnFirst) {
+    var errorLength = errors.length;
+    if ((!(typeof _object == 'number') || (typeof _object == 'number' && _object % 1 === 0)) && true && context.failOnFirst) {
       throw new ValidationError('field is not a number', _path, rules[2], _object);
-    } else if (!(typeof _object == 'number' && (_object % 1) === 0) && true) {
+    } else if ((!(typeof _object == 'number') || (typeof _object == 'number' && _object % 1 === 0)) && false) {
       errors.push(new ValidationError('field is not a number', _path, rules[2], _object));
     }
 
@@ -122,5 +125,4 @@ var validate = function(object, context) {
   object_validation1('object', object, context);
   return errors;
 };
-
 console.dir(validate({bar:true}))
