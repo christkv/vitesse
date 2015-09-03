@@ -20,6 +20,7 @@ var ex = {
   NotType: require('./lib/ast').NotType,
   AnyType: require('./lib/ast').AnyType,
   EnumType: require('./lib/ast').EnumType,
+  RecursiveReferenceType: require('./lib/ast').RecursiveReferenceType,
 
   // Validators
   StringValidator: require('./lib/validators/string'),
