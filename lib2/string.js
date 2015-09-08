@@ -117,6 +117,8 @@ Node.prototype.generate = function(context) {
     objectPath = 'object[i]';
   } else if(context.inArray && context.inArrayIndex) {
     objectPath = f('object[%s]', context.inArrayIndex);
+  } else if(context.object) {
+    objectPath = context.object;
   }
 
   // Generate object validation function

@@ -69,7 +69,7 @@ Compiler.prototype.compile = function(ast, options) {
     }).join('\n')
   });
 
-  console.log(source)
+  // console.log(source)
 
   // Format the final code
   var source = jsfmt.format(source);
@@ -80,7 +80,7 @@ Compiler.prototype.compile = function(ast, options) {
     console.log(source);
   }
 
-  console.log(source)
+  // console.log(source)
 
   // Variables used in the eval
   var func = null;

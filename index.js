@@ -43,7 +43,9 @@ var ex = {
   StringNode: require('./lib2/string'),
   NumberNode: require('./lib2/number'),
   ArrayNode: require('./lib2/array'),
-  IntegerNode: require('./lib2/integer')
+  IntegerNode: require('./lib2/integer'),
+  AnyNode: require('./lib2/any'),
+  BooleanNode: require('./lib2/boolean')
 }
 
 module.exports = ex;

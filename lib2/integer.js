@@ -81,9 +81,6 @@ Node.prototype.generate = function(context) {
   // Generate type validation if needed
   if(this.typeCheck) {
     renderingOptions.type = Mark.up(M(function(){/***
-  console.log("###################################################### PATH")
-  console.dir(path)
-
       if((!(typeof object == 'number') || !(typeof object == 'number' && object%1 === 0)) && context.failOnFirst) {
         throw new ValidationError('field is not a number', path, rules[{{ruleIndex}}], object);
       } else if((!(typeof object == 'number') || !(typeof object == 'number' && object%1 === 0))) {       
@@ -120,6 +117,8 @@ Node.prototype.generate = function(context) {
     objectPath = 'object[i]';
   } else if(context.inArray && context.inArrayIndex) {
     objectPath = f('object[%s]', context.inArrayIndex);
+  } else if(context.object) {
+    objectPath = context.object;
   }
 
   // Generate object validation function

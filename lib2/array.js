@@ -36,6 +36,10 @@ var Node = function(parent, field, options) {
   // Item validation
   // ----------------------------------------------------------
   this.itemValidation = null;
+
+  // AdditionalItems validation
+  // -----------------------------------------------------------
+  this.additionalItemsValidation = null;
 }
 
 Node.prototype.addValidation = function(validation) {
@@ -52,6 +56,10 @@ Node.prototype.addPositionalItemValidation = function(i, validation) {
 
 Node.prototype.addItemValidation = function(validation) {
   this.itemValidation = validation;
+}
+
+Node.prototype.addAdditionalItemsValidation = function(validation) {
+  this.additionalItemsValidation = validation;
 }
 
 Node.prototype.setTypeCheck = function(typeCheck) {  
@@ -85,6 +93,8 @@ Node.prototype.generate = function(context) {
       {{custom}}
       // Per item validation
       {{perItemValidations}}
+      // Additional items validation
+      {{additionalItemsValidation}}
       // Iterate over all the items
       {{allItemValidations}}
     }
@@ -97,6 +107,7 @@ Node.prototype.generate = function(context) {
     type: '',
     perItemValidations: '',
     allItemValidations: '',
+    additionalItemsValidation: '',
     index: this.id
   }
 
@@ -104,9 +115,9 @@ Node.prototype.generate = function(context) {
   if(this.typeCheck) {
     renderingOptions.type = M(function(){/***
       if(!Array.isArray(object) && context.failOnFirst) {
-        throw new ValidationError('field is not a number', '{{path}}', rules[{{ruleIndex}}], object);
+        throw new ValidationError('field is not an array', '{{path}}', rules[{{ruleIndex}}], object);
       } else if(!Array.isArray(object)) {
-        return errors.push(new ValidationError('field is not a number', '{{path}}', rules[{{ruleIndex}}], object));
+        return errors.push(new ValidationError('field is not an array', '{{path}}', rules[{{ruleIndex}}], object));
       }
     ***/}, {
       ruleIndex: this.id, path: this.path().join('.')
@@ -134,6 +145,12 @@ Node.prototype.generate = function(context) {
     renderingOptions.perItemValidations = generatePerItemValidations(this, this.positionalItemValidation, context);
   }
 
+  // Do we have an additional items validation
+  if(typeof this.additionalItemsValidation == 'boolean' || this.additionalItemsValidation instanceof Object) {
+    console.log("########################################################## additionalItemsValidation")
+    renderingOptions.additionalItemsValidation = generateAdditionalItemsValidation(this, this.additionalItemsValidation, this.positionalItemValidation, context);
+  }
+
   // Generate object validation function
   context.functions.push(Mark.up(validationTemplate, renderingOptions));
   // Generate function call
@@ -145,12 +162,58 @@ Node.prototype.generate = function(context) {
     }));
 }
 
-var generatePerItemValidations = function(self, validations, context) {
-  console.log("##################################################### generatePerItemValidations")
-  var statements = [];
+var generateAdditionalItemsValidation = function(self, additionalItemsValidation, positionalItemValidation, context) {
+  // No per item validations, just ignore the additional validations option
+  if(Object.keys(positionalItemValidation).length == 0) return '';
 
-  console.log("-------------------------------------------------------- 0")
-  console.dir(validations)
+  // Locate highest index and then add a statement to ban anything over it
+  var length = -1;
+  for(var i in positionalItemValidation) {
+    if(parseInt(i, 10) > length) length = parseInt(i, 10);
+  }
+
+  // We have perItemValidation and additionalItems == false
+  if(Object.keys(positionalItemValidation).length > 0 && additionalItemsValidation == false) {
+    // Return validation
+    return Mark.up(M(function(){/***
+      if(object.length > {{length}} && context.failOnFirst) {
+        throw new ValidationError('array contains invalid items', path, rules[{{ruleIndex}}], object);
+      } else if(object.length > {{length}}) {
+        return errors.push(new ValidationError('array contains invalid items', path, rules[{{ruleIndex}}], object));
+      }
+    ***/}), {
+      ruleIndex: self.id,
+      length: (length + 1)
+    });
+  }
+
+  // We have perItemValidation and additionalItems == Object
+  if(Object.keys(positionalItemValidation).length > 0 && additionalItemsValidation instanceof Object) {
+    // Create an inner context
+    var innerContext = {
+      functions: context.functions,
+      functionCalls: [],
+      rules: context.rules,
+      inArray:true
+    }
+
+    // Generate the code for the validation
+    additionalItemsValidation.generate(innerContext)
+    // Generate the validation
+    return Mark.up(M(function(){/***
+      for(var i = {{length}}; i < object.length; i++) {
+        {{validation}}
+      }
+    ***/}), {
+      validation: innerContext.functionCalls.join('\n'), length: (length + 1)
+    });
+  }
+
+  return '';
+}
+
+var generatePerItemValidations = function(self, validations, context) {
+  var statements = [];
 
   // Get the indexes
   for(var index in validations) {
@@ -171,15 +234,6 @@ var generatePerItemValidations = function(self, validations, context) {
     statements = statements.concat(innerContext.functionCalls);
   }
 
-  console.log("-------------------------------------------------------- 1")
-  console.dir(statements)
-
-  // for(var i = 0; i < validations.length; i++) {
-  //   var index = validations[i].index;
-
-  //   statements.push()
-  // }
-
   return Mark.up(M(function(){/***
     {{statements}}
   ***/}), {
@@ -198,11 +252,6 @@ var generateAllItemValidation = function(self, validation, context) {
 
   // Generate the code for the validation
   validation.generate(innerContext)
-  // console.log("==================================================================== validationCode 0")
-  // console.dir(innerContext.functionCalls)
-  // // console.dir(validation)
-  // // console.log(validationCode)
-  // console.log("==================================================================== validationCode 1")
   // Generate the validation
   return Mark.up(M(function(){/***
     for(var i = 0; i < object.length; i++) {

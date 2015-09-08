@@ -59,7 +59,7 @@ Node.prototype.generate = function(context) {
   context.rules.push(self);
   // Validation template
   var validationTemplate = M(function(){/***
-    var string_validation_{{index}} = function(path, object, context) {
+    var number_validation_{{index}} = function(path, object, context) {
       if(object === undefined) return;
       // We have a type validation
       {{type}}
@@ -80,13 +80,13 @@ Node.prototype.generate = function(context) {
 
   // Generate type validation if needed
   if(this.typeCheck) {
-    renderingOptions.type = M(function(){/***
+    renderingOptions.type = Mark.up(M(function(){/***
       if(typeof object != 'number' && context.failOnFirst) {
         throw new ValidationError('field is not a number', '{{path}}', rules[{{ruleIndex}}], object);
       } else if(typeof object != 'number') {       
         return errors.push(new ValidationError('field is not a number', '{{path}}', rules[{{ruleIndex}}], object));
       }
-    ***/}, {
+    ***/}), {
       ruleIndex: this.id, path: this.path().join('.')
     });      
   } else {
@@ -101,14 +101,35 @@ Node.prototype.generate = function(context) {
     renderingOptions.validations = generateValidationLanguage(this, this.validation);
   }
 
+  // Generate path
+  var path = 'path';
+  // If we are in an array
+  if(context.inArray && !context.inArrayIndex) {
+    path = f('path.slice(0).concat([i])');
+  } else if(context.inArray && context.inArrayIndex) {
+    path = f('path.slice(0).concat([%s])', context.inArrayIndex);
+  }
+
+  // Set the object
+  var objectPath = 'object';
+  // Do we have a custom object path generator
+  if(context.inArray && !context.inArrayIndex) {
+    objectPath = 'object[i]';
+  } else if(context.inArray && context.inArrayIndex) {
+    objectPath = f('object[%s]', context.inArrayIndex);
+  } else if(context.object) {
+    objectPath = context.object;
+  }
+
   // Generate object validation function
   context.functions.push(Mark.up(validationTemplate, renderingOptions));
   // Generate function call
   context.functionCalls.push(Mark.up(M(function(){/***
-      string_validation_{{index}}({{path}}, object, context);
+      number_validation_{{index}}({{path}}, {{object}}, context);
     ***/}), {
       index: this.id,
-      path: JSON.stringify(this.path())
+      path: path,
+      object: objectPath
     }));
 }
 
