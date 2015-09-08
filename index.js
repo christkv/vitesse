@@ -35,7 +35,15 @@ var ex = {
   AnyOfValidator: require('./lib/validators/any_of'),
   NotValidator: require('./lib/validators/not'),
   NullValidator: require('./lib/validators/null'),
-  NullValidator: require('./lib/validators/null')
+
+
+  // V2
+  CompilerV2: require('./lib2/compiler'),
+  ObjectNode: require('./lib2/object'),
+  StringNode: require('./lib2/string'),
+  NumberNode: require('./lib2/number'),
+  ArrayNode: require('./lib2/array'),
+  IntegerNode: require('./lib2/integer')
 }
 
 module.exports = ex;
