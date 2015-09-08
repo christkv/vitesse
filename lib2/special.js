@@ -22,7 +22,7 @@ Pattern.prototype.generate = function(obj, context) {
   // // Add the list of field
   // for(var name in fields) fieldNames[name] = {};
   for(var i = 0; i < fields.length; i++) {
-    fieldNames[field[i].field] = {};
+    fieldNames[fields[i].field] = {};
   }
 
 

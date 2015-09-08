@@ -5,6 +5,7 @@ var f = require('util').format,
 
 var Custom = require('./special').Custom,
   Pattern = require('./special').Pattern,
+  AdditionalProperties = require('./special').AdditionalProperties,
   Required = require('./special').Required,
   Prohibited = require('./special').Prohibited;
 
@@ -26,10 +27,6 @@ var Node = function(parent, field, options) {
   this.children = [];
   // Just some metadata
   this.type = 'object';
-
-  // Special validators, custom, pattern, required, prohibited
-  // ----------------------------------------------------------
-  this.specials = [];
 }
 
 Node.prototype.addValidation = function(validation) {
@@ -48,8 +45,20 @@ Node.prototype.addChild = function(field, node) {
   this.children.push({field: field, node: node});
 }
 
-Node.prototype.addSpecialValidator = function(validator) {
-  this.specials.push(validator);
+Node.prototype.addAdditionalPropertiesValidator = function(validation) {
+  this.additionalPropertiesValidator = validation;
+}
+
+Node.prototype.addPatternPropertiesValidator = function(validation) {
+  this.patternPropertiesValidator = validation;
+}
+
+Node.prototype.requiredFields = function(required) {
+  this.required = required;
+}
+
+Node.prototype.prohibitedFields = function(prohibited) {
+  this.prohibited = prohibited;
 }
 
 Node.prototype.path = function() {
@@ -75,8 +84,8 @@ Node.prototype.generate = function(context) {
       {{required}}
       // Validations
       {{validations}}
-      // Field name pattern validation
-      {{pattern}}
+      // Additional field validations
+      {{fieldValidations}}
       // Custom validations
       {{custom}}
       // Perform validations on object fields
@@ -90,7 +99,7 @@ Node.prototype.generate = function(context) {
     prohibited: '',
     validations: '',
     custom: '',
-    pattern: '',
+    fieldValidations: '',
     statements: '',
     type: '',
     index: this.id
@@ -115,21 +124,48 @@ Node.prototype.generate = function(context) {
     ***/});         
   }
 
+  // Do we have validations on object shape
   if(this.validation) {
     renderingOptions.validations = generateValidationLanguage(this, this.validation);
   }
+
+  // Do we have required fields
+  if(this.required) {
+    renderingOptions.required = generateRequiredFields(this, this.required);
+  }
+
+  // Do we have prohibited fields
+  if(this.prohibited) {
+    renderingOptions.prohibited = generateProhibited(this, this.prohibited);
+  }
+
+  // Generates the field validation code
+  renderingOptions.fieldValidations = generateFieldValidations(self, context, this.patternPropertiesValidator, this.additionalPropertiesValidator);
  
-  // Check all the specials
-  this.specials.forEach(function(x) {
-    if(x instanceof Pattern) {
-      renderingOptions.pattern = x.generate(self, context);
-    } else if(x instanceof Required) {
-      renderingOptions.required = x.generate(self, context);
-    } else if(x instanceof Prohibited) {
-      renderingOptions.prohibited = x.generate(self, context);
+  // Add the statements
+  var statements = [];
+
+  // Create all the field validations
+  this.children.forEach(function(x) {
+    var field = x.field;
+    var node = x.node;
+
+    // Create an inner context
+    var innerContext = {
+      functions: context.functions,
+      functionCalls: [],
+      rules: context.rules,
+      object: f('object.%s', field)
     }
+
+    // Generate the code
+    node.generate(innerContext);
+    // Add to statements
+    statements = statements.concat(innerContext.functionCalls);
   });
 
+  // Set rendering statements
+  renderingOptions.statements = statements.join('\n');
   // Generate object validation function
   context.functions.push(Mark.up(validationTemplate, renderingOptions));
   // Generate function call
@@ -139,6 +175,198 @@ Node.prototype.generate = function(context) {
       index: this.id,
       path: JSON.stringify(this.path())
     }));
+}
+
+var generateProhibited = function(self, prohibited) {
+  var validationTemplate = M(function(){/***
+    var prohibited = {{prohibited}};
+    var valid = true;
+
+    // Iterate over all the keys
+    for(var i = 0; i < prohibited.length; i++) {
+      if(object[prohibited[i]] !== undefined) {
+        valid = false;
+        break;
+      }
+    }
+
+    if(!valid && context.failOnFirst) {
+      throw new ValidationError('object has prohibited fields {{prohibited}}', path, rules[{{ruleIndex}}], object);
+    } else if(!valid) {
+      errors.push(new ValidationError('object has prohibited fields {{prohibited}}', path, rules[{{ruleIndex}}], object));
+    } 
+  ***/});
+
+  // Generate the validation code
+  return Mark.up(validationTemplate, {
+    ruleIndex: self.id, 
+    prohibited: JSON.stringify(prohibited)
+  }); 
+}
+
+var generateRequiredFields = function(self, required) {
+  var validationTemplate = M(function(){/***
+    var required = {{required}};
+    var valid = true;
+
+    // Iterate over all the keys
+    for(var i = 0; i < required.length; i++) {
+      if(object[required[i]] === undefined) {
+        valid = false;
+        break;
+      }
+    }
+
+    if(!valid && context.failOnFirst) {
+      throw new ValidationError('object is missing required fields {{required}}', path, rules[{{ruleIndex}}], object);
+    } else if(!valid) {
+      errors.push(new ValidationError('object is missing required fields {{required}}', path, rules[{{ruleIndex}}], object));
+    } 
+  ***/});
+
+  // Generate the validation code
+  return Mark.up(validationTemplate, {
+    ruleIndex: self.id, 
+    required: JSON.stringify(required)
+  }); 
+}
+
+var generateFieldValidations = function(self, context, patterns, additional) {
+  console.log("---------------------------------------------------------------------- generateFieldValidations")
+  console.dir(patterns)
+  console.dir(additional)
+  // Get the fields
+  var fields = self.children || [];
+  var patternProperties = patterns || {};
+  var fieldNames = {};
+
+  // // Add the list of field
+  // for(var name in fields) fieldNames[name] = {};
+  for(var i = 0; i < fields.length; i++) {
+    fieldNames[fields[i].field] = {};
+  }
+
+
+  // Validation template
+  var validationTemplate = M(function(){/***
+    var fieldNames = {{fieldNames}};
+    var keys = Object.keys(object);
+    var properties = keys.slice(0);
+
+    // The sets
+    var validSet = {};
+
+    // Go over all the keys
+    for(var i = 0; i < keys.length; i++) {
+      var key = keys[i];
+  
+      if(fieldNames[key]) {
+        // Set the valid key
+        validSet[key] = {};
+        // Remove the property
+        properties.splice(properties.indexOf(key), 1);
+      }
+
+      // Pattern validations
+      {{patterns}}
+    }
+
+    // Additional properties object
+    {{additionalPropertiesObject}}
+
+    // Additional properties false
+    {{additionalPropertiesFalse}}    
+  ***/});
+
+  // Stores all the patterns
+  var patterns = [];
+  // Go over all the patterns
+  for(var regexp in patternProperties) {
+    // Create inner context
+    var innerContext = {
+      functions: context.functions, 
+      functionCalls: [],
+      rules: context.rules, 
+      regexps: context.regexps,
+      object: 'object[key]'
+    }
+
+    // Get the validation
+    var validation = patternProperties[regexp];
+
+    // Generate the validation
+    validation.generate(innerContext);
+
+    // Generate the pattern
+    patterns.push(Mark.up(M(function(){/***
+      var pattern = /{{pattern}}/;
+  
+      if(key.match(pattern) != null) {
+        validSet[key] = {};
+        // Remove the property
+        properties.splice(properties.indexOf(key), 1);
+        // Validation
+        {{validation}}
+      }
+    ***/}), {
+      pattern: regexp,
+      validation: innerContext.functionCalls.join('\n')
+    }));
+  }
+
+  // Additional properties set to false
+  var additionalPropertiesFalse = additional == false
+    ? Mark.up(M(function(){/***
+      if(properties.length > 0 && context.failOnFirst) {
+        throw new ValidationError('illegal fields on object', path, rules[{{ruleIndex}}], object);
+      } else if(properties.length > 0) {
+        errors.push(new ValidationError('illegal fields on object', path, rules[{{ruleIndex}}], object));
+      } 
+    ***/}), {
+      ruleIndex: self.id
+    })
+    : '';
+
+  // Additional properties validation
+  var additionalPropertiesObject = '';
+  // Additional Properties is a schema
+  if(additional != null && typeof additional == 'object') {
+    // Create inner context
+    var innerContext = {
+      functions: context.functions, 
+      functionCalls: [],
+      rules: context.rules, 
+      regexps: context.regexps,
+      object: 'object[key]'
+    }
+
+    // Generate validations
+    additional.generate(innerContext);
+
+    // Generate the pattern
+    additionalPropertiesObject = Mark.up(M(function(){/***
+      // Go over all the keys
+      for(var i = 0; i < keys.length; i++) {
+        var key = keys[i];
+        
+        // Perform validation
+        if(properties.indexOf(key) != -1) {
+          {{validations}}
+        }
+      }      
+    ***/}), {
+      validations: innerContext.functionCalls.join('\n')
+    });
+  }
+
+  // Create template
+  return Mark.up(validationTemplate, {
+    fieldNames: JSON.stringify(fieldNames),
+    patterns: patterns.join('\n'),
+    totalPatterns: patterns.length,
+    additionalPropertiesFalse: additionalPropertiesFalse,
+    additionalPropertiesObject: additionalPropertiesObject
+  });  
 }
 
 var generateValidationLanguage = function(self, validations) {

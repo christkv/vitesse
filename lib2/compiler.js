@@ -69,7 +69,7 @@ Compiler.prototype.compile = function(ast, options) {
     }).join('\n')
   });
 
-  // console.log(source)
+  console.log(source)
 
   // Format the final code
   var source = jsfmt.format(source);
