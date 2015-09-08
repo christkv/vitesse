@@ -6,7 +6,8 @@ var f = require('util').format,
   utils = require('./utils'),
   Mark = require("markup-js");
 
-var clone = require('./utils').clone;
+var clone = require('./utils').clone,
+  decorate = require('./utils').decorate;
 
 var ObjectNode = require('./object');
 
@@ -57,6 +58,9 @@ Compiler.prototype.compile = function(ast, options) {
     custom: custom,
     regexps: regexps
   }
+
+  // Decorate the context
+  decorate(context);
 
   // Generate the code
   ast.generate(context);

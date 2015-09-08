@@ -66,6 +66,10 @@ Node.prototype.setTypeCheck = function(typeCheck) {
   this.typeCheck = typeCheck;
 }
 
+Node.prototype.uniqueItems = function(uniqueItems) {
+  this.uniqueItems = uniqueItems;
+}
+
 Node.prototype.addSpecialValidator = function(validator) {
   this.special.push(validator);
 }
@@ -89,6 +93,8 @@ Node.prototype.generate = function(context) {
       {{type}}
       // Validations
       {{validations}}
+      // Uniqueness validation
+      {{unique}}
       // Custom validations
       {{custom}}
       // Per item validation
@@ -108,6 +114,7 @@ Node.prototype.generate = function(context) {
     perItemValidations: '',
     allItemValidations: '',
     additionalItemsValidation: '',
+    unique: '',
     index: this.id
   }
 
@@ -140,6 +147,11 @@ Node.prototype.generate = function(context) {
     renderingOptions.allItemValidations = generateAllItemValidation(this, this.itemValidation, context);
   }
 
+  // We have a uniqueness constraint on the array items
+  if(this.uniqueItems) {
+    renderingOptions.unique = generateUniqueItems(this);
+  }
+
   // We have array positional items
   if(Object.keys(this.positionalItemValidation).length > 0) {
     renderingOptions.perItemValidations = generatePerItemValidations(this, this.positionalItemValidation, context);
@@ -147,7 +159,6 @@ Node.prototype.generate = function(context) {
 
   // Do we have an additional items validation
   if(typeof this.additionalItemsValidation == 'boolean' || this.additionalItemsValidation instanceof Object) {
-    console.log("########################################################## additionalItemsValidation")
     renderingOptions.additionalItemsValidation = generateAdditionalItemsValidation(this, this.additionalItemsValidation, this.positionalItemValidation, context);
   }
 
@@ -158,6 +169,10 @@ Node.prototype.generate = function(context) {
     path = f('path.slice(0).concat([i])');
   } else if(context.inArray && context.inArrayIndex) {
     path = f('path.slice(0).concat([%s])', context.inArrayIndex);
+  } else if(context.path) {
+    path = context.path;
+  } else if(this.parent == null) {
+    path = ['["object"]'];
   }
 
   // Set the object
@@ -181,6 +196,25 @@ Node.prototype.generate = function(context) {
       path: path,
       object: objectPath
     }));
+}
+
+var generateUniqueItems = function(self) {
+  //
+  // Generate uniqueness validation function
+  // ---------------------------------------------
+  // Validation template
+  var uniqueValidationTemplate = M(function(){/***
+    if(!object.every(testArrays) && context.failOnFirst) {
+      throw new ValidationError('array contains duplicate values', path, rules[{{ruleIndex}}], object);
+    } else if(!object.every(testArrays)) {      
+      errors.push(new ValidationError('array contains duplicate values', path, rules[{{ruleIndex}}], object));
+    }
+  ***/});
+
+  // Generate uniqueness validation
+  return Mark.up(uniqueValidationTemplate, {
+      ruleIndex: self.id
+    });
 }
 
 var generateAdditionalItemsValidation = function(self, additionalItemsValidation, positionalItemValidation, context) {
