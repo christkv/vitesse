@@ -101,6 +101,10 @@ Node.prototype.generate = function(context) {
     path = f('path.slice(0).concat([i])');
   } else if(context.inArray && context.inArrayIndex) {
     path = f('path.slice(0).concat([%s])', context.inArrayIndex);
+  } else if(context.path) {
+    path = context.path;
+  } else if(this.parent == null) {
+    path = ['["object"]'];
   }
 
   // Set the object

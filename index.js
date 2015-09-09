@@ -45,7 +45,8 @@ var ex = {
   ArrayNode: require('./lib2/array'),
   IntegerNode: require('./lib2/integer'),
   AnyNode: require('./lib2/any'),
-  BooleanNode: require('./lib2/boolean')
+  BooleanNode: require('./lib2/boolean'),
+  OneOfNode: require('./lib2/oneof')
 }
 
 module.exports = ex;
