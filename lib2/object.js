@@ -232,9 +232,6 @@ var generateRequiredFields = function(self, required) {
 }
 
 var generateFieldValidations = function(self, context, patterns, additional) {
-  console.log("---------------------------------------------------------------------- generateFieldValidations")
-  console.dir(patterns)
-  console.dir(additional)
   // Get the fields
   var fields = self.children || [];
   var patternProperties = patterns || {};

@@ -5,6 +5,7 @@ var f = require('util').format,
 
 var Custom = require('./special').Custom,
   Pattern = require('./special').Pattern,
+  AdditionalProperties = require('./special').AdditionalProperties,
   Required = require('./special').Required,
   Prohibited = require('./special').Prohibited;
 
@@ -22,28 +23,18 @@ var Node = function(parent, field, options) {
   this.validation = options.validation ? options.validation : null;
   // Any options
   this.options = options;
+  // All children attached to this node
+  this.children = [];
   // Just some metadata
-  this.type = 'string';
-
-  // Special validators, custom, pattern, required, prohibited
-  // ----------------------------------------------------------
-  this.specials = [];
-}
-
-Node.prototype.addValidation = function(validation) {
-  this.validation = this.validation || {};
-  // Merge in validation
-  for(var name in validation) {
-    this.validation[name] = validation[name];
-  }
+  this.type = 'object';
 }
 
 Node.prototype.setTypeCheck = function(typeCheck) {  
   this.typeCheck = typeCheck;
 }
 
-Node.prototype.addSpecialValidator = function(validator) {
-  this.special.push(validator);
+Node.prototype.addValidations = function(validations) {
+  this.validations = validations;
 }
 
 Node.prototype.path = function() {
@@ -59,39 +50,66 @@ Node.prototype.generate = function(context) {
   context.rules.push(self);
   // Validation template
   var validationTemplate = M(function(){/***
-    var boolean_validation_{{index}} = function(path, object, context) {
-      if(object === undefined) return;
-      // We have a type validation
-      {{type}}
-      // Custom validations
-      {{custom}}
+    var all_of_validation_{{index}} = function(path, object, context) {
+      // Not possible to perform any validations on the object as it does not exist
+      if(!(object === undefined)) {
+        // Total validations to perform
+        var totalValidations = {{totalValidations}};
+        // Total validations that were successful
+        var successfulValidations = 0;
+        // Keep track of the local errors
+        var currentErrors = errors;
+        errors = [];      
+        
+        // Perform validations on object fields
+        {{statements}}
+
+        // Check if we had more than one successful validation
+        if((successfulValidations != totalValidations) && context.failOnFirst) {
+          throw new ValidationError('one or more schema\'s did not match the allOf rule', path, rules[{{ruleIndex}}], object, errors);
+        } else if((successfulValidations != totalValidations) && !context.failOnFirst) {
+          currentErrors.push(new ValidationError('one or more schema\'s did not match the allOf rule', path, rules[{{ruleIndex}}], object, errors));
+        }
+
+        // Reset the errors
+        errors = currentErrors;
+      }
+    }
+  ***/});
+
+  // Create an inner context
+  var innerContext = {
+    functions: context.functions,
+    functionCalls: [],
+    rules: context.rules
+  }
+
+  // Create all validations
+  this.validations.forEach(function(v) {
+    v.generate(innerContext);
+  });
+
+  // Statement validation template
+  var validationStatementTemplate = M(function(){/***
+    var numberOfErrors = errors.length;
+
+    {{statement}}
+
+    if(numberOfErrors == errors.length) {
+      successfulValidations = successfulValidations + 1;
     }
   ***/});
 
   // Rendering context
   var renderingOptions = {
-    custom: '',
-    type: '',
-    index: this.id
-  }
-
-  // Generate type validation if needed
-  if(this.typeCheck) {
-    renderingOptions.type = Mark.up(M(function(){/***
-      if(typeof object != 'boolean' && context.failOnFirst) {
-        throw new ValidationError('field is not a boolean', '{{path}}', rules[{{ruleIndex}}], object);
-      } else if(typeof object != 'boolean') {       
-        return errors.push(new ValidationError('field is not a boolean', '{{path}}', rules[{{ruleIndex}}], object));
-      }
-    ***/}), {
-      ruleIndex: this.id, path: this.path().join('.')
-    });      
-  } else {
-    renderingOptions.type = M(function(){/***
-      if(typeof object != 'boolean') {
-        return;
-      }
-    ***/});         
+    statements: innerContext.functionCalls.map(function(s) {
+      return Mark.up(validationStatementTemplate, {
+        statement: s
+      });
+    }).join('\n'),
+    index: this.id,
+    ruleIndex: this.id,
+    totalValidations: this.validations.length
   }
 
   // Generate path
@@ -122,7 +140,7 @@ Node.prototype.generate = function(context) {
   context.functions.push(Mark.up(validationTemplate, renderingOptions));
   // Generate function call
   context.functionCalls.push(Mark.up(M(function(){/***
-      boolean_validation_{{index}}({{path}}, {{object}}, context);
+      all_of_validation_{{index}}({{path}}, {{object}}, context);
     ***/}), {
       index: this.id,
       path: path,

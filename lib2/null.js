@@ -59,7 +59,7 @@ Node.prototype.generate = function(context) {
   context.rules.push(self);
   // Validation template
   var validationTemplate = M(function(){/***
-    var boolean_validation_{{index}} = function(path, object, context) {
+    var null_validation_{{index}} = function(path, object, context) {
       if(object === undefined) return;
       // We have a type validation
       {{type}}
@@ -78,17 +78,17 @@ Node.prototype.generate = function(context) {
   // Generate type validation if needed
   if(this.typeCheck) {
     renderingOptions.type = Mark.up(M(function(){/***
-      if(typeof object != 'boolean' && context.failOnFirst) {
-        throw new ValidationError('field is not a boolean', '{{path}}', rules[{{ruleIndex}}], object);
-      } else if(typeof object != 'boolean') {       
-        return errors.push(new ValidationError('field is not a boolean', '{{path}}', rules[{{ruleIndex}}], object));
+      if(object != null && context.failOnFirst) {
+        throw new ValidationError('field is not a null', '{{path}}', rules[{{ruleIndex}}], object);
+      } else if(object != null) {
+        return errors.push(new ValidationError('field is not a null', '{{path}}', rules[{{ruleIndex}}], object));
       }
     ***/}), {
       ruleIndex: this.id, path: this.path().join('.')
     });      
   } else {
     renderingOptions.type = M(function(){/***
-      if(typeof object != 'boolean') {
+      if(object != null) {
         return;
       }
     ***/});         
@@ -122,7 +122,7 @@ Node.prototype.generate = function(context) {
   context.functions.push(Mark.up(validationTemplate, renderingOptions));
   // Generate function call
   context.functionCalls.push(Mark.up(M(function(){/***
-      boolean_validation_{{index}}({{path}}, {{object}}, context);
+      null_validation_{{index}}({{path}}, {{object}}, context);
     ***/}), {
       index: this.id,
       path: path,

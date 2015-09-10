@@ -62,10 +62,6 @@ Node.prototype.generate = function(context) {
       // Perform validations on object fields
       {{statements}}
   
-      console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ HOW MANY")
-      console.dir(successfulValidations)
-      console.dir(object)
-
       // Check if we had more than one successful validation
       if(successfulValidations != 1 && context.failOnFirst) {
         throw new ValidationError('more than one schema matched ofOne rule', path, rules[{{ruleIndex}}], object, errors);
