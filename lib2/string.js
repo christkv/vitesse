@@ -38,6 +38,10 @@ Node.prototype.addValidation = function(validation) {
   }
 }
 
+Node.prototype.setDefault = function(value) {
+  this.defaultValue = value;
+}
+
 Node.prototype.setTypeCheck = function(typeCheck) {  
   this.typeCheck = typeCheck;
 }
@@ -52,6 +56,9 @@ Node.prototype.path = function() {
 }
 
 Node.prototype.generate = function(context) {
+  // Shortcut the rendering
+  if(this.defaultValue != null) return;
+  // Set self
   var self = this;
   // Get the path
   var path = this.path().join('.');
@@ -98,7 +105,7 @@ Node.prototype.generate = function(context) {
   }
 
   if(this.validation) {
-    renderingOptions.validations = generateValidationLanguage(this, this.validation);
+    renderingOptions.validations = generateValidationLanguage(this, this.validation, context);
   }
 
   // Generate path
@@ -137,7 +144,7 @@ Node.prototype.generate = function(context) {
     }));
 }
 
-var generateValidationLanguage = function(self, validations) {
+var generateValidationLanguage = function(self, validations, context) {
   var validationTemplate = M(function(){/***
     if({{validation}} && context.failOnFirst) {
       throw new ValidationError('string fails validation {{rule}}', path, rules[{{ruleIndex}}], object);
@@ -163,9 +170,9 @@ var generateValidationLanguage = function(self, validations) {
       valueValidations.push(f('[%s].indexOf(object) == -1', Utils.generateArray(validations[operator])));
     } else if(operator === '$regexp') {
       // Add the value validation
-      valueValidations.push(f('regexps[%s].test(object) == false', index));
+      valueValidations.push(f('regexps[%s].test(object) == false', self.id));
       // Add the validation to the regexp object
-      context.regexps[index] = typeof validations[operator] == 'string'
+      context.regexps[self.id] = typeof validations[operator] == 'string'
         ? new RegExp(validations[operator]) : validations[operator];
     } else {
       throw new Error(f('validation operator %s is not supported by String type', operator));

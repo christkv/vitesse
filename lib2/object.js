@@ -37,6 +37,10 @@ Node.prototype.addValidation = function(validation) {
   }
 }
 
+Node.prototype.setDefault = function(value) {
+  this.defaultValue = value;
+}
+
 Node.prototype.setTypeCheck = function(typeCheck) {  
   this.typeCheck = typeCheck;
 }
@@ -67,6 +71,9 @@ Node.prototype.path = function() {
 }
 
 Node.prototype.generate = function(context) {
+  // Shortcut the rendering
+  if(this.defaultValue != null) return;
+  // Set self
   var self = this;
   // Get the path
   var path = this.path().join('.');
@@ -107,18 +114,18 @@ Node.prototype.generate = function(context) {
 
   // Generate type validation if needed
   if(this.typeCheck) {
-    renderingOptions.type = M(function(){/***
+    renderingOptions.type = Mark.up(M(function(){/***
       if((object == null || typeof object != 'object' || Array.isArray(object)) && context.failOnFirst) {
-        throw new ValidationError('field is not an object', '{{path}}', rules[{{ruleIndex}}], object);
-      } else if((object == null || typeof object != 'object' || Array.isArray(object))) {       
-        return errors.push(new ValidationError('field is not an object', '{{path}}', rules[{{ruleIndex}}], object));
+        throw new ValidationError('field is not an object', path, rules[{{ruleIndex}}], object);
+      } else if(object == null || typeof object != 'object' || Array.isArray(object)) {
+        return errors.push(new ValidationError('field is not an object', path, rules[{{ruleIndex}}], object));
       }
-    ***/}, {
-      ruleIndex: this.id, path: this.path().join('.')
+    ***/}), {
+      ruleIndex: this.id
     });      
   } else {
     renderingOptions.type = M(function(){/***
-      if((object == null || typeof object != 'object' || Array.isArray(object))) {
+      if(object == null || typeof object != 'object' || Array.isArray(object)) {
         return;
       }
     ***/});         
@@ -138,6 +145,10 @@ Node.prototype.generate = function(context) {
   if(this.prohibited) {
     renderingOptions.prohibited = generateProhibited(this, this.prohibited);
   }
+
+  // console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ general")
+  // console.dir(this.patternPropertiesValidator)
+  // console.dir(this.additionalPropertiesValidator)
 
   // Generates the field validation code
   renderingOptions.fieldValidations = generateFieldValidations(self, context, this.patternPropertiesValidator, this.additionalPropertiesValidator);
@@ -164,17 +175,45 @@ Node.prototype.generate = function(context) {
     statements = statements.concat(innerContext.functionCalls);
   });
 
+  // Generate path
+  var path = 'path';
+  // If we are in an array
+  if(context.inArray && !context.inArrayIndex) {
+    path = f('path.slice(0).concat([i])');
+  } else if(context.inArray && context.inArrayIndex) {
+    path = f('path.slice(0).concat([%s])', context.inArrayIndex);
+  } else if(context.path) {
+    path = context.path;
+  } else if(this.parent == null) {
+    path = ['["object"]'];
+  }
+
+  // Set the object
+  var objectPath = 'object';
+  // Do we have a custom object path generator
+  if(context.inArray && !context.inArrayIndex) {
+    objectPath = 'object[i]';
+  } else if(context.inArray && context.inArrayIndex) {
+    objectPath = f('object[%s]', context.inArrayIndex);
+  } else if(context.object) {
+    objectPath = context.object;
+  }
+
   // Set rendering statements
   renderingOptions.statements = statements.join('\n');
   // Generate object validation function
   context.functions.push(Mark.up(validationTemplate, renderingOptions));
   // Generate function call
   context.functionCalls.push(Mark.up(M(function(){/***
-      object_validation_{{index}}({{path}}, object, context);
+      object_validation_{{index}}({{path}}, {{object}}, context);
     ***/}), {
       index: this.id,
-      path: JSON.stringify(this.path())
+      path: path,
+      object: objectPath
     }));
+
+  // Set rendering statements
+  renderingOptions.statements = statements.join('\n');
 }
 
 var generateProhibited = function(self, prohibited) {
@@ -310,6 +349,9 @@ var generateFieldValidations = function(self, context, patterns, additional) {
       validation: innerContext.functionCalls.join('\n')
     }));
   }
+
+  // console.log("=================================== additional")
+  // console.dir(additional)
 
   // Additional properties set to false
   var additionalPropertiesFalse = additional == false

@@ -26,7 +26,7 @@ var Node = function(parent, field, options) {
   // All children attached to this node
   this.children = [];
   // Just some metadata
-  this.type = 'allof';
+  this.type = 'anyof';
 }
 
 Node.prototype.setTypeCheck = function(typeCheck) {  
@@ -55,35 +55,29 @@ Node.prototype.generate = function(context) {
   var path = this.path().join('.');
   // Push ourselves to the rules array
   context.rules.push(self);
-
-  // console.log("############################################### ALLOF")
-  // console.dir(this.validations)
   // Validation template
   var validationTemplate = M(function(){/***
-    var all_of_validation_{{index}} = function(path, object, context) {
+    var any_of_validation_{{index}} = function(path, object, context) {
       // Not possible to perform any validations on the object as it does not exist
-      if(!(object === undefined)) {
-        // Total validations to perform
-        var totalValidations = {{totalValidations}};
-        // Total validations that were successful
-        var successfulValidations = 0;
-        // Keep track of the local errors
-        var currentErrors = errors;
-        errors = [];      
-        
-        // Perform validations on object fields
-        {{statements}}
+      if(object === undefined) return;
+      // Total validations that were successful
+      var successfulValidations = 0;
+      // Keep track of the local errors
+      var currentErrors = errors;
+      errors = [];      
+      
+      // Perform validations on object fields
+      {{statements}}
 
-        // Check if we had more than one successful validation
-        if((successfulValidations != totalValidations) && context.failOnFirst) {
-          throw new ValidationError('one or more schema\'s did not match the allOf rule', path, rules[{{ruleIndex}}], object, errors);
-        } else if((successfulValidations != totalValidations) && !context.failOnFirst) {
-          currentErrors.push(new ValidationError('one or more schema\'s did not match the allOf rule', path, rules[{{ruleIndex}}], object, errors));
-        }
-
-        // Reset the errors
-        errors = currentErrors;
+      // Check if we had more than one successful validation
+      if(successfulValidations == 0 && context.failOnFirst) {
+        throw new ValidationError('value does not match any of the schema\'s in the anyOf rule', path, rules[{{ruleIndex}}], object, errors);
+      } else if(successfulValidations == 0 && !context.failOnFirst) {
+        currentErrors.push(new ValidationError('value does not match any of the schema\'s in the anyOf rule', path, rules[{{ruleIndex}}], object, errors));
       }
+
+      // Reset the errors
+      errors = currentErrors;
     }
   ***/});
 
@@ -118,8 +112,7 @@ Node.prototype.generate = function(context) {
       });
     }).join('\n'),
     index: this.id,
-    ruleIndex: this.id,
-    totalValidations: this.validations.length
+    ruleIndex: this.id
   }
 
   // Generate path
@@ -150,7 +143,7 @@ Node.prototype.generate = function(context) {
   context.functions.push(Mark.up(validationTemplate, renderingOptions));
   // Generate function call
   context.functionCalls.push(Mark.up(M(function(){/***
-      all_of_validation_{{index}}({{path}}, {{object}}, context);
+      any_of_validation_{{index}}({{path}}, {{object}}, context);
     ***/}), {
       index: this.id,
       path: path,

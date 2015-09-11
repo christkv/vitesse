@@ -23,7 +23,7 @@ var Node = function(parent, field, options) {
   // Any options
   this.options = options;
   // Just some metadata
-  this.type = 'string';
+  this.type = 'any';
 
   // Special validators, custom, pattern, required, prohibited
   // ----------------------------------------------------------
@@ -32,6 +32,10 @@ var Node = function(parent, field, options) {
 
 Node.prototype.setTypeCheck = function(typeCheck) {  
   this.typeCheck = typeCheck;
+}
+
+Node.prototype.setDefault = function(value) {
+  this.defaultValue = value;
 }
 
 Node.prototype.addSpecialValidator = function(validator) {

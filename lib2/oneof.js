@@ -26,11 +26,15 @@ var Node = function(parent, field, options) {
   // All children attached to this node
   this.children = [];
   // Just some metadata
-  this.type = 'object';
+  this.type = 'oneof';
 }
 
 Node.prototype.setTypeCheck = function(typeCheck) {  
   this.typeCheck = typeCheck;
+}
+
+Node.prototype.setDefault = function(value) {
+  this.defaultValue = value;
 }
 
 Node.prototype.addValidations = function(validations) {
@@ -43,6 +47,9 @@ Node.prototype.path = function() {
 }
 
 Node.prototype.generate = function(context) {
+  // Shortcut the rendering
+  if(this.defaultValue != null) return;
+  // Set self
   var self = this;
   // Get the path
   var path = this.path().join('.');

@@ -26,7 +26,7 @@ var Node = function(parent, field, options) {
   // All children attached to this node
   this.children = [];
   // Just some metadata
-  this.type = 'allof';
+  this.type = 'enum';
 }
 
 Node.prototype.setTypeCheck = function(typeCheck) {  
@@ -37,8 +37,8 @@ Node.prototype.setDefault = function(value) {
   this.defaultValue = value;
 }
 
-Node.prototype.addValidations = function(validations) {
-  this.validations = validations;
+Node.prototype.addEnums = function(enums) {
+  this.enums = enums;
 }
 
 Node.prototype.path = function() {
@@ -55,71 +55,82 @@ Node.prototype.generate = function(context) {
   var path = this.path().join('.');
   // Push ourselves to the rules array
   context.rules.push(self);
-
-  // console.log("############################################### ALLOF")
-  // console.dir(this.validations)
   // Validation template
   var validationTemplate = M(function(){/***
-    var all_of_validation_{{index}} = function(path, object, context) {
-      // Not possible to perform any validations on the object as it does not exist
+    var enum_validation_{{index}} = function(path, object, context) {
+      var valid = false;
+
       if(!(object === undefined)) {
-        // Total validations to perform
-        var totalValidations = {{totalValidations}};
-        // Total validations that were successful
-        var successfulValidations = 0;
-        // Keep track of the local errors
-        var currentErrors = errors;
-        errors = [];      
-        
-        // Perform validations on object fields
-        {{statements}}
+        // Enum validations
+        {{validations}}
 
-        // Check if we had more than one successful validation
-        if((successfulValidations != totalValidations) && context.failOnFirst) {
-          throw new ValidationError('one or more schema\'s did not match the allOf rule', path, rules[{{ruleIndex}}], object, errors);
-        } else if((successfulValidations != totalValidations) && !context.failOnFirst) {
-          currentErrors.push(new ValidationError('one or more schema\'s did not match the allOf rule', path, rules[{{ruleIndex}}], object, errors));
+        // Check if we have the validation
+        if(!valid && context.failOnFirst) {
+          throw new ValidationError('field does not match enumeration {{enumeration}}', path, rules[{{ruleIndex}}], object);
+        } else if(!valid) {
+          errors.push(new ValidationError('field does not match enumeration {{enumeration}}', path, rules[{{ruleIndex}}], object));
         }
-
-        // Reset the errors
-        errors = currentErrors;
       }
     }
   ***/});
 
-  // Create an inner context
-  var innerContext = {
-    functions: context.functions,
-    functionCalls: [],
-    rules: context.rules
-  }
+  // Unroll the enum
+  var validations = self.enums.map(function(x, i) {
+    // Start conditional
+    var conditional = '} else ';
+    if(i == 0) conditional = '';
+    if(i == self.enums.length) conditional = '}';
 
-  // Create all validations
-  this.validations.forEach(function(v) {
-    v.generate(innerContext);
-  });
+    // End conditional
+    var endConditional = '';
+    if(i == self.enums.length -1 ) endConditional = '}';
 
-  // Statement validation template
-  var validationStatementTemplate = M(function(){/***
-    var numberOfErrors = errors.length;
-
-    {{statement}}
-
-    if(numberOfErrors == errors.length) {
-      successfulValidations = successfulValidations + 1;
+    // Generate the code
+    if(typeof x === 'number' || typeof x === 'string' || typeof x === 'boolean') {
+      return Mark.up(M(function(){/***
+        {{conditional}}if(object === {{value}}) {
+          valid = true;
+        {{endConditional}}
+      ***/}), {
+        value: typeof x === 'string' ? f("'%s'", x) : x, 
+        index: i,
+        conditional: conditional,
+        endConditional: endConditional,
+        enumeration: JSON.stringify(self.enums)
+      });
+    } else if(x instanceof Object) {
+      return Mark.up(M(function(){/***
+        {{conditional}}if(deepCompareStrict({{value}}, object)) {
+          valid = true;
+        {{endConditional}}
+      ***/}), {
+        value: JSON.stringify(x), 
+        index: i,
+        conditional: conditional,
+        endConditional: endConditional,
+        enumeration: JSON.stringify(self.enums)
+      });
+    } else if(Array.isArray(x)) {
+      return Mark.up(M(function(){/***
+        {{conditional}}if(deepCompareStrict({{value}}, object)) {
+          valid = true;
+        {{endConditional}}
+      ***/}), {
+        value: JSON.stringify(x), 
+        index: i,
+        conditional: conditional,
+        endConditional: endConditional,
+        enumeration: JSON.stringify(self.enums)
+      });
     }
-  ***/});
+  });
 
   // Rendering context
   var renderingOptions = {
-    statements: innerContext.functionCalls.map(function(s) {
-      return Mark.up(validationStatementTemplate, {
-        statement: s
-      });
-    }).join('\n'),
     index: this.id,
     ruleIndex: this.id,
-    totalValidations: this.validations.length
+    enumeration: JSON.stringify(this.enums),
+    validations: validations.join('\n'),
   }
 
   // Generate path
@@ -150,7 +161,7 @@ Node.prototype.generate = function(context) {
   context.functions.push(Mark.up(validationTemplate, renderingOptions));
   // Generate function call
   context.functionCalls.push(Mark.up(M(function(){/***
-      all_of_validation_{{index}}({{path}}, {{object}}, context);
+      enum_validation_{{index}}({{path}}, {{object}}, context);
     ***/}), {
       index: this.id,
       path: path,

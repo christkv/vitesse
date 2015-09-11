@@ -48,7 +48,11 @@ var ex = {
   BooleanNode: require('./lib2/boolean'),
   OneOfNode: require('./lib2/oneof'),
   AllOfNode: require('./lib2/allof'),
-  NullNode: require('./lib2/null')
+  AnyOfNode: require('./lib2/anyof'),
+  NotNode: require('./lib2/not'),
+  NullNode: require('./lib2/null'),
+  EnumNode: require('./lib2/enum'),
+  RecursiveNode: require('./lib2/recursive')
 }
 
 module.exports = ex;

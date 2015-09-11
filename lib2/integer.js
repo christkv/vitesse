@@ -23,7 +23,7 @@ var Node = function(parent, field, options) {
   // Any options
   this.options = options;
   // Just some metadata
-  this.type = 'string';
+  this.type = 'integer';
 
   // Special validators, custom, pattern, required, prohibited
   // ----------------------------------------------------------
@@ -36,6 +36,10 @@ Node.prototype.addValidation = function(validation) {
   for(var name in validation) {
     this.validation[name] = validation[name];
   }
+}
+
+Node.prototype.setDefault = function(value) {
+  this.defaultValue = value;
 }
 
 Node.prototype.setTypeCheck = function(typeCheck) {  
@@ -52,6 +56,9 @@ Node.prototype.path = function() {
 }
 
 Node.prototype.generate = function(context) {
+  // Shortcut the rendering
+  if(this.defaultValue != null) return;
+  // Set self
   var self = this;
   // Get the path
   var path = this.path().join('.');

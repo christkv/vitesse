@@ -73,7 +73,7 @@ Compiler.prototype.compile = function(ast, options) {
     }).join('\n')
   });
 
-  console.log(source)
+  // console.log(source)
 
   // Format the final code
   var source = jsfmt.format(source);
@@ -91,7 +91,7 @@ Compiler.prototype.compile = function(ast, options) {
 
   // Compile the function
   eval(source)
-  console.log("########################################## EVAL")
+  // console.log("########################################## EVAL")
 
   // Return the validation function
   return {
