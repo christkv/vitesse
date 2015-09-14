@@ -25,6 +25,8 @@ var Node = function(parent, field, options) {
   this.options = options;
   // All children attached to this node
   this.children = [];
+  // Dependencies
+  this.dependencies = [];
   // Just some metadata
   this.type = 'object';
 }
@@ -47,6 +49,10 @@ Node.prototype.setTypeCheck = function(typeCheck) {
 
 Node.prototype.addChild = function(field, node) {
   this.children.push({field: field, node: node});
+}
+
+Node.prototype.addDependency = function(field, dependencyType, object) {
+  this.dependencies.push({field: field, type: dependencyType, dependency: object});
 }
 
 Node.prototype.addAdditionalPropertiesValidator = function(validation) {
@@ -91,6 +97,8 @@ Node.prototype.generate = function(context) {
       {{validations}}
       // Additional field validations
       {{fieldValidations}}
+      // Dependencies
+      {{dependencies}}
       // Custom validations
       {{custom}}
       // Perform validations on object fields
@@ -107,6 +115,7 @@ Node.prototype.generate = function(context) {
     fieldValidations: '',
     statements: '',
     type: '',
+    dependencies: '',
     index: this.id
   }
 
@@ -142,6 +151,11 @@ Node.prototype.generate = function(context) {
   // Do we have prohibited fields
   if(this.prohibited) {
     renderingOptions.prohibited = generateProhibited(this, this.prohibited);
+  }
+
+  // Do we have dependencies
+  if(this.dependencies.length > 0) {
+    renderingOptions.dependencies = generateDependencies(this, context, this.dependencies);
   }
 
   // console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ general")
@@ -212,6 +226,81 @@ Node.prototype.generate = function(context) {
 
   // Set rendering statements
   renderingOptions.statements = statements.join('\n');
+}
+
+var generateDependencies = function(self, context, dependencies) {
+  var arrayValidationTemplate = M(function(){/***
+    var dependencies = {{dependencies}};
+    var valid = true;
+
+    if(object['{{field}}']) {
+      for(var i = 0; i < dependencies.length; i++) {
+        if(object[dependencies[i]] == undefined) {
+          valid = false;
+          break;
+        }
+      }
+    }
+
+    if(!valid && context.failOnFirst) {
+      throw new ValidationError('field {{field}} is dependent on fields {{dependencies}}', path, rules[{{ruleIndex}}], object);
+    } else if(!valid) {
+      errors.push(new ValidationError('field {{field}} is dependent on fields {{dependencies}}', path, rules[{{ruleIndex}}], object));
+    } 
+  ***/});
+
+  var objectValidationTemplate = M(function(){/***
+    if(object['{{field}}']) {
+      // Keep track of the local errors
+      var currentErrors = errors;
+      errors = [];      
+
+      {{statement}}
+
+      if(errors.length > 0 && context.failOnFirst) {
+        throw new ValidationError('field {{field}} is dependent on fields {{dependencies}}', path, rules[{{ruleIndex}}], object);
+      } else if(errors.length > 0) {
+        currentErrors.push(new ValidationError('field {{field}} is dependent on fields {{dependencies}}', path, rules[{{ruleIndex}}], object));
+      } 
+      
+      // Reset the current errors
+      errors = currentErrors;
+    }
+  ***/});
+
+  var strings = [];
+
+  // Go through all the dependencies
+  for(var i = 0; i < dependencies.length; i++) {
+    var dependency = dependencies[i];
+
+    if(dependency.type == 'array') {
+      strings.push(Mark.up(arrayValidationTemplate, {
+        ruleIndex: self.id, 
+        field: dependency.field,
+        dependencies: JSON.stringify(dependency.dependency)
+      }));
+    } else if(dependency.type == 'schema') {
+      // Create an inner context
+      var innerContext = {
+        functions: context.functions,
+        functionCalls: [],
+        rules: context.rules
+      }
+
+      // Generate the validation
+      dependency.dependency.generate(innerContext);
+
+      // Push the validation result
+      strings.push(Mark.up(objectValidationTemplate, {
+        ruleIndex: self.id, 
+        field: dependency.field,
+        statement: innerContext.functionCalls.join('\n')
+      }));
+    }
+  }
+
+  return strings.join('\n');
 }
 
 var generateProhibited = function(self, prohibited) {
