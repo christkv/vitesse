@@ -158,10 +158,6 @@ Node.prototype.generate = function(context) {
     renderingOptions.dependencies = generateDependencies(this, context, this.dependencies);
   }
 
-  // console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ general")
-  // console.dir(this.patternPropertiesValidator)
-  // console.dir(this.additionalPropertiesValidator)
-
   // Generates the field validation code
   if(this.patternPropertiesValidator != undefined || this.additionalPropertiesValidator != undefined) {
     renderingOptions.fieldValidations = generateFieldValidations(self, context, this.patternPropertiesValidator, this.additionalPropertiesValidator);
