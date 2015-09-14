@@ -1,6 +1,7 @@
 "use strict"
 
 var f = require('util').format,
+  fs = require('fs'),
   jsfmt = require('jsfmt'),
   M = require('mstring'),
   utils = require('./utils'),
@@ -81,6 +82,7 @@ Compiler.prototype.compile = function(ast, options) {
 
   // We enabled debugging, print the generated source
   if(options.debug) {
+    // fs.writeFileSync('debug.schema.js', source, 'utf8')
     console.log(source);
   }
 

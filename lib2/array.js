@@ -84,8 +84,6 @@ Node.prototype.path = function() {
 }
 
 Node.prototype.generate = function(context) {
-  // Shortcut the rendering
-  if(this.defaultValue != null) return;
   // Set self
   var self = this;
   // Get the path
