@@ -38,7 +38,8 @@ var ex = {
 
 
   // V2
-  CompilerV2: require('./lib2/compiler'),
+  CompilerV2: require('./lib2/compiler').Compiler,
+  ClosureCompilerV2: require('./lib2/compiler').ClosureCompiler,
   ObjectNode: require('./lib2/object'),
   StringNode: require('./lib2/string'),
   NumberNode: require('./lib2/number'),

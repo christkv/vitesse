@@ -163,7 +163,9 @@ Node.prototype.generate = function(context) {
   // console.dir(this.additionalPropertiesValidator)
 
   // Generates the field validation code
-  renderingOptions.fieldValidations = generateFieldValidations(self, context, this.patternPropertiesValidator, this.additionalPropertiesValidator);
+  if(this.patternPropertiesValidator != undefined || this.additionalPropertiesValidator != undefined) {
+    renderingOptions.fieldValidations = generateFieldValidations(self, context, this.patternPropertiesValidator, this.additionalPropertiesValidator);
+  }
  
   // Add the statements
   var statements = [];

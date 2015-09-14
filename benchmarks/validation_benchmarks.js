@@ -1,8 +1,10 @@
 var Benchmark = require('benchmark'),
-  Compiler = require('../lib/compiler'),
-  ClosureCompiler = require('../lib/closure_compiler'),
-  NumberType = require('../lib/ast').NumberType,
-  DocumentType = require('../lib/ast').DocumentType
+  Compiler = require('../lib2/compiler').Compiler,
+  ClosureCompiler = require('../lib2/compiler').ClosureCompiler,
+  // NumberType = require('../lib/ast').NumberType,
+  // DocumentType = require('../lib/ast').DocumentType
+  ObjectNode = require('../lib2/object'),
+  IntegerNode = require('../lib2/integer'),
   f = require('util').format;
 
 var Joi = require('joi');
@@ -10,13 +12,16 @@ var Joi = require('joi');
 // Create a benchmark suite
 var suite = new Benchmark.Suite;
 
-// Compile to validator
-var validator = new Compiler().compile(new DocumentType({
-  'number': new NumberType({validations: {
-    $gt: 100, $lt: 1000
-  }}, {exists:true})
-}), {debug:true});
+// Create the top node
+var obj = new ObjectNode(null, null, {});
+// Create the number field
+var number = new IntegerNode(obj, 'number', {});
+number.addValidation({$gt: 100});
+number.addValidation({$lt: 100});
+obj.addChild('number', number);
 
+// Compile the validator
+var validator = new Compiler().compile(obj, {debug:true});
 // Create Joi expression
 var joiSchema = Joi.object().keys({
   number: Joi.number().integer().min(100).max(1000)
@@ -25,25 +30,11 @@ var joiSchema = Joi.object().keys({
 // Compile to validator
 var validatorClosure = null;
 // Compile using closure compiler
-new ClosureCompiler().compile(new DocumentType({
-  'number': new NumberType({validations: {
-    $gt: 100, $lt: 1000
-  }}, {exists:true})
-}), {debug:true}, function(err, v) {
+new ClosureCompiler().compile(obj, {debug:true}, function(err, v) {
   validatorClosure = v;
   // run benchmark
   suite.run({ 'async': true });
 });
-
-// // Joi validator
-// suite.add('Joi validator', function() {
-//   Joi.validate({number:150}, joiSchema, {abortEarly:false}, function(err, value) {})
-// })
-
-// // Hand coded
-// suite.add('Handcoded validation', function() {
-//   manual({number:150})
-// });
 
 var manual = function(object) {
   var errors = [];

@@ -3,6 +3,7 @@
 var f = require('util').format,
   fs = require('fs'),
   jsfmt = require('jsfmt'),
+  cc = require('closure-compiler'),
   M = require('mstring'),
   utils = require('./utils'),
   Mark = require("markup-js");
@@ -12,52 +13,44 @@ var clone = require('./utils').clone,
 
 var ObjectNode = require('./object');
 
-var Compiler = function() {
-}
+// Wrap in validation method
+var syncTemplate = M(function(){/***
+  var ValidationError = function(message, path, rule, value, errors) {
+    this.message = message;
+    this.path = path;
+    this.rule = rule;
+    this.value = value;
+    this.errors = errors;
+  }
 
-Compiler.prototype.compile = function(ast, options) {
+  var validate = function(object, context) {
+    var context = context == null ? {} : context;
+    var errors = [];
+
+    {{functions}}
+
+    {{statements}}
+
+    return errors;
+  };
+
+  func = validate;
+***/});
+
+var generate = function(ast, options) {
   options = options || {};
   options = clone(options);
 
-  // Contains all the rules used
-  var rules = [];
-  var regexps = {};
-  var custom = {};
-
   // Reset count
   utils.resetId();
-
-  // Wrap in validation method
-  var syncTemplate = M(function(){/***
-    var ValidationError = function(message, path, rule, value, errors) {
-      this.message = message;
-      this.path = path;
-      this.rule = rule;
-      this.value = value;
-      this.errors = errors;
-    }
-
-    var validate = function(object, context) {
-      var context = context == null ? {} : context;
-      var errors = [];
-
-      {{functions}}
-
-      {{statements}}
-
-      return errors;
-    };
-
-    func = validate;
-  ***/});
 
   // Total generation context
   var context = {
     functions: [],
     functionCalls: [],
-    rules: rules,
-    custom: custom,
-    regexps: regexps
+    rules: options.rules,
+    custom: options.custom,
+    regexps: options.regexps
   }
 
   // Decorate the context
@@ -82,18 +75,31 @@ Compiler.prototype.compile = function(ast, options) {
 
   // We enabled debugging, print the generated source
   if(options.debug) {
-    // fs.writeFileSync('debug.schema.js', source, 'utf8')
     console.log(source);
   }
 
-  // console.log(source)
+  return source;
+}
 
+var Compiler = function() {
+}
+
+Compiler.prototype.compile = function(ast, options) {
+  options = options ? clone(options) : {};
   // Variables used in the eval
+  var rules = [];
+  var regexps = {};
+  var custom = {};
   var func = null;
+  // Add to the options
+  options.regexps = regexps;
+  options.rules = rules;
+  options.custom = custom;
+  // Generate the source
+  var source = generate(ast, options);
 
   // Compile the function
   eval(source)
-  // console.log("########################################## EVAL")
 
   // Return the validation function
   return {
@@ -101,4 +107,45 @@ Compiler.prototype.compile = function(ast, options) {
   }
 }
 
-module.exports = Compiler;
+var ClosureCompiler = function() {}
+
+ClosureCompiler.prototype.compile = function(ast, options, callback) {
+  if(typeof options == 'function') callback = options; options = {};
+  options = options ? clone(options) : {};
+  // Variables used in the eval
+  var rules = [];
+  var regexps = {};
+  var custom = {};
+  var func = null;
+  // Add to the options
+  options.regexps = regexps;
+  options.rules = rules;
+  options.custom = custom;
+  // Generate the source code
+  var source = generate(ast, options);
+  // Run closure compiler on the result
+  // Compiler flags
+  var compilerFlags = {
+  };
+
+  // Handle closure compiler result
+  var done = function(err, stdout, stderr) {
+    if(err) return callback(err);
+    // Get the transformed source
+    var source = stdout;
+    // Compile the function
+    eval(source)
+    // Return the validation function
+    callback(null, {
+      validate: func
+    });
+  }
+
+  // Execute the closure compiler
+  cc.compile(source, compilerFlags, done);
+}
+
+
+module.exports = {
+  Compiler: Compiler, ClosureCompiler: ClosureCompiler
+}
