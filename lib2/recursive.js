@@ -1,7 +1,8 @@
 var f = require('util').format,
   Mark = require("markup-js"),
   M = require('mstring'),
-  utils = require('./utils');
+  utils = require('./utils'),
+  generatePathAndObject = utils.generatePathAndObject;
 
 var Custom = require('./special').Custom,
   Pattern = require('./special').Pattern,

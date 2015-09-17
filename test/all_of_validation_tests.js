@@ -1,105 +1,87 @@
 var assert = require("assert"),
   co = require('co'),
   f = require('util').format,
-  ArrayType = require('../lib/ast').ArrayType,
-  NestedArrayType = require('../lib/ast').NestedArrayType,
-  StringType = require('../lib/ast').StringType,
-  OneOfType = require('../lib/ast').OneOfType,
-  AllOfType = require('../lib/ast').AllOfType,
-  NumberType = require('../lib/ast').NumberType,
-  IntegerType = require('../lib/ast').IntegerType,
-  DocumentType = require('../lib/ast').DocumentType,
-  Compiler = require('../lib/compiler'),
-  ClosureCompiler = require('../lib/closure_compiler');
+  AllOfNode = require('../lib2/allof'),
+  ObjectNode = require('../lib2/object'),
+  IntegerNode = require('../lib2/integer'),
+  StringNode = require('../lib2/string'),
+  Compiler = require('../lib2/compiler').Compiler;
+
+var debug = true;
+var debug = false;
 
 describe('AllOf', function() {
   describe('validation', function() {
     it('should correctly handle nested types', function() {
-      var doc3 = new IntegerType({ validations: { $lte: 10 } });
+      var topLevelDocument = new ObjectNode(null, null, {});
+      // Embedded field
+      var allOfNode = new AllOfNode(null, null, {});     
+      // Add to allOfNode
+      allOfNode.addValidations([
+        new IntegerNode(null, null, {}),
+        new IntegerNode(null, null, {}).addValidation({$lte: 10})
+      ]);
 
-      // Top level document
-      var embeddedDocument = new AllOfType({
-        validations: [
-          new IntegerType({}),
-          new IntegerType({ validations: { $gte: 2 } }),
-          doc3        
-        ]
-      });
+      // Add embedded document
+      topLevelDocument.addChild('child', allOfNode);
 
-      // Top level document
-      var topLevelDocument = new DocumentType({
-        fields: {
-          'child': embeddedDocument
-        }
-      });
-
+      // Create a compiler
       var compiler = new Compiler({});
       // Compile the AST
-      var func = compiler.compile(topLevelDocument, {});
+      var func = compiler.compile(topLevelDocument, {debug:debug});
       // Attempt to validate
       var results = func.validate({child: 11});
       assert.equal(1, results.length);
       assert.equal('one or more schema\'s did not match the allOf rule', results[0].message);
-      assert.equal('object.child', results[0].path);
-      assert.ok(topLevelDocument === results[0].rule);
+      assert.deepEqual(['object', 'child'], results[0].path);
+      assert.ok(allOfNode === results[0].rule);
       assert.equal(1, results[0].errors.length);
-
     });
 
     it('should handle situation where validation is a document', function() {
-      var doc1 = new DocumentType({
-            fields: {
-              'field': new StringType({})
-            },
-            exists:true
-          });
+      var doc1 = new ObjectNode(null, null, {});
+      doc1.addChild('field', new StringNode(null, null, {}));
 
-      var string2 = new StringType({validations: {$gte:2}});
-      var doc2 = new DocumentType({
-            fields: {
-              'field': string2
-            },
-            exists:true
-          });
+      var doc2 = new ObjectNode(null, null, {});
+      var string = new StringNode(null, null, {}).addValidation({$gte:2});
+      doc2.addChild('field', string);
 
-      // Top level document
-      var topLevelDocument = new AllOfType({
-        validations: [
-          doc2
-        ]
-      });
+      var allOf = new AllOfNode(null, null, {}).addValidations([doc2]);
 
+      // Compiler
       var compiler = new Compiler({});
       // Compile the AST
-      var func = compiler.compile(topLevelDocument, {});
+      var func = compiler.compile(allOf, {});
       // Attempt to validate
       var results = func.validate({field:''});
       assert.equal(1, results.length);
       assert.equal('one or more schema\'s did not match the allOf rule', results[0].message);
-      assert.equal('object', results[0].path);
-      assert.ok(topLevelDocument === results[0].rule);
+      assert.deepEqual(['object'], results[0].path);
+      assert.ok(allOf === results[0].rule);
       // Remaining error
-      assert.equal('string fails validation {\"$gte\":2}', results[0].errors[0].message);
-      assert.equal('object.field', results[0].errors[0].path);
-      assert.ok(string2 === results[0].errors[0].rule);
+      assert.equal('string fails validation {\"$gte\":2}', results[0].errors[0].message);     
+      assert.deepEqual(['object', 'field'], results[0].errors[0].path);
+      assert.ok(string === results[0].errors[0].rule);
 
       // Attempt to validate
       var results = func.validate({field:'  '});
       assert.equal(0, results.length);
 
-      // Top level document
-      var topLevelDocument = new AllOfType({
-        validations: [
-          doc1, doc2
-        ]
-      });
+      var doc1 = new ObjectNode(null, null, {});
+      // Generate a new allOf
+      var allOf = new AllOfNode(null, null, {}).addValidations([
+          new StringNode(null, null, {}).addValidation({$gte:2}),
+          new StringNode(null, null, {}).addValidation({$lte:5})
+        ]);
 
-      var compiler = new Compiler({});
+      // Add as a field
+      doc1.addChild('field', allOf);
+
       // Compile the AST
-      var func = compiler.compile(topLevelDocument, {});
+      var func = compiler.compile(doc1, {});
       // Attempt to validate
-      var results = func.validate({field:'  '});
-      assert.equal(0, results.length);
+      var results = func.validate({field:'                      '});
+      assert.equal(1, results.length);
     });
   });
 });

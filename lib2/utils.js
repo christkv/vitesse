@@ -1,4 +1,5 @@
-var M = require('mstring');
+var M = require('mstring'),
+  f = require('util').format;
 
 var id = 0;
 
@@ -14,6 +15,37 @@ var clone = function(o) {
   var opts = {};
   for(var name in o) opts[name] = o[name];
   return opts;
+}
+
+var generatePathAndObject = function(self, context) {
+// Generate path
+  var path = 'path';
+  // If we are in an array
+  if(context.inArray && !context.inArrayIndex) {
+    path = f('path.slice(0).concat([i])');
+  } else if(context.inArray && context.inArrayIndex) {
+    path = f('path.slice(0).concat([%s])', context.inArrayIndex);
+  } else if(context.path) {
+    path = context.path;
+  } else if(self.parent == null) {
+    path = ['["object"]'];
+  } else if(self.parent) {
+    path = f('path.slice(0).concat(["%s"])', self.field);
+  }
+
+  // Set the object
+  var objectPath = 'object';
+  // Do we have a custom object path generator
+  if(context.inArray && !context.inArrayIndex) {
+    objectPath = 'object[i]';
+  } else if(context.inArray && context.inArrayIndex) {
+    objectPath = f('object[%s]', context.inArrayIndex);
+  } else if(context.object) {
+    objectPath = context.object;
+  }
+
+  // Return the object
+  return {path: path, objectPath: objectPath};  
 }
 
 var decorate = function(context) {
@@ -77,5 +109,6 @@ module.exports = {
   generateId: generateId,
   resetId: resetId,
   clone: clone,
-  decorate: decorate
+  decorate: decorate,
+  generatePathAndObject: generatePathAndObject
 }

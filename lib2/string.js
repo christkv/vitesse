@@ -1,7 +1,8 @@
 var f = require('util').format,
   Mark = require("markup-js"),
   M = require('mstring'),
-  utils = require('./utils');
+  utils = require('./utils'),
+  generatePathAndObject = utils.generatePathAndObject;
 
 var Custom = require('./special').Custom,
   Pattern = require('./special').Pattern,
@@ -36,18 +37,23 @@ Node.prototype.addValidation = function(validation) {
   for(var name in validation) {
     this.validation[name] = validation[name];
   }
+
+  return this;
 }
 
 Node.prototype.setDefault = function(value) {
   this.defaultValue = value;
+  return this;
 }
 
 Node.prototype.setTypeCheck = function(typeCheck) {  
   this.typeCheck = typeCheck;
+  return this;
 }
 
 Node.prototype.addSpecialValidator = function(validator) {
   this.special.push(validator);
+  return this;
 }
 
 Node.prototype.path = function() {
@@ -61,7 +67,7 @@ Node.prototype.generate = function(context) {
   // Get the path
   var path = this.path().join('.');
   // Push ourselves to the rules array
-  context.rules.push(self);
+  context.rules[this.id] = this;
   // Validation template
   var validationTemplate = M(function(){/***
     var string_validation_{{index}} = function(path, object, context) {
@@ -106,30 +112,8 @@ Node.prototype.generate = function(context) {
     renderingOptions.validations = generateValidationLanguage(this, this.validation, context);
   }
 
-  // Generate path
-  var path = 'path';
-  // If we are in an array
-  if(context.inArray && !context.inArrayIndex) {
-    path = f('path.slice(0).concat([i])');
-  } else if(context.inArray && context.inArrayIndex) {
-    path = f('path.slice(0).concat([%s])', context.inArrayIndex);
-  } else if(context.path) {
-    path = context.path;
-  } else if(this.parent == null) {
-    path = ['["object"]'];
-  }
-
-  // Set the object
-  var objectPath = 'object';
-  // Do we have a custom object path generator
-  if(context.inArray && !context.inArrayIndex) {
-    objectPath = 'object[i]';
-  } else if(context.inArray && context.inArrayIndex) {
-    objectPath = f('object[%s]', context.inArrayIndex);
-  } else if(context.object) {
-    objectPath = context.object;
-  }
-
+  // Generate path and objectPath
+  var paths = generatePathAndObject(self, context);
   // Generate object validation function
   context.functions.push(Mark.up(validationTemplate, renderingOptions));
   // Generate function call
@@ -137,8 +121,8 @@ Node.prototype.generate = function(context) {
       string_validation_{{index}}({{path}}, {{object}}, context);
     ***/}), {
       index: this.id,
-      path: path,
-      object: objectPath
+      path: paths.path,
+      object: paths.objectPath
     }));
 }
 

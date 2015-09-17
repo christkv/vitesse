@@ -26,6 +26,7 @@ var syncTemplate = M(function(){/***
   var validate = function(object, context) {
     var context = context == null ? {} : context;
     var errors = [];
+    var path = ['object'];
 
     {{functions}}
 

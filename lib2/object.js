@@ -1,7 +1,8 @@
 var f = require('util').format,
   Mark = require("markup-js"),
   M = require('mstring'),
-  utils = require('./utils');
+  utils = require('./utils'),
+  generatePathAndObject = utils.generatePathAndObject;
 
 var Custom = require('./special').Custom,
   Pattern = require('./special').Pattern,
@@ -37,38 +38,53 @@ Node.prototype.addValidation = function(validation) {
   for(var name in validation) {
     this.validation[name] = validation[name];
   }
+
+  return this;
 }
 
 Node.prototype.setDefault = function(value) {
   this.defaultValue = value;
+  return this;
 }
 
 Node.prototype.setTypeCheck = function(typeCheck) {  
   this.typeCheck = typeCheck;
+  return this;
 }
 
 Node.prototype.addChild = function(field, node) {
+  // Set the parent to this node
+  node.parent = this;
+  // Set the field for the node
+  node.field = field;
+  // Add to the list of children
   this.children.push({field: field, node: node});
+  return this;
 }
 
 Node.prototype.addDependency = function(field, dependencyType, object) {
   this.dependencies.push({field: field, type: dependencyType, dependency: object});
+  return this;
 }
 
 Node.prototype.addAdditionalPropertiesValidator = function(validation) {
   this.additionalPropertiesValidator = validation;
+  return this;
 }
 
 Node.prototype.addPatternPropertiesValidator = function(validation) {
   this.patternPropertiesValidator = validation;
+  return this;
 }
 
 Node.prototype.requiredFields = function(required) {
   this.required = required;
+  return this;
 }
 
 Node.prototype.prohibitedFields = function(prohibited) {
   this.prohibited = prohibited;
+  return this;
 }
 
 Node.prototype.path = function() {
@@ -82,7 +98,7 @@ Node.prototype.generate = function(context) {
   // Get the path
   var path = this.path().join('.');
   // Push ourselves to the rules array
-  context.rules.push(self);
+  context.rules[this.id] = this;
   // Validation template
   var validationTemplate = M(function(){/***
     var object_validation_{{index}} = function(path, object, context) {
@@ -185,30 +201,32 @@ Node.prototype.generate = function(context) {
     statements = statements.concat(innerContext.functionCalls);
   });
 
-  // Generate path
-  var path = 'path';
-  // If we are in an array
-  if(context.inArray && !context.inArrayIndex) {
-    path = f('path.slice(0).concat([i])');
-  } else if(context.inArray && context.inArrayIndex) {
-    path = f('path.slice(0).concat([%s])', context.inArrayIndex);
-  } else if(context.path) {
-    path = context.path;
-  } else if(this.parent == null) {
-    path = ['["object"]'];
-  }
+  // // Generate path
+  // var path = 'path';
+  // // If we are in an array
+  // if(context.inArray && !context.inArrayIndex) {
+  //   path = f('path.slice(0).concat([i])');
+  // } else if(context.inArray && context.inArrayIndex) {
+  //   path = f('path.slice(0).concat([%s])', context.inArrayIndex);
+  // } else if(context.path) {
+  //   path = context.path;
+  // } else if(this.parent == null) {
+  //   path = ['["object"]'];
+  // }
 
-  // Set the object
-  var objectPath = 'object';
-  // Do we have a custom object path generator
-  if(context.inArray && !context.inArrayIndex) {
-    objectPath = 'object[i]';
-  } else if(context.inArray && context.inArrayIndex) {
-    objectPath = f('object[%s]', context.inArrayIndex);
-  } else if(context.object) {
-    objectPath = context.object;
-  }
+  // // Set the object
+  // var objectPath = 'object';
+  // // Do we have a custom object path generator
+  // if(context.inArray && !context.inArrayIndex) {
+  //   objectPath = 'object[i]';
+  // } else if(context.inArray && context.inArrayIndex) {
+  //   objectPath = f('object[%s]', context.inArrayIndex);
+  // } else if(context.object) {
+  //   objectPath = context.object;
+  // }
 
+  // Generate path and objectPath
+  var paths = generatePathAndObject(self, context);
   // Set rendering statements
   renderingOptions.statements = statements.join('\n');
   // Generate object validation function
@@ -218,8 +236,10 @@ Node.prototype.generate = function(context) {
       object_validation_{{index}}({{path}}, {{object}}, context);
     ***/}), {
       index: this.id,
-      path: path,
-      object: objectPath
+      path: paths.path,
+      object: paths.objectPath
+      // path: path,
+      // object: objectPath
     }));
 
   // Set rendering statements
