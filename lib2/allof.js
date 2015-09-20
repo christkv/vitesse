@@ -97,7 +97,8 @@ Node.prototype.generate = function(context) {
   var innerContext = {
     functions: context.functions,
     functionCalls: [],
-    rules: context.rules
+    rules: context.rules,
+    regexps: context.regexps
   }
 
   // Create all validations

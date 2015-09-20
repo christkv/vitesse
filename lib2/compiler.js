@@ -68,8 +68,6 @@ var generate = function(ast, options) {
     }).join('\n')
   });
 
-  // console.log(source)
-
   // Format the final code
   var source = jsfmt.format(source);
   source = source.replace(/\n\n/g, "\n");
@@ -134,7 +132,6 @@ ClosureCompiler.prototype.compile = function(ast, options, callback) {
     if(err) return callback(err);
     // Get the transformed source
     var source = stdout;
-    console.log(source)
     // Compile the function
     eval(source)
     // Return the validation function

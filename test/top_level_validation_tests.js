@@ -1,27 +1,24 @@
 var assert = require("assert"),
   co = require('co'),
   f = require('util').format,
-  ArrayType = require('../lib/ast').ArrayType,
-  NestedArrayType = require('../lib/ast').NestedArrayType,
-  StringType = require('../lib/ast').StringType,
-  OneOfType = require('../lib/ast').OneOfType,
-  AllOfType = require('../lib/ast').AllOfType,
-  AnyOfType = require('../lib/ast').AnyOfType,
-  NotType = require('../lib/ast').NotType,
-  NumberType = require('../lib/ast').NumberType,
-  IntegerType = require('../lib/ast').IntegerType,
-  BooleanType = require('../lib/ast').BooleanType,
-  DocumentType = require('../lib/ast').DocumentType,
-  Compiler = require('../lib/compiler'),
-  ClosureCompiler = require('../lib/closure_compiler');
+  ArrayNode = require('../lib2/array'),
+  ObjectNode = require('../lib2/object'),
+  IntegerNode = require('../lib2/integer'),
+  BooleanNode = require('../lib2/boolean'),
+  OneOfNode = require('../lib2/oneof'),
+  AllOfNode = require('../lib2/allof'),
+  AnyOfNode = require('../lib2/anyOf'),
+  NotNode = require('../lib2/not'),
+  NumberNode = require('../lib2/number'),
+  StringNode = require('../lib2/string'),
+  Compiler = require('../lib2/compiler').Compiler,
+  ClosureCompiler = require('../lib2/compiler').ClosureCompiler;
 
 describe('TopLevel', function() {
   describe('validation', function() {
     it('should correctly validate top level integer value', function() {
-      // Top level document
-      var topLevelDocument = new IntegerType({
-        validations: {$gte:2}
-      });
+      var topLevelDocument = new IntegerNode(null, null, {typeCheck:true})
+        .addValidation({$gte:2});
 
       // Create a compiler
       var compiler = new Compiler({});
@@ -38,10 +35,8 @@ describe('TopLevel', function() {
     });
 
     it('should correctly validate top level numeric value', function() {
-      // Top level document
-      var topLevelDocument = new NumberType({
-        validations: {$gte:2}
-      });
+      var topLevelDocument = new NumberNode(null, null, {typeCheck:true})
+        .addValidation({$gte:2});
 
       // Create a compiler
       var compiler = new Compiler({});
@@ -59,7 +54,7 @@ describe('TopLevel', function() {
 
     it('should correctly validate top level boolean value', function() {
       // Top level document
-      var topLevelDocument = new BooleanType({});
+      var topLevelDocument = new BooleanNode(null, null, {typeCheck:true});
       // Create a compiler
       var compiler = new Compiler({});
       // Compile the AST
@@ -75,10 +70,8 @@ describe('TopLevel', function() {
     });
 
     it('should correctly validate top level string value', function() {
-      // Top level document
-      var topLevelDocument = new StringType({
-        validations: {$gte:2}
-      });
+      var topLevelDocument = new StringNode(null, null, {typeCheck:true})
+        .addValidation({$gte:2});
 
       // Create a compiler
       var compiler = new Compiler({});
@@ -104,15 +97,13 @@ describe('TopLevel', function() {
     });
 
     it('should correctly validate top level array value', function() {
-      // Embedded document
-      var embeddedDocument = new IntegerType({
-        validations: {$gte:2}
-      });
+      var embeddedDocument = new IntegerNode(null, null, {typeCheck:true})
+        .addValidation({$gte:2});
 
-      // Top level document
-      var topLevelDocument = new ArrayType({
-        validations: {$gte:2}, of: embeddedDocument, validations: {$gte:5, $lte:10}
-      });
+      var topLevelDocument = new ArrayNode(null, null, {typeCheck:true})
+        .addValidation({$gte:5})
+        .addValidation({$lte:10})
+        .addItemValidation(embeddedDocument);
 
       // Create a compiler
       var compiler = new Compiler({});
@@ -122,14 +113,14 @@ describe('TopLevel', function() {
       // Execute validation
       var results = func.validate([1, 2, 2]);
       assert.equal(2, results.length);
-      assert.equal("array failed length validation {\"$gte\":5,\"$lte\":10}", results[0].message);
-      assert.equal('object', results[0].path);
+      assert.equal('array fails length validation {"$gte":5,"$lte":10}', results[0].message);
+      assert.deepEqual(['object'], results[0].path);
       assert.ok(results[0].rule === topLevelDocument);
       assert.deepEqual([1, 2, 2], results[0].value);
 
       // Number validation failure
       assert.equal("number fails validation {\"$gte\":2}", results[1].message);
-      assert.equal('object[0]', results[1].path);
+      assert.deepEqual(['object'], results[0].path);
       assert.ok(results[1].rule === embeddedDocument);
       assert.equal(1, results[1].value);
 
@@ -137,7 +128,7 @@ describe('TopLevel', function() {
       var results = func.validate([1, 2, 1, 1, 1]);
       assert.equal(4, results.length);
       assert.equal("number fails validation {\"$gte\":2}", results[0].message);
-      assert.equal('object[0]', results[0].path);
+      assert.deepEqual(['object', '0'], results[0].path);
       assert.ok(results[0].rule === embeddedDocument);
       assert.equal(1, results[0].value);
 
@@ -147,14 +138,14 @@ describe('TopLevel', function() {
     });
 
     it('should correctly validate top level ofOne', function() {
-      // Top level document
-      var topLevelDocument = new OneOfType({
-        validations: [
-          new IntegerType({}),
-          new IntegerType({ validations: { $gte: 2 } }),
-          new IntegerType({ validations: { $gte: 5 } })        
-        ]
-      });
+      var topLevelDocument = new OneOfNode(null, null, {typeCheck:true})
+        .addValidations([
+            new IntegerNode(null, null, {typeCheck:true}),
+            new IntegerNode(null, null, {typeCheck:true})
+              .addValidation({$gte:2}),
+            new IntegerNode(null, null, {typeCheck:true})
+              .addValidation({$gte:5}),
+          ]);
 
       // Create a compiler
       var compiler = new Compiler({});
@@ -174,16 +165,26 @@ describe('TopLevel', function() {
     });
 
     it('should correctly validate top level allOf', function() {
-      var doc3 = new IntegerType({ validations: { $lte: 10 } });
+      // var doc3 = new IntegerType({ validations: { $lte: 10 } });
 
-      // Top level document
-      var topLevelDocument = new AllOfType({
-        validations: [
-          new IntegerType({}),
-          new IntegerType({ validations: { $gte: 2 } }),
-          doc3        
-        ]
-      });
+      // // Top level document
+      // var topLevelDocument = new AllOfType({
+      //   validations: [
+      //     new IntegerType({}),
+      //     new IntegerType({ validations: { $gte: 2 } }),
+      //     doc3        
+      //   ]
+      // });
+      var doc3 = new IntegerNode(null, null, {typeCheck:true})
+        .addValidation({$lte:10});
+
+      var topLevelDocument = new AllOfNode(null, null, {typeCheck:true})
+        .addValidations([
+            new IntegerNode(null, null, {typeCheck:true}),
+            new IntegerNode(null, null, {typeCheck:true})
+              .addValidation({$gte:2}),
+            doc3
+          ]);
 
       // Create a compiler
       var compiler = new Compiler({});
@@ -209,13 +210,14 @@ describe('TopLevel', function() {
 
     it('should correctly validate top level anyOf', function() {
       // Top level document
-      var topLevelDocument = new AnyOfType({
-        validations: [
-          new IntegerType({}),
-          new IntegerType({ validations: { $gte: 2 } }),
-          new IntegerType({ validations: { $lte: 5 } })        
-        ]
-      });
+      var topLevelDocument = new AnyOfNode(null, null, {typeCheck:true})
+        .addValidations([
+            new IntegerNode(null, null, {typeCheck:true}),
+            new IntegerNode(null, null, {typeCheck:true})
+              .addValidation({$gte:2}),
+            new IntegerNode(null, null, {typeCheck:true})
+              .addValidation({$lte:5}),
+          ]);
 
       // Create a compiler
       var compiler = new Compiler({});
@@ -237,13 +239,14 @@ describe('TopLevel', function() {
 
     it('should correctly validate top level not', function() {
       // Top level document
-      var topLevelDocument = new NotType({
-        validations: [
-          new IntegerType({}),
-          new IntegerType({ validations: { $gte: 2 } }),
-          new IntegerType({ validations: { $gte: 5 } })        
-        ]
-      });
+      var topLevelDocument = new NotNode(null, null, {typeCheck:true})
+        .addValidations([
+            new IntegerNode(null, null, {typeCheck:true}),
+            new IntegerNode(null, null, {typeCheck:true})
+              .addValidation({$gte:2}),
+            new IntegerNode(null, null, {typeCheck:true})
+              .addValidation({$lte:5}),
+          ]);
 
       // Create a compiler
       var compiler = new Compiler({});

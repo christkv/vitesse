@@ -41,7 +41,14 @@ Node.prototype.setDefault = function(value) {
 }
 
 Node.prototype.addValidations = function(validations) {
-  this.validations = validations;
+  var self = this;
+  // Map this object as the parent
+  this.validations = validations.map(function(x) {
+    x.parent = self.parent;
+    x.field = self.field;
+    return x;
+  });
+
   return this;
 }
 
@@ -87,7 +94,8 @@ Node.prototype.generate = function(context) {
   var innerContext = {
     functions: context.functions,
     functionCalls: [],
-    rules: context.rules
+    rules: context.rules,
+    regexps: context.regexps
   }
 
   // Create all validations

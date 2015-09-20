@@ -192,6 +192,7 @@ Node.prototype.generate = function(context) {
       functions: context.functions,
       functionCalls: [],
       rules: context.rules,
+      regexps: context.regexps,
       object: f('object.%s', field)
     }
 
@@ -303,7 +304,8 @@ var generateDependencies = function(self, context, dependencies) {
       var innerContext = {
         functions: context.functions,
         functionCalls: [],
-        rules: context.rules
+        rules: context.rules,
+        regexps: context.regexps
       }
 
       // Generate the validation

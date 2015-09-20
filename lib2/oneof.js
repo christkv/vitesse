@@ -32,14 +32,24 @@ var Node = function(parent, field, options) {
 
 Node.prototype.setTypeCheck = function(typeCheck) {  
   this.typeCheck = typeCheck;
+  return this;
 }
 
 Node.prototype.setDefault = function(value) {
   this.defaultValue = value;
+  return this;
 }
 
 Node.prototype.addValidations = function(validations) {
-  this.validations = validations;
+  var self = this;
+  // Map this object as the parent
+  this.validations = validations.map(function(x) {
+    x.parent = self.parent;
+    x.field = self.field;
+    return x;
+  });
+
+  return this;
 }
 
 Node.prototype.path = function() {
@@ -84,7 +94,8 @@ Node.prototype.generate = function(context) {
   var innerContext = {
     functions: context.functions,
     functionCalls: [],
-    rules: context.rules
+    rules: context.rules,
+    regexps: context.regexps
   }
 
   // Create all validations

@@ -245,7 +245,9 @@ var generateAdditionalItemsValidation = function(self, additionalItemsValidation
       functions: context.functions,
       functionCalls: [],
       rules: context.rules,
-      inArray:true
+      regexps: context.regexps,
+      inArray:true,
+      regexps: context.regexps
     }
 
     // Generate the code for the validation
@@ -273,6 +275,7 @@ var generatePerItemValidations = function(self, validations, context) {
       functions: context.functions,
       functionCalls: [],
       rules: context.rules,
+      regexps: context.regexps,
 
       // Array specific fields
       inArray:true,
@@ -298,6 +301,7 @@ var generateAllItemValidation = function(self, validation, context) {
     functions: context.functions,
     functionCalls: [],
     rules: context.rules,
+    regexps: context.regexps,
     inArray:true
   }
 

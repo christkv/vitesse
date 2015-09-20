@@ -126,6 +126,12 @@ Node.prototype.generate = function(context) {
     }));
 }
 
+var generateArray = function(a) {
+  return a.map(function(x) {
+    return f('"%s"', x);
+  });
+}
+
 var generateValidationLanguage = function(self, validations, context) {
   var validationTemplate = M(function(){/***
     if(({{validation}}) && context.failOnFirst) {
@@ -149,7 +155,7 @@ var generateValidationLanguage = function(self, validations, context) {
     } else if(operator === '$lt') {
       valueValidations.push(f('object.length >= %s', validations[operator]));
     } else if(operator === '$in') {
-      valueValidations.push(f('[%s].indexOf(object) == -1', Utils.generateArray(validations[operator])));
+      valueValidations.push(f('[%s].indexOf(object) == -1', generateArray(validations[operator])));
     } else if(operator === '$regexp') {
       // Add the value validation
       valueValidations.push(f('regexps[%s].test(object) == false', self.id));
