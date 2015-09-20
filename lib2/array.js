@@ -49,34 +49,44 @@ Node.prototype.addValidation = function(validation) {
   for(var name in validation) {
     this.validation[name] = validation[name];
   }
+
+  return this;
 }
 
 Node.prototype.setDefault = function(value) {
   this.defaultValue = value;
+  return this;
 }
 
 Node.prototype.addPositionalItemValidation = function(i, validation) {
   this.positionalItemValidation[i] = validation;
+  return this;
 }
 
 Node.prototype.addItemValidation = function(validation) {
   this.itemValidation = validation;
+  this.itemValidation.parent = this;
+  return this;
 }
 
 Node.prototype.addAdditionalItemsValidation = function(validation) {
   this.additionalItemsValidation = validation;
+  return this;
 }
 
 Node.prototype.setTypeCheck = function(typeCheck) {  
   this.typeCheck = typeCheck;
+  return this;
 }
 
 Node.prototype.uniqueItems = function(uniqueItems) {
-  this.uniqueItems = uniqueItems;
+  this.uniqueItemsFunction = uniqueItems;
+  return this;
 }
 
 Node.prototype.addSpecialValidator = function(validator) {
   this.special.push(validator);
+  return this;
 }
 
 Node.prototype.path = function() {
@@ -128,12 +138,12 @@ Node.prototype.generate = function(context) {
   if(this.typeCheck) {
     renderingOptions.type = Mark.up(M(function(){/***
       if(!Array.isArray(object) && context.failOnFirst) {
-        throw new ValidationError('field is not an array', '{{path}}', rules[{{ruleIndex}}], object);
+        throw new ValidationError('field is not an array', path, rules[{{ruleIndex}}], object);
       } else if(!Array.isArray(object)) {
-        return errors.push(new ValidationError('field is not an array', '{{path}}', rules[{{ruleIndex}}], object));
+        return errors.push(new ValidationError('field is not an array', path, rules[{{ruleIndex}}], object));
       }
     ***/}), {
-      ruleIndex: this.id, path: this.path().join('.')
+      ruleIndex: this.id
     });      
   } else {
     renderingOptions.type = M(function(){/***
@@ -154,7 +164,7 @@ Node.prototype.generate = function(context) {
   }
 
   // We have a uniqueness constraint on the array items
-  if(this.uniqueItems) {
+  if(this.uniqueItemsFunction) {
     renderingOptions.unique = generateUniqueItems(this);
   }
 
@@ -167,30 +177,6 @@ Node.prototype.generate = function(context) {
   if(typeof this.additionalItemsValidation == 'boolean' || this.additionalItemsValidation instanceof Object) {
     renderingOptions.additionalItemsValidation = generateAdditionalItemsValidation(this, this.additionalItemsValidation, this.positionalItemValidation, context);
   }
-
-  // // Generate path
-  // var path = 'path';
-  // // If we are in an array
-  // if(context.inArray && !context.inArrayIndex) {
-  //   path = f('path.slice(0).concat([i])');
-  // } else if(context.inArray && context.inArrayIndex) {
-  //   path = f('path.slice(0).concat([%s])', context.inArrayIndex);
-  // } else if(context.path) {
-  //   path = context.path;
-  // } else if(this.parent == null) {
-  //   path = ['["object"]'];
-  // }
-
-  // // Set the object
-  // var objectPath = 'object';
-  // // Do we have a custom object path generator
-  // if(context.inArray && !context.inArrayIndex) {
-  //   objectPath = 'object[i]';
-  // } else if(context.inArray && context.inArrayIndex) {
-  //   objectPath = f('object[%s]', context.inArrayIndex);
-  // } else if(context.object) {
-  //   objectPath = context.object;
-  // }
 
   // Generate path and objectPath
   var paths = generatePathAndObject(self, context);
@@ -329,10 +315,10 @@ var generateAllItemValidation = function(self, validation, context) {
 
 var generateValidationLanguage = function(self, validations) {
   var validationTemplate = M(function(){/***
-    if({{validation}} && context.failOnFirst) {
-      throw new ValidationError('number fails validation {{rule}}', path, rules[{{ruleIndex}}], object);
-    } else if({{validation}}) {
-      errors.push(new ValidationError('number fails validation {{rule}}', path, rules[{{ruleIndex}}], object));
+    if(({{validation}}) && context.failOnFirst) {
+      throw new ValidationError('array fails length validation {{rule}}', path, rules[{{ruleIndex}}], object);
+    } else if(({{validation}})) {
+      errors.push(new ValidationError('array fails length validation {{rule}}', path, rules[{{ruleIndex}}], object));
     }
   ***/});
 

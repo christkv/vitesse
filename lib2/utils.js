@@ -22,7 +22,7 @@ var generatePathAndObject = function(self, context) {
   var path = 'path';
   // If we are in an array
   if(context.inArray && !context.inArrayIndex) {
-    path = f('path.slice(0).concat([i])');
+    path = f('path.slice(0).concat(["" + i])');
   } else if(context.inArray && context.inArrayIndex) {
     path = f('path.slice(0).concat([%s])', context.inArrayIndex);
   } else if(context.path) {

@@ -128,9 +128,9 @@ Node.prototype.generate = function(context) {
 
 var generateValidationLanguage = function(self, validations, context) {
   var validationTemplate = M(function(){/***
-    if({{validation}} && context.failOnFirst) {
+    if(({{validation}}) && context.failOnFirst) {
       throw new ValidationError('string fails validation {{rule}}', path, rules[{{ruleIndex}}], object);
-    } else if({{validation}}) {
+    } else if(({{validation}})) {
       errors.push(new ValidationError('string fails validation {{rule}}', path, rules[{{ruleIndex}}], object));
     }
   ***/});
