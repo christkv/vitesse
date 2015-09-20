@@ -37,18 +37,23 @@ Node.prototype.addValidation = function(validation) {
   for(var name in validation) {
     this.validation[name] = validation[name];
   }
+
+  return this;
 }
 
 Node.prototype.setDefault = function(value) {
   this.defaultValue = value;
+  return this;
 }
 
 Node.prototype.setTypeCheck = function(typeCheck) {  
   this.typeCheck = typeCheck;
+  return this;
 }
 
 Node.prototype.addSpecialValidator = function(validator) {
   this.special.push(validator);
+  return this;
 }
 
 Node.prototype.path = function() {
@@ -88,12 +93,12 @@ Node.prototype.generate = function(context) {
   if(this.typeCheck) {
     renderingOptions.type = Mark.up(M(function(){/***
       if(typeof object != 'number' && context.failOnFirst) {
-        throw new ValidationError('field is not a number', '{{path}}', rules[{{ruleIndex}}], object);
+        throw new ValidationError('field is not a number', path, rules[{{ruleIndex}}], object);
       } else if(typeof object != 'number') {       
-        return errors.push(new ValidationError('field is not a number', '{{path}}', rules[{{ruleIndex}}], object));
+        return errors.push(new ValidationError('field is not a number', path, rules[{{ruleIndex}}], object));
       }
     ***/}), {
-      ruleIndex: this.id, path: this.path().join('.')
+      ruleIndex: this.id
     });      
   } else {
     renderingOptions.type = M(function(){/***

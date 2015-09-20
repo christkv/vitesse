@@ -11,11 +11,6 @@ var assert = require("assert"),
 describe('Boolean', function() {
   describe('validation', function() {
     it('simple boolean type validation', function() {
-      // var schema = new DocumentType({
-      //   fields: {
-      //     'field': new BooleanType({exists:true})
-      //   }
-      // });
       var booleanValue = new BooleanNode(null, null, {typeCheck:true});
       var schema = new ObjectNode(null, null, {typeCheck:true})
         .addChild('field', booleanValue)
