@@ -1,36 +1,26 @@
 var assert = require("assert"),
   co = require('co'),
   f = require('util').format,
-  ArrayType = require('../lib/ast').ArrayType,
-  NestedArrayType = require('../lib/ast').NestedArrayType,
-  StringType = require('../lib/ast').StringType,
-  OneOfType = require('../lib/ast').OneOfType,
-  AllOfType = require('../lib/ast').AllOfType,
-  AnyOfType = require('../lib/ast').AnyOfType,
-  NotType = require('../lib/ast').NotType,
-  NumberType = require('../lib/ast').NumberType,
-  IntegerType = require('../lib/ast').IntegerType,
-  DocumentType = require('../lib/ast').DocumentType,
-  Compiler = require('../lib/compiler'),
-  ClosureCompiler = require('../lib/closure_compiler');
+  ArrayNode = require('../lib2/array'),
+  ObjectNode = require('../lib2/object'),
+  IntegerNode = require('../lib2/integer'),
+  NotNode = require('../lib2/not'),
+  BooleanNode = require('../lib2/boolean'),
+  NumberNode = require('../lib2/number'),
+  StringNode = require('../lib2/string'),
+  Compiler = require('../lib2/compiler').Compiler;
 
 describe('Not', function() {
   describe('validation', function() {
     it('should correctly handle nested types', function() {
-      // Top level document
-      var embeddedDocument = new NotType({
-        validations: [
-          new IntegerType({}),
-          new StringType({})        
-        ]
-      });
+      var embeddedDocument = new NotNode()
+        .addValidations([
+            new IntegerNode(null, null, {typeCheck:true}),
+            new StringNode(null, null, {typeCheck:true})
+          ]);
 
-      // Top level document
-      var topLevelDocument = new DocumentType({
-        fields: {
-          'child': embeddedDocument
-        }
-      });
+      var topLevelDocument = new ObjectNode(null, null, {typeCheck:true})
+        .addChild('child', embeddedDocument);
 
       var compiler = new Compiler({});
       // Compile the AST
@@ -39,34 +29,26 @@ describe('Not', function() {
       var results = func.validate({child: ''});
       assert.equal(1, results.length);
       assert.equal("value failed not rule", results[0].message);
-      assert.equal('object.child', results[0].path);
-      assert.ok(topLevelDocument === results[0].rule);
+      assert.deepEqual(['object', 'child'], results[0].path);
+      assert.ok(embeddedDocument === results[0].rule);
     });
 
     it('should handle situation where validation is a document', function() {
-      var doc1 = new DocumentType({
-            fields: {
-              'field': new StringType({})
-            },
-            exists:true
-          });
+      var string1 = new StringNode(null, null, {typeCheck:true});
+      var doc1 = new ObjectNode(null, null, {typeCheck:true})
+        .addChild('field', string1)
+        .requiredFields(['field']);
 
       // String
-      var string2 = new StringType({validations: {$gte:2}});
+      var string2 = new StringNode(null, null, {typeCheck:true});
       // Get the document
-      var doc2 = new DocumentType({
-            fields: {
-              'field': string2
-            },
-            exists:true
-          });
+      var doc2 = new ObjectNode(null, null, {typeCheck:true})
+        .addChild('field', string2)
+        .requiredFields(['field']);
 
       // Top level document
-      var topLevelDocument = new NotType({
-        validations: [
-          doc2
-        ]
-      });
+      var topLevelDocument = new NotNode()
+        .addValidations([doc2]);
 
       var compiler = new Compiler({});
       // Compile the AST
@@ -75,7 +57,7 @@ describe('Not', function() {
       var results = func.validate({field:'  '});
       assert.equal(1, results.length);
       assert.equal("value failed not rule", results[0].message);
-      assert.equal('object', results[0].path);
+      assert.deepEqual(['object'], results[0].path);
       assert.ok(topLevelDocument === results[0].rule);
 
       // Attempt to validate
@@ -83,11 +65,8 @@ describe('Not', function() {
       assert.equal(0, results.length);
 
       // Top level document
-      var topLevelDocument = new NotType({
-        validations: [
-          doc1, doc2
-        ]
-      });
+      var topLevelDocument = new NotNode()
+        .addValidations([doc1, doc2]);
 
       var compiler = new Compiler({});
       // Compile the AST
@@ -100,8 +79,8 @@ describe('Not', function() {
       var results = func.validate({field:'  '});
       assert.equal(1, results.length);
       assert.equal("value failed not rule", results[0].message);
-      assert.equal('object', results[0].path);
-      assert.ok(topLevelDocument === results[0].rule);
+      assert.deepEqual(['object'], results[0].path);
+      assert.ok(string1 === results[0].rule);
     });
   });
 });

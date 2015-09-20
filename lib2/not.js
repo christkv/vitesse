@@ -32,14 +32,17 @@ var Node = function(parent, field, options) {
 
 Node.prototype.setTypeCheck = function(typeCheck) {  
   this.typeCheck = typeCheck;
+  return this;
 }
 
 Node.prototype.setDefault = function(value) {
   this.defaultValue = value;
+  return this;
 }
 
 Node.prototype.addValidations = function(validations) {
   this.validations = validations;
+  return this;
 }
 
 Node.prototype.path = function() {
