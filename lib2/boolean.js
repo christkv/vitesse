@@ -85,12 +85,12 @@ Node.prototype.generate = function(context) {
   if(this.typeCheck) {
     renderingOptions.type = Mark.up(M(function(){/***
       if(typeof object != 'boolean' && context.failOnFirst) {
-        throw new ValidationError('field is not a boolean', '{{path}}', rules[{{ruleIndex}}], object);
+        throw new ValidationError('field is not a boolean', path, rules[{{ruleIndex}}], object);
       } else if(typeof object != 'boolean') {       
-        return errors.push(new ValidationError('field is not a boolean', '{{path}}', rules[{{ruleIndex}}], object));
+        return errors.push(new ValidationError('field is not a boolean', path, rules[{{ruleIndex}}], object));
       }
     ***/}), {
-      ruleIndex: this.id, path: this.path().join('.')
+      ruleIndex: this.id
     });      
   } else {
     renderingOptions.type = M(function(){/***
@@ -99,30 +99,6 @@ Node.prototype.generate = function(context) {
       }
     ***/});         
   }
-
-  // // Generate path
-  // var path = 'path';
-  // // If we are in an array
-  // if(context.inArray && !context.inArrayIndex) {
-  //   path = f('path.slice(0).concat([i])');
-  // } else if(context.inArray && context.inArrayIndex) {
-  //   path = f('path.slice(0).concat([%s])', context.inArrayIndex);
-  // } else if(context.path) {
-  //   path = context.path;
-  // } else if(this.parent == null) {
-  //   path = ['["object"]'];
-  // }
-
-  // // Set the object
-  // var objectPath = 'object';
-  // // Do we have a custom object path generator
-  // if(context.inArray && !context.inArrayIndex) {
-  //   objectPath = 'object[i]';
-  // } else if(context.inArray && context.inArrayIndex) {
-  //   objectPath = f('object[%s]', context.inArrayIndex);
-  // } else if(context.object) {
-  //   objectPath = context.object;
-  // }
 
   // Generate path and objectPath
   var paths = generatePathAndObject(self, context);

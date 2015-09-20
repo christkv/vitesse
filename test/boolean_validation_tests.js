@@ -1,22 +1,25 @@
 var assert = require("assert"),
   co = require('co'),
   f = require('util').format,
-  ArrayType = require('../lib/ast').ArrayType,
-  NestedArrayType = require('../lib/ast').NestedArrayType,
-  StringType = require('../lib/ast').StringType,
-  NumberType = require('../lib/ast').NumberType,
-  BooleanType = require('../lib/ast').BooleanType,
-  DocumentType = require('../lib/ast').DocumentType,
-  Compiler = require('../lib/compiler');
+  ArrayNode = require('../lib2/array'),
+  ObjectNode = require('../lib2/object'),
+  IntegerNode = require('../lib2/integer'),
+  BooleanNode = require('../lib2/boolean'),
+  StringNode = require('../lib2/string'),
+  Compiler = require('../lib2/compiler').Compiler;
 
 describe('Boolean', function() {
   describe('validation', function() {
     it('simple boolean type validation', function() {
-      var schema = new DocumentType({
-        fields: {
-          'field': new BooleanType({exists:true})
-        }
-      });
+      // var schema = new DocumentType({
+      //   fields: {
+      //     'field': new BooleanType({exists:true})
+      //   }
+      // });
+      var booleanValue = new BooleanNode(null, null, {typeCheck:true});
+      var schema = new ObjectNode(null, null, {typeCheck:true})
+        .addChild('field', booleanValue)
+        .requiredFields(['field']);
 
       var compiler = new Compiler({});
       // Compile the AST
@@ -25,16 +28,16 @@ describe('Boolean', function() {
       // Validate {}
       var results = func.validate({});
       assert.equal(1, results.length);
-      assert.equal('field does not exist', results[0].message);
-      assert.equal('object.field', results[0].path);
-      assert.ok(results[0].rule instanceof DocumentType);
+      assert.equal('object is missing required fields [\"field\"]', results[0].message);
+      assert.deepEqual(['object'], results[0].path);
+      assert.ok(results[0].rule === schema);
 
       // Validate {field:''}
       var results = func.validate({field:''});
       assert.equal(1, results.length);
       assert.equal('field is not a boolean', results[0].message);
-      assert.equal('object.field', results[0].path);
-      assert.ok(results[0].rule instanceof BooleanType);
+      assert.deepEqual(['object', 'field'], results[0].path);
+      assert.ok(results[0].rule === booleanValue);
 
       // Validate correctly
       var results = func.validate({field:true});
@@ -46,18 +49,13 @@ describe('Boolean', function() {
     });
 
     it('simple boolean nested object type validation', function() {
-      var doc1 = new DocumentType({
-        fields: {
-          'field': new BooleanType({exists:true})
-        },
-        exists:true
-      });
+      var booleanValue = new BooleanNode(null, null, {typeCheck:true});
+      var doc1 = new ObjectNode(null, null, {typeCheck:true})
+        .addChild('field', booleanValue);
 
-      var schema = new DocumentType({
-        fields: {
-          'doc': doc1
-        }
-      });
+      var schema = new ObjectNode(null, null, {typeCheck:true})
+        .addChild('doc', doc1)
+        .requiredFields(['doc']);
 
       var compiler = new Compiler({});
       // Compile the AST
@@ -66,16 +64,16 @@ describe('Boolean', function() {
       // Validate {}
       var results = func.validate({});
       assert.equal(1, results.length);
-      assert.equal('field does not exist', results[0].message);
-      assert.equal('object.doc', results[0].path);
-      assert.ok(results[0].rule instanceof DocumentType);
+      assert.equal('object is missing required fields ["doc"]', results[0].message);
+      assert.deepEqual(['object'], results[0].path);
+      assert.ok(results[0].rule === schema);
 
       // Validate {doc: {field:''}}
       var results = func.validate({doc: {field:''}});
       assert.equal(1, results.length);
       assert.equal('field is not a boolean', results[0].message);
-      assert.equal('object.doc.field', results[0].path);
-      assert.ok(results[0].rule instanceof BooleanType);
+      assert.deepEqual(['object', 'doc', 'field'], results[0].path);
+      assert.ok(results[0].rule === booleanValue);
 
       // Validate correctly
       var results = func.validate({doc: {field:true}});

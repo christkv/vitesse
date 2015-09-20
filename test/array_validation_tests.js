@@ -6,12 +6,6 @@ var assert = require("assert"),
   IntegerNode = require('../lib2/integer'),
   StringNode = require('../lib2/string'),
   Compiler = require('../lib2/compiler').Compiler;
-  // ArrayType = require('../lib/ast').ArrayType,
-  // NestedArrayType = require('../lib/ast').NestedArrayType,
-  // StringType = require('../lib/ast').StringType,
-  // NumberType = require('../lib/ast').NumberType,
-  // DocumentType = require('../lib/ast').DocumentType,
-  // Compiler = require('../lib/compiler');
 
 describe('Array', function() {
   describe('validation', function() {

@@ -23,6 +23,8 @@ describe('Number', function() {
 
       // Validate {}
       var results = func.validate({});
+      console.log("----------------------------------------------------------")
+      console.dir(results)
       assert.equal(1, results.length);
       assert.equal('field does not exist', results[0].message);
       assert.equal('object.field', results[0].path);
