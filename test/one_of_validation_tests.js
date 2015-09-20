@@ -36,6 +36,8 @@ describe('OneOf', function() {
       var func = compiler.compile(topLevelDocument, {});
       // Attempt to validate
       var results = func.validate({child: 3});
+      // console.log("-----------------------------------------------")
+      // console.dir(results)
       assert.equal(1, results.length);
       assert.equal('more than one schema matched ofOne rule', results[0].message);
       assert.equal('object.child', results[0].path);
