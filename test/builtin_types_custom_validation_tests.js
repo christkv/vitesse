@@ -1,12 +1,6 @@
 var assert = require("assert"),
   co = require('co'),
   f = require('util').format,
-  ArrayType = require('../lib/ast').ArrayType,
-  NestedArrayType = require('../lib/ast').NestedArrayType,
-  CustomType = require('../lib/ast').CustomType,
-  StringType = require('../lib/ast').StringType,
-  NumberType = require('../lib/ast').NumberType,
-  DocumentType = require('../lib/ast').DocumentType,
   Compiler = require('../lib/compiler');
 
 describe('Custom', function() {

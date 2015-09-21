@@ -24,6 +24,7 @@
   "dependencies": {
     "closure-compiler": "^0.2.7",
     "jsfmt": "0.4.1",
+    "jstransform": "^11.0.3",
     "markup-js": "^1.5.21",
     "mstring": "0.1.2"
   },

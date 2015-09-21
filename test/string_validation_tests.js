@@ -1,10 +1,10 @@
 var assert = require("assert"),
   co = require('co'),
   f = require('util').format,
-  ObjectNode = require('../lib2/object'),
-  StringNode = require('../lib2/string'),
-  Compiler = require('../lib2/compiler').Compiler,
-  ClosureCompiler = require('../lib2/compiler').ClosureCompiler;
+  ObjectNode = require('../lib/object'),
+  StringNode = require('../lib/string'),
+  Compiler = require('../lib/compiler').Compiler,
+  ClosureCompiler = require('../lib/compiler').ClosureCompiler;
 
 describe('String', function() {
   describe('validation', function() {

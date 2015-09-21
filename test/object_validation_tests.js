@@ -1,14 +1,14 @@
 var assert = require("assert"),
   co = require('co'),
   f = require('util').format,
-  ArrayNode = require('../lib2/array'),
-  ObjectNode = require('../lib2/object'),
-  IntegerNode = require('../lib2/integer'),
-  BooleanNode = require('../lib2/boolean'),
-  NumberNode = require('../lib2/number'),
-  StringNode = require('../lib2/string'),
-  Compiler = require('../lib2/compiler').Compiler,
-  ClosureCompiler = require('../lib2/compiler').ClosureCompiler;
+  ArrayNode = require('../lib/array'),
+  ObjectNode = require('../lib/object'),
+  IntegerNode = require('../lib/integer'),
+  BooleanNode = require('../lib/boolean'),
+  NumberNode = require('../lib/number'),
+  StringNode = require('../lib/string'),
+  Compiler = require('../lib/compiler').Compiler,
+  ClosureCompiler = require('../lib/compiler').ClosureCompiler;
 
 describe('Object', function() {
   describe('validation', function() {

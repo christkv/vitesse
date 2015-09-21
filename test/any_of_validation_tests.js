@@ -1,11 +1,11 @@
 var assert = require("assert"),
   co = require('co'),
   f = require('util').format,
-  AnyOfNode = require('../lib2/anyof'),
-  ObjectNode = require('../lib2/object'),
-  IntegerNode = require('../lib2/integer'),
-  StringNode = require('../lib2/string'),
-  Compiler = require('../lib2/compiler').Compiler;
+  AnyOfNode = require('../lib/anyof'),
+  ObjectNode = require('../lib/object'),
+  IntegerNode = require('../lib/integer'),
+  StringNode = require('../lib/string'),
+  Compiler = require('../lib/compiler').Compiler;
 
 describe('AnyOf', function() {
   describe('validation', function() {
