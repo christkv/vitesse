@@ -1,21 +1,21 @@
 // Export module entities
 var ex = {
-  Compiler: require('./lib2/compiler').Compiler,
-  ClosureCompiler: require('./lib2/compiler').ClosureCompiler,
-  ObjectNode: require('./lib2/object'),
-  StringNode: require('./lib2/string'),
-  NumberNode: require('./lib2/number'),
-  ArrayNode: require('./lib2/array'),
-  IntegerNode: require('./lib2/integer'),
-  AnyNode: require('./lib2/any'),
-  BooleanNode: require('./lib2/boolean'),
-  OneOfNode: require('./lib2/oneof'),
-  AllOfNode: require('./lib2/allof'),
-  AnyOfNode: require('./lib2/anyof'),
-  NotNode: require('./lib2/not'),
-  NullNode: require('./lib2/null'),
-  EnumNode: require('./lib2/enum'),
-  RecursiveNode: require('./lib2/recursive')
+  Compiler: require('./lib/compiler').Compiler,
+  ClosureCompiler: require('./lib/compiler').ClosureCompiler,
+  ObjectNode: require('./lib/object'),
+  StringNode: require('./lib/string'),
+  NumberNode: require('./lib/number'),
+  ArrayNode: require('./lib/array'),
+  IntegerNode: require('./lib/integer'),
+  AnyNode: require('./lib/any'),
+  BooleanNode: require('./lib/boolean'),
+  OneOfNode: require('./lib/oneof'),
+  AllOfNode: require('./lib/allof'),
+  AnyOfNode: require('./lib/anyof'),
+  NotNode: require('./lib/not'),
+  NullNode: require('./lib/null'),
+  EnumNode: require('./lib/enum'),
+  RecursiveNode: require('./lib/recursive')
 }
 
 module.exports = ex;
