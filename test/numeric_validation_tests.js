@@ -36,6 +36,33 @@ describe('Number', function() {
       assert.ok(results[0].rule === numberNode);
     });
 
+    it('simple number type validation with empty validations', function() {
+      var numberNode = new NumberNode(null, null, {typeCheck:true})
+        .addValidation({});
+
+      var schema = new ObjectNode(null, null, {typeCheck:true})
+        .addChild('field', numberNode)
+        .requiredFields(['field']);
+
+      var compiler = new Compiler({});
+      // Compile the AST
+      var func = compiler.compile(schema, {});
+
+      // Validate {}
+      var results = func.validate({});
+      assert.equal(1, results.length);
+      assert.equal('object is missing required fields ["field"]', results[0].message);
+      assert.deepEqual(['object'], results[0].path);
+      assert.ok(results[0].rule === schema);
+
+      // Validate {field:''}
+      var results = func.validate({field:''});
+      assert.equal(1, results.length);
+      assert.equal('field is not a number', results[0].message);
+      assert.deepEqual(['object', 'field'], results[0].path);
+      assert.ok(results[0].rule === numberNode);
+    });
+
     it('simple number nested object type validation', function() {
       var numberNode = new NumberNode(null, null, {typeCheck:true});
       var doc1 = new ObjectNode(null, null, {typeCheck:true})
