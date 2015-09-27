@@ -53,7 +53,9 @@ describe('Object', function() {
       assert.equal(1, results.length);
       assert.equal('field is not a string', results[0].message);
       assert.deepEqual(['object', 'child', 'field'], results[0].path);
-      assert.ok(results[0].rule === string);
+      // console.dir(results[0].rule.type == 'string');
+      // assert.ok(results[0].rule === string);
+      assert.ok(results[0].rule.type === 'string');
 
       // Validate {}
       var results = func.validate({child:{field:''}});
@@ -106,7 +108,9 @@ describe('Object', function() {
         assert.equal(1, results.length);
         assert.equal('field is not a string', results[0].message);
         assert.deepEqual(['object', 'child', 'field'], results[0].path);
-        assert.ok(results[0].rule === string);
+        // console.dir(results[0].rule.type == 'string');
+        // assert.ok(results[0].rule === string);
+        assert.ok(results[0].rule.type === 'string');
 
         // Validate {}
         var results = func.validate({child:{field:''}});

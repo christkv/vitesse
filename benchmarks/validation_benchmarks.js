@@ -1,10 +1,8 @@
 var Benchmark = require('benchmark'),
-  Compiler = require('../lib2/compiler').Compiler,
-  ClosureCompiler = require('../lib2/compiler').ClosureCompiler,
-  // NumberType = require('../lib/ast').NumberType,
-  // DocumentType = require('../lib/ast').DocumentType
-  ObjectNode = require('../lib2/object'),
-  IntegerNode = require('../lib2/integer'),
+  Compiler = require('../lib/compiler').Compiler,
+  ClosureCompiler = require('../lib/compiler').ClosureCompiler,
+  ObjectNode = require('../lib/object'),
+  IntegerNode = require('../lib/integer'),
   f = require('util').format;
 
 var Joi = require('joi');
@@ -59,15 +57,15 @@ var manual = function(object) {
   }
 }
 
-// Vitesse test
-suite.add('Compiler test', function() {
-  validator.validate({number:150});
-});
+// // Vitesse test
+// suite.add('Compiler test', function() {
+//   validator.validate({number:150});
+// });
 
-// Vitesse closure test
-suite.add('Closure compiler test', function() {
-  validatorClosure.validate({number:150});
-});
+// // Vitesse closure test
+// suite.add('Closure compiler test', function() {
+//   validatorClosure.validate({number:150});
+// });
 
 // Manual test
 suite.add('Manual vitesse test', function() {
@@ -96,103 +94,93 @@ var ValidationError = function(message, path, rule, value) {
 var validate = function(object, context) {
   var context = context == null ? {} : context;
   var errors = [];
-  // var generatePath = function(parent) {
-  //   var args = Array.prototype.slice.call(arguments);
-  //   args.shift();
-  //   return f('%s%s', parent, args.map(function(x) {
-  //     return f('[%s]', x);
-  //   }).join(''));
-  // }
-  // var exists_validation2 = function(path, object, context) {
-  //   if (undefined == object && context.failOnFirst) {
-  //     throw new ValidationError('field does not exist', path, rules[1], object);
-  //   } else if (undefined == object) {
-  //     errors.push(new ValidationError('field does not exist', path, rules[1], object));
-  //   }
-  // }
-  // var number_validation3 = function(path, object, context) {
-  //   if (object == undefined) return;
-  //   if (!(typeof object == 'number') && context.failOnFirst) {
-  //     throw new ValidationError('field is not a number', path, rules[2], object);
-  //   } else if (!(typeof object == 'number')) {
-  //     errors.push(new ValidationError('field is not a number', path, rules[2], object));
-  //   }
-  //   if (typeof object == 'number' && (object <= 100 || object >= 1000) && context.failOnFirst) {
-  //     throw new ValidationError('number fails validation {"$gt":100,"$lt":1000}', path, rules[2], object);
-  //   } else if (typeof object == 'number' && (object <= 100 || object >= 1000)) {
-  //     errors.push(new ValidationError('number fails validation {"$gt":100,"$lt":1000}', path, rules[2], object));
-  //   }
-  // }
-
-  var object_validation1 = function(path, object, context) {
-    if ((object == null || typeof object != 'object') && context.failOnFirst) {
-      throw new ValidationError('field is not an object', path, rules[0], object);
-    } else if (object == null || typeof object != 'object') {
-      errors.push(new ValidationError('field is not an object', path, rules[0], object));
+  var path = ['object'];
+  var generatePath = function(parent) {
+    var args = Array.prototype.slice.call(arguments);
+    args.shift();
+    return f('%s%s', parent, args.map(function(x) {
+      return f('[%s]', x);
+    }).join(''));
+  }
+  var deepCompareStrict = function(a, b) {
+    if (typeof a !== typeof b) {
+      return false;
     }
-    // Not possible to perform any validations on the object as it does not exist
-    if (object == null) return;
+    if (a instanceof Array) {
+      if (!(b instanceof Array)) {
+        return false;
+      }
+      if (a.length !== b.length) {
+        return false;
+      }
+      return a.every(function(v, i) {
+        return deepCompareStrict(a[i], b[i]);
+      });
+    }
+    if (typeof a === 'object') {
+      if (!a || !b) {
+        return a === b;
+      }
+      var aKeys = Object.keys(a);
+      var bKeys = Object.keys(b);
+      if (aKeys.length !== bKeys.length) {
+        return false;
+      }
+      return aKeys.every(function(v) {
+        return deepCompareStrict(a[v], b[v]);
+      });
+    }
+    return a === b;
+  };
+  var testArrays = function(v, i, a) {
+    for (var j = i + 1; j < a.length; j++)
+      if (deepCompareStrict(v, a[j])) {
+        return false;
+    }
+    return true;
+  }
+  // function integer_validation_1(path, object, context) {
+  //   if (object === undefined) return;
+  //   // We have a type validation
+  //   if (typeof object != 'number') {
+  //     return errors;
+  //   }
+  //   // Validations
+  //   if ((object <= 100 || object >= 100) && context.failOnFirst) {
+  //     throw new ValidationError('number fails validation {"$gt":100,"$lt":100}', path, null, object);
+  //   } else if( (object <= 100 || object >= 100) ) {
+  //     errors.push(new ValidationError('number fails validation {"$gt":100,"$lt":100}', path, null, object));
+  //   }
+  //   // Custom validations
+  // }
+  // function object_validation_0(path, object, context) {
+    if (object === undefined) return;
+    // We have a type validation
+    if (object == null || typeof object != 'object' || Array.isArray(object)) {
+      return errors;
+    }
+    // Prohibits fields override
+    // Requires fields override
+    // Validations
+    // Additional field validations
+    // Dependencies
     // Custom validations
     // Perform validations on object fields
-    // exists_validation2(path + '.number', object.number, context);
-    // number_validation3(path + '.number', object.number, context);
+    // integer_validation_1(path.slice(0).concat(["number"]), object.number, context);
 
-    var _object = object.number;
-    var _path = path + '.number';
-
-    if (undefined == _object && context.failOnFirst) {
-      throw new ValidationError('field does not exist', _path, rules[1], _object);
-    } else if (undefined == _object) {
-      errors.push(new ValidationError('field does not exist', _path, rules[1], _object));
+    if (object.number === undefined) return;
+    // We have a type validation
+    if (typeof object.number != 'number') {
+      return errors;
+    }
+    // Validations
+    if ((object.number <= 100 || object.number >= 100) && context.failOnFirst) {
+      throw new ValidationError('number fails validation {"$gt":100,"$lt":100}', path, null, object.number);
+    } else if( (object.number <= 100 || object.number >= 100) ) {
+      errors.push(new ValidationError('number fails validation {"$gt":100,"$lt":100}', path, null, object.number));
     }
 
-    if (_object == undefined) return;
-    if (!(typeof _object == 'number') && context.failOnFirst) {
-      throw new ValidationError('field is not a number', _path, rules[2], _object);
-    } else if (!(typeof _object == 'number')) {
-      errors.push(new ValidationError('field is not a number', _path, rules[2], _object));
-    }
-
-    if (typeof _object == 'number' && (_object <= 100 || _object >= 1000) && context.failOnFirst) {
-      throw new ValidationError('number fails validation {"$gt":100,"$lt":1000}', _path, rules[2], _object);
-    } else if (typeof _object == 'number' && (_object <= 100 || _object >= 1000)) {
-      errors.push(new ValidationError('number fails validation {"$gt":100,"$lt":1000}', _path, rules[2], _object));
-    }
-
-  }
-
-  object_validation1('object', object, context);
+  // }
+  // object_validation_0(["object"], object, context);
   return errors;
 };
-
-// var validate = function(b, e) {
-//   e = e || {};
-//   var c = [], d = e;
-//   if (null != b && "object" == typeof b || !d.failOnFirst) {
-//     null != b && "object" == typeof b || c.push(new ValidationError("field is not an object", "object", rules[0], b));
-//   } else {
-//     throw new ValidationError("field is not an object", "object", rules[0], b);
-//   }
-//   if (null != b) {
-//     var a = b.number;
-//     if (void 0 == a && d.failOnFirst) {
-//       throw new ValidationError("field does not exist", "object.number", rules[1], a);
-//     }
-//     null != a && void 0 != a || c.push(new ValidationError("field does not exist", "object.number", rules[1], a));
-//     a = b.number;
-//     if (void 0 != a) {
-//       if ("number" != typeof a && d.failOnFirst) {
-//         throw new ValidationError("field is not a number", "object.number", rules[2], a);
-//       }
-//       "number" != typeof a && c.push(new ValidationError("field is not a number", "object.number", rules[2], a));
-//       if ("number" == typeof a && (100 >= a || 1E3 <= a) && d.failOnFirst) {
-//         throw new ValidationError('number fails validation {"$gt":100,"$lt":1000}', "object.number", rules[2], a);
-//       }
-//       "number" == typeof a && (100 >= a || 1E3 <= a) && c.push(new ValidationError('number fails validation {"$gt":100,"$lt":1000}', "object.number", rules[2], a));
-//     }
-//   }
-//   return c;
-// };
-
-// // run benchmark
-// suite.run({ 'async': true });
