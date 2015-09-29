@@ -16,7 +16,7 @@ describe('Optimizer', function() {
 
       var compiler = new Compiler({});
       // Compile the AST
-      var func = compiler.compile(schema, {optimize:true, debug:true});
+      var func = compiler.compile(schema, {optimize:true, debug:false});
 
       // Validate {}
       var results = func.validate({});

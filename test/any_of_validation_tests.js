@@ -24,14 +24,13 @@ describe('AnyOf', function() {
 
       var compiler = new Compiler({});
       // Compile the AST
-      var func = compiler.compile(topLevelDocument, {debug:true});
+      var func = compiler.compile(topLevelDocument, {debug:false});
       // Attempt to validate
       var results = func.validate({child: ''});
       assert.equal(1, results.length);
       assert.equal("value does not match any of the schema\'s in the anyOf rule", results[0].message);
       assert.deepEqual(['object', 'child'], results[0].path);
       assert.ok(anyOf === results[0].rule);
-      console.dir(results[0].errors)
       assert.equal(3, results[0].errors.length);
     });
 
