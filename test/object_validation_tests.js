@@ -64,6 +64,7 @@ describe('Object', function() {
 
     it('should handle single level embedded document using closure compiler', function(done) {
       if(process.env["TRAVIS_JOB_ID"]) return done();
+      this.timeout(50000);
       var string = new StringNode(null, null, {typeCheck:true})
       var embeddedDocument = new ObjectNode(null, null, {typeCheck:true})
         .addChild('field', string)
