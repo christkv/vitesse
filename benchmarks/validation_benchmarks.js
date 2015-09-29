@@ -18,8 +18,15 @@ number.addValidation({$gt: 100});
 number.addValidation({$lt: 100});
 obj.addChild('number', number);
 
+// Debug flag
+var debug = false;
+
 // Compile the validator
-var validator = new Compiler().compile(obj, {debug:true});
+var validator = new Compiler().compile(obj, {debug:debug});
+
+// Compile the validator
+var validatorOptimized = new Compiler().compile(obj, {debug:debug, optimize:true});
+
 // Create Joi expression
 var joiSchema = Joi.object().keys({
   number: Joi.number().integer().min(100).max(1000)
@@ -57,15 +64,20 @@ var manual = function(object) {
   }
 }
 
-// // Vitesse test
-// suite.add('Compiler test', function() {
-//   validator.validate({number:150});
-// });
+// Vitesse test
+suite.add('Compiler test', function() {
+  validator.validate({number:150});
+});
 
-// // Vitesse closure test
-// suite.add('Closure compiler test', function() {
-//   validatorClosure.validate({number:150});
-// });
+// Vitesse test
+suite.add('Compiler test optimized', function() {
+  validatorOptimized.validate({number:150});
+});
+
+// Vitesse closure test
+suite.add('Closure compiler test', function() {
+  validatorClosure.validate({number:150});
+});
 
 // Manual test
 suite.add('Manual vitesse test', function() {
@@ -139,20 +151,7 @@ var validate = function(object, context) {
     }
     return true;
   }
-  // function integer_validation_1(path, object, context) {
-  //   if (object === undefined) return;
-  //   // We have a type validation
-  //   if (typeof object != 'number') {
-  //     return errors;
-  //   }
-  //   // Validations
-  //   if ((object <= 100 || object >= 100) && context.failOnFirst) {
-  //     throw new ValidationError('number fails validation {"$gt":100,"$lt":100}', path, null, object);
-  //   } else if( (object <= 100 || object >= 100) ) {
-  //     errors.push(new ValidationError('number fails validation {"$gt":100,"$lt":100}', path, null, object));
-  //   }
-  //   // Custom validations
-  // }
+
   // function object_validation_0(path, object, context) {
     if (object === undefined) return;
     // We have a type validation
@@ -166,20 +165,20 @@ var validate = function(object, context) {
     // Dependencies
     // Custom validations
     // Perform validations on object fields
-    // integer_validation_1(path.slice(0).concat(["number"]), object.number, context);
-
-    if (object.number === undefined) return;
+    var object_1 = object.number;
+    var path_1 = path.slice(0).concat(["number"]);{
+    if (object_1 === undefined) return;
     // We have a type validation
-    if (typeof object.number != 'number') {
-      return errors;
+    if (typeof object_1 == 'number') {
+      // Validations
+      if ((object_1 <= 100 || object_1 >= 100) && context.failOnFirst) {
+        throw new ValidationError('number fails validation {"$gt":100,"$lt":100}', path_1, rules[1], object_1);
+      } else if( (object_1 <= 100 || object_1 >= 100) ) {
+        errors.push(new ValidationError('number fails validation {"$gt":100,"$lt":100}', path_1, rules[1], object_1));
+      }
+      // Custom validations
     }
-    // Validations
-    if ((object.number <= 100 || object.number >= 100) && context.failOnFirst) {
-      throw new ValidationError('number fails validation {"$gt":100,"$lt":100}', path, null, object.number);
-    } else if( (object.number <= 100 || object.number >= 100) ) {
-      errors.push(new ValidationError('number fails validation {"$gt":100,"$lt":100}', path, null, object.number));
-    }
-
+    };
   // }
   // object_validation_0(["object"], object, context);
   return errors;
