@@ -1,6 +1,6 @@
 {
   "name": "vitesse",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Vitesse is a high performance object validation library",
   "main": "index.js",
   "scripts": {
