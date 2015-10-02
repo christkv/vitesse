@@ -9,7 +9,7 @@ Vitesse is a high speed object validation framework. It's meant as a target for 
 * Closure compiler test x 2,745,918 ops/sec ±0.86% (83 runs sampled)
 * Manual vitesse test x 2,588,368 ops/sec ±0.83% (92 runs sampled)
 
-The goal of this project is to allow you to avoid the cost of interpreting a set of validation rules by ahead of time compile it (AOT) using eval, allowing you to get close to the performance of manually writing validation code.
+The goal of this module is to allow you to avoid the cost of interpreting a set of validation rules by ahead of time compile it (AOT) using eval, allowing you to get close to the performance of manually writing validation code.
 
 With Vitesse as your target you can define whatever DSL you want and have Vitesse optimize it for maximum performance
 
@@ -102,7 +102,7 @@ module.exports = {
 }
 ```
 
-This simple DSL let's you create validations of the following style.
+This simple custom DSL let's you create validations of the following style.
 
 ```js
 var validator = Validator
@@ -120,4 +120,14 @@ var validator = Validator
 var compiler = new Compiler();
 var validator = compiler.compile(validator);
 assert.equal(1, validator.validate({id:'', users:[{id:'', permissions:['yupp']}]}).length);
+```
+
+## Available Nodes
+
+### Object Node
+
+The object node defines that validations for an object.
+
+```js
+var objectNode = new ObjectNode(null, null, {typeCheck:true})
 ```
