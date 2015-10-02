@@ -64,6 +64,11 @@ var manual = function(object) {
   }
 }
 
+// Joi test
+suite.add('Joi test', function() {
+  Joi.validate({number:150}, joiSchema, function (err, value) { });
+});
+
 // Vitesse test
 suite.add('Compiler test', function() {
   validator.validate({number:150});
