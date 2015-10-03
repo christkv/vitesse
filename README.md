@@ -131,3 +131,5 @@ The object node defines that validations for an object.
 ```js
 var objectNode = new ObjectNode(null, null, {typeCheck:true})
 ```
+
+The following methods are available
