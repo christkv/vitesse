@@ -2,12 +2,6 @@
 
 var f = require('util').format;
 
-/**************************************************************************
- *
- * COLLECTION TESTS
- *
- *************************************************************************/
-
 /**
  * Create a String validator for strings of length greater or equal to 5
  * and less or equal than 100 characters

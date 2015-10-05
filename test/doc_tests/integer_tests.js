@@ -2,12 +2,6 @@
 
 var f = require('util').format;
 
-/**************************************************************************
- *
- * COLLECTION TESTS
- *
- *************************************************************************/
-
 /**
  * Create a Integer validator for integers greater or equal to 5
  * and less or equal to 100.
