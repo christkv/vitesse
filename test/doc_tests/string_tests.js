@@ -22,8 +22,7 @@ exports['simple add validation test'] = {
       StringNode = require('../../lib/string');
     // LINE assert = require('assert'),
     // LINE   Compiler = require('vitesse').Compiler,
-    // LINE   StringNode = require('vitesse').StringNode,
-    // LINE   ObjectNode = require('vitesse').ObjectNode;
+    // LINE   StringNode = require('vitesse').StringNode;
     // BEGIN
 
     var schema = new StringNode(null, null, {typeCheck:true})
@@ -68,8 +67,7 @@ exports['simple date format validation test'] = {
       StringNode = require('../../lib/string');
     // LINE assert = require('assert'),
     // LINE   Compiler = require('vitesse').Compiler,
-    // LINE   StringNode = require('vitesse').StringNode,
-    // LINE   ObjectNode = require('vitesse').ObjectNode;
+    // LINE   StringNode = require('vitesse').StringNode;
     // BEGIN
 
     var schema = new StringNode(null, null, {typeCheck:true})
@@ -95,6 +93,61 @@ exports['simple date format validation test'] = {
 
     // Validate string 'xxxxxx'
     var results = func.validate('2015-09-10');
+    assert.equal(0, results.length);
+    // END
+    test.done();
+  }
+}
+
+/**
+ * Create a Custom validator
+ * @example-class StringNode
+ * @example-method addCustomValidator
+ */
+exports['simple custom validator for string node'] = {
+  // The actual test we wish to run
+  test: function(configure, test) {
+    var assert = require('assert'),
+      Compiler = require('../../lib/compiler').Compiler,
+      StringNode = require('../../lib/string'),
+      CustomNode = require('../../lib/custom');
+    // LINE assert = require('assert'),
+    // LINE   Compiler = require('vitesse').Compiler,
+    // LINE   StringNode = require('vitesse').StringNode,
+    // LINE   CustomNode = require('../../lib/custom');
+    // BEGIN
+
+    var customValidator = new CustomNode()
+      .setContext({regexp: /^[0-9]+$/ })
+      .setValidator(function(object, context) {
+        if(!context.regexp.test(object)) {
+          return new Error('failed regular expression ' + context.regexp.toString());
+        }
+      });
+
+    var schema = new StringNode(null, null, {typeCheck:true})
+      .addCustomValidator(customValidator);
+
+    var compiler = new Compiler({});
+    // Compile the AST
+    var func = compiler.compile(schema, {});
+
+    // Validate {}
+    var results = func.validate({});
+    assert.equal(1, results.length);
+    assert.equal('field is not a string', results[0].message);
+    assert.deepEqual(['object'], results[0].path);
+    assert.ok(results[0].rule === schema);
+
+    // Validate ''
+    var results = func.validate('');
+    assert.equal(1, results.length);
+    assert.equal('failed regular expression /^[0-9]+$/', results[0].message);
+    assert.deepEqual(['object'], results[0].path);
+    assert.ok(results[0].rule === customValidator);
+
+    // Validate string 'xxxxxx'
+    var results = func.validate('123456');
     assert.equal(0, results.length);
     // END
     test.done();
