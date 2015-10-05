@@ -2,6 +2,8 @@
   "plugins": ["plugins/markdown", "docs/lib/jsdoc/examples_plugin.js"],
   "source": {
     "include": [
+      "test/doc_tests/integer_tests.js",
+      "test/doc_tests/number_tests.js",
       "test/doc_tests/string_tests.js",
       "lib/allof.js",
       "lib/any.js",

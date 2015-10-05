@@ -6,7 +6,9 @@ var Runner = require('integra').Runner
   , TestNameFilter = require('integra').TestNameFilter
 
 var testFiles =[
-  '/test/doc_tests/string_tests.js'
+  '/test/doc_tests/string_tests.js',
+  '/test/doc_tests/number_tests.js',
+  '/test/doc_tests/integer_tests.js'
 ]
 
 // Set up the runner
