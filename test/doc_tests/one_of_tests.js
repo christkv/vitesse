@@ -4,10 +4,10 @@ var f = require('util').format;
 
 /**
  * Create a Not validator for string validations
- * @example-class NotNode
+ * @example-class OneOfNode
  * @example-method addValidations
  */
-exports['simple all of test'] = {
+exports['simple oneOf test'] = {
   // The actual test we wish to run
   test: function(configure, test) {
     var assert = require('assert'),

@@ -7,7 +7,7 @@ var f = require('util').format;
  * @example-class AnyOfNode
  * @example-method addValidations
  */
-exports['simple all of test'] = {
+exports['simple anyOf test'] = {
   // The actual test we wish to run
   test: function(configure, test) {
     var assert = require('assert'),
