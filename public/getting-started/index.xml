@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Getting-Starteds on Vitesse</title>
+    <link>/getting-started/</link>
+    <description>Recent content in Getting-Starteds on Vitesse</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 17 Mar 2015 15:36:56 +0000</lastBuildDate>
+    <atom:link href="/getting-started/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Getting Started</title>
+      <link>/getting-started/</link>
+      <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
+      
+      <guid>/getting-started/</guid>
+      <description>
+
+&lt;h2 id=&#34;getting-started&#34;&gt;Getting Started&lt;/h2&gt;
+
+&lt;p&gt;To help you get started quickly using vitesse, follow:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/getting-started/installation-guide/&#34;&gt;Installation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/getting-started/quick-tour/&#34;&gt;Quick Tour&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Installation Guide</title>
+      <link>/getting-started/installation-guide/</link>
+      <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
+      
+      <guid>/getting-started/installation-guide/</guid>
+      <description>
+
+&lt;h1 id=&#34;installation&#34;&gt;Installation&lt;/h1&gt;
+
+&lt;p&gt;The recommended way to get started using Vitesse is by using the &lt;code&gt;NPM&lt;/code&gt; (Node Package Manager) to install the dependency in your project.&lt;/p&gt;
+
+&lt;h2 id=&#34;vitesse&#34;&gt;Vitesse&lt;/h2&gt;
+
+&lt;p&gt;Given that you have created your own project using &lt;code&gt;npm init&lt;/code&gt; we install the vitesse module and it&amp;rsquo;s dependencies by executing the following &lt;code&gt;NPM&lt;/code&gt; command.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;npm install vitesse --save
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This will download the vitesse module and add a dependency entry in your &lt;code&gt;package.json&lt;/code&gt; file.&lt;/p&gt;
+
+&lt;h2 id=&#34;initial-requirement-for-closurecompiler&#34;&gt;Initial requirement for ClosureCompiler&lt;/h2&gt;
+
+&lt;p&gt;If you want to use the &lt;code&gt;ClosureCompiler&lt;/code&gt; you will need a &lt;code&gt;Java&lt;/code&gt; runtime installed on your machine as the compiler is dependent on it to execute the Google Closure Compiler.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Quick Tour</title>
+      <link>/getting-started/quick-tour/</link>
+      <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
+      
+      <guid>/getting-started/quick-tour/</guid>
+      <description>
+
+&lt;h1 id=&#34;quickstart&#34;&gt;QuickStart&lt;/h1&gt;
+
+&lt;p&gt;This quick guide will give you an introduction on what Vitesse is and how to leverage it in your application for high performance validations.&lt;/p&gt;
+
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+
+&lt;p&gt;Vitesse is a framework that lets you easily create your own Domain Specific Validation languages (DSVL). The goal of Vitesse it to generate efficient fast code while allowing you to freely express yourself when designing your favorite style of validation framework.&lt;/p&gt;
+
+&lt;p&gt;It can serve as a target for JSON Schema implementations, a Joi like framework or whatever you can think of.&lt;/p&gt;
+
+&lt;h2 id=&#34;under-the-covers&#34;&gt;Under the covers&lt;/h2&gt;
+
+&lt;p&gt;To understand how Vitesse works it&amp;rsquo;s easier to show a simple example. Let&amp;rsquo;s look at a very simple Object validator.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;var ObjectNode = require(&#39;vitesse&#39;).ObjectNode,
+  StringNode = require(&#39;vitesse&#39;).StringNode,
+  IntegerNode = require(&#39;vitesse&#39;).IntegerNode,
+  Compiler = require(&#39;vitesse&#39;).Compiler;
+
+var schema = new ObjectNode(null, null, {typeCheck:true})
+  .addChild(&#39;name&#39;, new StringNode(null, null, {typeCheck:true}))
+  .addChild(&#39;age&#39;, new IntegerNode(null, null, {typeCheck:true}))
+  .requiredFields([&#39;name&#39;, &#39;age&#39;]);
+
+var compiler = new Compiler();
+var validator = compiler.compile(schema);
+console.dir(validator.validate({name: &#39;peter&#39;}))
+console.dir(validator.validate({name: &#39;peter&#39;, age: &#39;10&#39;}))
+console.dir(validator.validate({name: &#39;peter&#39;, age: 10}))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The first part of the code&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;var schema = new ObjectNode(null, null, {typeCheck:true})
+  .addChild(&#39;name&#39;, new StringNode(null, null, {typeCheck:true}))
+  .addChild(&#39;age&#39;, new IntegerNode(null, null, {typeCheck:true}))
+  .requiredFields([&#39;name&#39;, &#39;age&#39;]);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Constructs a object hierarchy that represents the intended validations we want applied to an object.&lt;/p&gt;
+
+&lt;p&gt;The next part.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;var compiler = new Compiler();
+var validator = compiler.compile(schema);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Compiles that object hierarchy into &lt;code&gt;Javascript&lt;/code&gt; code and then uses &lt;code&gt;eval&lt;/code&gt; to return you a instantiated validation function that is optimized to perform the validation as close to hand-coded validations as possible.&lt;/p&gt;
+
+&lt;p&gt;Finally we print the results of a couple of example validations.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;console.dir(validator.validate({name: &#39;peter&#39;}))
+console.dir(validator.validate({name: &#39;peter&#39;, age: &#39;10&#39;}))
+console.dir(validator.validate({name: &#39;peter&#39;, age: 10}))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;closure-compiler&#34;&gt;Closure Compiler&lt;/h2&gt;
+
+&lt;p&gt;The &lt;code&gt;Vitesse&lt;/code&gt; module also comes with an alternative compiler that leverages the Google Closure compiler. This requires a &lt;code&gt;Java&lt;/code&gt; runtime to be installed on the system as the module will execute a child process to compile the generated JavaScript with the Closure Compiler to maximize the performance.&lt;/p&gt;
+
+&lt;p&gt;Be aware that the Closure Compiler is a magnitude slower than the normal Compiler as it requires to execute Java in a child process each time you call compile.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s look at how we can compile the example above using the Closure Compiler. Notice that we require a callback as the operation is Asynchronous.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;var ObjectNode = require(&#39;vitesse&#39;).ObjectNode,
+  StringNode = require(&#39;vitesse&#39;).StringNode,
+  IntegerNode = require(&#39;vitesse&#39;).IntegerNode,
+  ClosureCompiler = require(&#39;vitesse&#39;).ClosureCompiler;
+
+var schema = new ObjectNode(null, null, {typeCheck:true})
+  .addChild(&#39;name&#39;, new StringNode(null, null, {typeCheck:true}))
+  .addChild(&#39;age&#39;, new IntegerNode(null, null, {typeCheck:true}))
+  .requiredFields([&#39;name&#39;, &#39;age&#39;]);
+
+var compiler = new ClosureCompiler();
+compiler.compile(schema, function(err, validator) {
+  console.dir(validator.validate({name: &#39;peter&#39;}))
+  console.dir(validator.validate({name: &#39;peter&#39;, age: &#39;10&#39;}))
+  console.dir(validator.validate({name: &#39;peter&#39;, age: 10}))  
+});
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

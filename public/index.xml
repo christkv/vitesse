@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Vitesse</title>
+    <link>/</link>
+    <description>Recent content on Vitesse</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 19 Mar 2015 12:53:30 -0400</lastBuildDate>
+    <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Domain Specific Language</title>
+      <link>/reference/dsl/</link>
+      <pubDate>Thu, 19 Mar 2015 12:53:30 -0400</pubDate>
+      
+      <guid>/reference/dsl/</guid>
+      <description>
+
+&lt;h1 id=&#34;domain-specific-language&#34;&gt;Domain Specific Language&lt;/h1&gt;
+
+&lt;p&gt;A domain-specific language (DSL) is a computer language specialized to a particular application domain. This is in contrast to a general-purpose language (GPL), which is broadly applicable across domains, and lacks specialized features for a particular domain.&lt;/p&gt;
+
+&lt;p&gt;Vitesse is a target to for custom DSLs created by developers. Let&amp;rsquo;s look at a very simple example leveraging ES6 to create a custom validation language.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;&amp;quot;use strict&amp;quot;
+
+var v = require(&#39;vitesse&#39;),
+  StringNode = v.StringNode,
+  ObjectNode = v.ObjectNode,
+  IntegerNode = v.IntegerNode,
+  NumberNode = v.NumberNode,
+  ArrayNode = v.ArrayNode,
+  VitesseCompiler = v.Compiler;
+
+class Validator {
+  constructor() {    
+  }
+
+  static object() {
+    return new ObjectBuilder();
+  }
+
+  static string() {
+    return new StringBuilder();
+  }
+
+  static array() {
+    return new ArrayBuilder();
+  }
+}
+
+class Compiler {
+  constructor() {    
+  }
+
+  compile(object, options) {
+    options = options || {};
+    options.optimizer = true;
+    // Get the compiler
+    return new VitesseCompiler().compile(object.object, options);
+  }
+}
+
+class ObjectBuilder {
+  constructor() {    
+    this.object = new ObjectNode(null, null, {typeCheck:true});
+  }
+
+  fields(fields) {
+    for(var name in fields) {
+      this.object.addChild(name, fields[name].object);
+    }
+
+    return this;
+  }
+
+  require(required) {
+    this.object.requiredFields(required);
+    return this;
+  }
+}
+
+class StringBuilder {
+  constructor() {    
+    this.object = new StringNode(null, null, {typeCheck:true})
+  }
+
+  in(values) {
+    this.object.addValidation({$in: values});
+    return this;
+  }
+}
+
+class ArrayBuilder {
+  constructor() {    
+    this.object = new ArrayNode(null, null, {typeCheck:true})
+  }
+
+  of(object) {
+    this.object.addItemValidation(object.object);
+    return this;
+  }
+}
+
+module.exports = {
+  Validator: Validator,
+  Compiler: Compiler
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This simple custom DSL let&amp;rsquo;s you create validations of the following style.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;var validator = Validator
+  .object()
+  .fields({
+    id: Validator.string(),
+    users: Validator.array().of(Validator.object().fields({
+      id: Validator.string(),
+      permissions: Validator.array().of(Validator.string().in([&#39;read&#39;, &#39;write&#39;, &#39;delete&#39;, &#39;upate&#39;]))
+    })
+    .require([&#39;id&#39;, &#39;permissions&#39;]))
+  })
+  .require([&#39;id&#39;, &#39;users&#39;]);  
+
+var compiler = new Compiler();
+var validator = compiler.compile(validator);
+assert.equal(1, validator.validate({id:&#39;&#39;, users:[{id:&#39;&#39;, permissions:[&#39;yupp&#39;]}]}).length);
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Issues &amp; Help</title>
+      <link>/issues-help/</link>
+      <pubDate>Wed, 18 Mar 2015 16:56:14 +0000</pubDate>
+      
+      <guid>/issues-help/</guid>
+      <description>
+
+&lt;h1 id=&#34;issues-help&#34;&gt;Issues &amp;amp; Help&lt;/h1&gt;
+
+&lt;p&gt;We are lucky to have a vibrant MongoDB Java community with lots of varying
+experience of using the Java driver.  We often find the quickest way to get support for
+general questions is through the &lt;a href=&#34;http://groups.google.com/group/mongodb-user&#34;&gt;mongodb-user google group&lt;/a&gt;
+or through &lt;a href=&#34;http://stackoverflow.com/questions/tagged/mongodb+java&#34;&gt;stackoverflow&lt;/a&gt;.  Please also
+refer to our own &lt;a href=&#34;http://www.mongodb.org/about/support&#34;&gt;support channels&lt;/a&gt; documentation.&lt;/p&gt;
+
+&lt;h2 id=&#34;bugs-feature-requests&#34;&gt;Bugs / Feature Requests&lt;/h2&gt;
+
+&lt;p&gt;If you think you’ve found a bug or want to see a new feature in the Java driver,
+please open a case in our issue management tool, JIRA:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://jira.mongodb.org&#34;&gt;Create an account and login&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Navigate to &lt;a href=&#34;https://jira.mongodb.org/browse/NODE&#34;&gt;the NODE project&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Click &lt;strong&gt;Create Issue&lt;/strong&gt; - Please provide as much information as possible about the issue type and how to reproduce it.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Bug reports in JIRA for the Node.js driver and the Core Server (i.e. SERVER) project are &lt;strong&gt;public&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;If you’ve identified a security vulnerability in a driver or any other
+MongoDB project, please report it according to the &lt;a href=&#34;http://docs.mongodb.org/manual/tutorial/create-a-vulnerability-report&#34;&gt;instructions here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;pull-requests&#34;&gt;Pull Requests&lt;/h2&gt;
+
+&lt;p&gt;We are happy to accept contributions to help improve the driver.
+We will guide user contributions to ensure they meet the standards of the codebase.
+Please ensure that any pull requests include documentation, tests and also pass
+a the gradle checks.&lt;/p&gt;
+
+&lt;p&gt;To get started check out the source and work on a branch:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ git clone https://github.com/mongodb/node-mongodb-native.git
+$ cd node-mongodb-native
+$ npm install
+$ git checkout -b myNewFeature
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Ensure you code passes the test suite. Before running the test suite make sure you have the &lt;code&gt;mongod&lt;/code&gt; executable on your current path.&lt;/p&gt;
+
+&lt;p&gt;Run the functional test suite.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ node test/runner.js -t functional
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Quick Tour</title>
+      <link>/getting-started/quick-tour/</link>
+      <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
+      
+      <guid>/getting-started/quick-tour/</guid>
+      <description>
+
+&lt;h1 id=&#34;quickstart&#34;&gt;QuickStart&lt;/h1&gt;
+
+&lt;p&gt;This quick guide will give you an introduction on what Vitesse is and how to leverage it in your application for high performance validations.&lt;/p&gt;
+
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+
+&lt;p&gt;Vitesse is a framework that lets you easily create your own Domain Specific Validation languages (DSVL). The goal of Vitesse it to generate efficient fast code while allowing you to freely express yourself when designing your favorite style of validation framework.&lt;/p&gt;
+
+&lt;p&gt;It can serve as a target for JSON Schema implementations, a Joi like framework or whatever you can think of.&lt;/p&gt;
+
+&lt;h2 id=&#34;under-the-covers&#34;&gt;Under the covers&lt;/h2&gt;
+
+&lt;p&gt;To understand how Vitesse works it&amp;rsquo;s easier to show a simple example. Let&amp;rsquo;s look at a very simple Object validator.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;var ObjectNode = require(&#39;vitesse&#39;).ObjectNode,
+  StringNode = require(&#39;vitesse&#39;).StringNode,
+  IntegerNode = require(&#39;vitesse&#39;).IntegerNode,
+  Compiler = require(&#39;vitesse&#39;).Compiler;
+
+var schema = new ObjectNode(null, null, {typeCheck:true})
+  .addChild(&#39;name&#39;, new StringNode(null, null, {typeCheck:true}))
+  .addChild(&#39;age&#39;, new IntegerNode(null, null, {typeCheck:true}))
+  .requiredFields([&#39;name&#39;, &#39;age&#39;]);
+
+var compiler = new Compiler();
+var validator = compiler.compile(schema);
+console.dir(validator.validate({name: &#39;peter&#39;}))
+console.dir(validator.validate({name: &#39;peter&#39;, age: &#39;10&#39;}))
+console.dir(validator.validate({name: &#39;peter&#39;, age: 10}))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The first part of the code&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;var schema = new ObjectNode(null, null, {typeCheck:true})
+  .addChild(&#39;name&#39;, new StringNode(null, null, {typeCheck:true}))
+  .addChild(&#39;age&#39;, new IntegerNode(null, null, {typeCheck:true}))
+  .requiredFields([&#39;name&#39;, &#39;age&#39;]);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Constructs a object hierarchy that represents the intended validations we want applied to an object.&lt;/p&gt;
+
+&lt;p&gt;The next part.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;var compiler = new Compiler();
+var validator = compiler.compile(schema);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Compiles that object hierarchy into &lt;code&gt;Javascript&lt;/code&gt; code and then uses &lt;code&gt;eval&lt;/code&gt; to return you a instantiated validation function that is optimized to perform the validation as close to hand-coded validations as possible.&lt;/p&gt;
+
+&lt;p&gt;Finally we print the results of a couple of example validations.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;console.dir(validator.validate({name: &#39;peter&#39;}))
+console.dir(validator.validate({name: &#39;peter&#39;, age: &#39;10&#39;}))
+console.dir(validator.validate({name: &#39;peter&#39;, age: 10}))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;closure-compiler&#34;&gt;Closure Compiler&lt;/h2&gt;
+
+&lt;p&gt;The &lt;code&gt;Vitesse&lt;/code&gt; module also comes with an alternative compiler that leverages the Google Closure compiler. This requires a &lt;code&gt;Java&lt;/code&gt; runtime to be installed on the system as the module will execute a child process to compile the generated JavaScript with the Closure Compiler to maximize the performance.&lt;/p&gt;
+
+&lt;p&gt;Be aware that the Closure Compiler is a magnitude slower than the normal Compiler as it requires to execute Java in a child process each time you call compile.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s look at how we can compile the example above using the Closure Compiler. Notice that we require a callback as the operation is Asynchronous.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;var ObjectNode = require(&#39;vitesse&#39;).ObjectNode,
+  StringNode = require(&#39;vitesse&#39;).StringNode,
+  IntegerNode = require(&#39;vitesse&#39;).IntegerNode,
+  ClosureCompiler = require(&#39;vitesse&#39;).ClosureCompiler;
+
+var schema = new ObjectNode(null, null, {typeCheck:true})
+  .addChild(&#39;name&#39;, new StringNode(null, null, {typeCheck:true}))
+  .addChild(&#39;age&#39;, new IntegerNode(null, null, {typeCheck:true}))
+  .requiredFields([&#39;name&#39;, &#39;age&#39;]);
+
+var compiler = new ClosureCompiler();
+compiler.compile(schema, function(err, validator) {
+  console.dir(validator.validate({name: &#39;peter&#39;}))
+  console.dir(validator.validate({name: &#39;peter&#39;, age: &#39;10&#39;}))
+  console.dir(validator.validate({name: &#39;peter&#39;, age: 10}))  
+});
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>index</title>
+      <link>/</link>
+      <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
+      
+      <guid>/</guid>
+      <description>
+
+&lt;h1 id=&#34;vitesse-the-high-speed-validation-sdk&#34;&gt;Vitesse, the high speed validation SDK&lt;/h1&gt;
+
+&lt;p&gt;&lt;img src=&#39;/img/train-161606_640.png&#39; width=&#39;320&#39;/&gt;&lt;/p&gt;
+
+&lt;p&gt;Vitesse is a high speed object validation framework. It&amp;rsquo;s meant as a target for developers to build validation frameworks or DSL (Domain specific languages) while being able to leverage close to hand-coded performance.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Joi test x 139,410 ops/sec ±1.86% (85 runs sampled)&lt;/li&gt;
+&lt;li&gt;Compiler test optimized x 2,555,137 ops/sec ±1.50% (93 runs sampled)&lt;/li&gt;
+&lt;li&gt;Closure compiler test x 2,745,918 ops/sec ±0.86% (83 runs sampled)&lt;/li&gt;
+&lt;li&gt;Manual vitesse test x 2,588,368 ops/sec ±0.83% (92 runs sampled)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The goal of this module is to allow you to avoid the cost of interpreting a set of validation rules by ahead of time compile it (AOT) using eval, allowing you to get close to the performance of manually writing validation code.&lt;/p&gt;
+
+&lt;p&gt;With Vitesse as your target you can define whatever DSL you want and have Vitesse optimize it for maximum performance&lt;/p&gt;
+
+&lt;h1 id=&#34;why-vitesse&#34;&gt;Why Vitesse&lt;/h1&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Create your own DSL&amp;rsquo;s but gain the performance of hand-crafted optimized validation code.&lt;/li&gt;
+&lt;li&gt;Leave the optimization of code to &lt;code&gt;Vitesse&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Avoid maintaining complex and error prone validation code.&lt;/li&gt;
+&lt;li&gt;Leverage it in your own frameworks, ODMs, ORMs etc.&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Getting Started</title>
+      <link>/getting-started/</link>
+      <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
+      
+      <guid>/getting-started/</guid>
+      <description>
+
+&lt;h2 id=&#34;getting-started&#34;&gt;Getting Started&lt;/h2&gt;
+
+&lt;p&gt;To help you get started quickly using vitesse, follow:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/getting-started/installation-guide/&#34;&gt;Installation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/getting-started/quick-tour/&#34;&gt;Quick Tour&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Installation Guide</title>
+      <link>/getting-started/installation-guide/</link>
+      <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
+      
+      <guid>/getting-started/installation-guide/</guid>
+      <description>
+
+&lt;h1 id=&#34;installation&#34;&gt;Installation&lt;/h1&gt;
+
+&lt;p&gt;The recommended way to get started using Vitesse is by using the &lt;code&gt;NPM&lt;/code&gt; (Node Package Manager) to install the dependency in your project.&lt;/p&gt;
+
+&lt;h2 id=&#34;vitesse&#34;&gt;Vitesse&lt;/h2&gt;
+
+&lt;p&gt;Given that you have created your own project using &lt;code&gt;npm init&lt;/code&gt; we install the vitesse module and it&amp;rsquo;s dependencies by executing the following &lt;code&gt;NPM&lt;/code&gt; command.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;npm install vitesse --save
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This will download the vitesse module and add a dependency entry in your &lt;code&gt;package.json&lt;/code&gt; file.&lt;/p&gt;
+
+&lt;h2 id=&#34;initial-requirement-for-closurecompiler&#34;&gt;Initial requirement for ClosureCompiler&lt;/h2&gt;
+
+&lt;p&gt;If you want to use the &lt;code&gt;ClosureCompiler&lt;/code&gt; you will need a &lt;code&gt;Java&lt;/code&gt; runtime installed on your machine as the compiler is dependent on it to execute the Google Closure Compiler.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Reference</title>
+      <link>/reference/</link>
+      <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
+      
+      <guid>/reference/</guid>
+      <description>
+
+&lt;h2 id=&#34;reference&#34;&gt;Reference&lt;/h2&gt;
+
+&lt;p&gt;The reference documentation the Vitesse module focuses on general use-cases.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/reference/dsl/&#34;&gt;Custom DSL&lt;/a&gt;: How to build your own custom DSL Validation language leveraging Vitesse.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/christkv/vitesse-jsonspec&#34;&gt;JSON Schema Validator&lt;/a&gt;: A JSON Schema validator implementation leveraging Vitesse to generate the underlying code.&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
