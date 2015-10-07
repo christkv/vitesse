@@ -6,45 +6,27 @@ title = "Issues & Help"
   pre = "<i class='fa fa-life-ring'></i>"
 +++
 
-# Issues & Help
+# Issues & Bugs
 
-We are lucky to have a vibrant MongoDB Java community with lots of varying
-experience of using the Java driver.  We often find the quickest way to get support for
-general questions is through the [mongodb-user google group](http://groups.google.com/group/mongodb-user)
-or through [stackoverflow](http://stackoverflow.com/questions/tagged/mongodb+java).  Please also
-refer to our own [support channels](http://www.mongodb.org/about/support) documentation.
-
-## Bugs / Feature Requests
-
-If you think you’ve found a bug or want to see a new feature in the Java driver,
-please open a case in our issue management tool, JIRA:
-
-- [Create an account and login](https://jira.mongodb.org).
-- Navigate to [the NODE project](https://jira.mongodb.org/browse/NODE).
-- Click **Create Issue** - Please provide as much information as possible about the issue type and how to reproduce it.
-
-Bug reports in JIRA for the Node.js driver and the Core Server (i.e. SERVER) project are **public**.
-
-If you’ve identified a security vulnerability in a driver or any other
-MongoDB project, please report it according to the [instructions here](http://docs.mongodb.org/manual/tutorial/create-a-vulnerability-report).
+Issues and bug fixes can be opened as Issues in the [github tracker](https://github.com/christkv/vitesse/issues) for the project.
 
 ## Pull Requests
 
-We are happy to accept contributions to help improve the driver.
+We are happy to accept contributions to help improve vitesse.
 We will guide user contributions to ensure they meet the standards of the codebase.
-Please ensure that any pull requests include documentation, tests and also pass
-a the gradle checks.
+Please ensure that any pull requests include documentation and tests and also pass
+a the travis.ci tests.
 
 To get started check out the source and work on a branch:
 
 ```bash
-$ git clone https://github.com/mongodb/node-mongodb-native.git
-$ cd node-mongodb-native
+$ git clone https://github.com/christkv/vitesse.git
+$ cd vitesse
 $ npm install
 $ git checkout -b myNewFeature
 ```
 
-Ensure you code passes the test suite. Before running the test suite make sure you have the `mongod` executable on your current path.
+Ensure you code passes the test suite. 
 
 Run the functional test suite.
 ```bash

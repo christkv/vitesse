@@ -6,20 +6,20 @@ var Runner = require('integra').Runner
   , TestNameFilter = require('integra').TestNameFilter
 
 var testFiles =[
-  '/test/doc_tests/all_of_tests.js',
-  '/test/doc_tests/one_of_tests.js',
-  '/test/doc_tests/any_of_tests.js',
-  '/test/doc_tests/array_tests.js',
-  '/test/doc_tests/object_tests.js',
-  '/test/doc_tests/not_tests.js',
-  '/test/doc_tests/any_tests.js',
-  '/test/doc_tests/string_tests.js',
-  '/test/doc_tests/boolean_tests.js',
-  '/test/doc_tests/compiler_tests.js',
-  '/test/doc_tests/null_tests.js',
-  '/test/doc_tests/number_tests.js',
-  '/test/doc_tests/enum_tests.js',
-  '/test/doc_tests/integer_tests.js'
+  '/test/all_of_tests.js',
+  '/test/one_of_tests.js',
+  '/test/any_of_tests.js',
+  '/test/array_tests.js',
+  '/test/object_tests.js',
+  '/test/not_tests.js',
+  '/test/any_tests.js',
+  '/test/string_tests.js',
+  '/test/boolean_tests.js',
+  '/test/compiler_tests.js',
+  '/test/null_tests.js',
+  '/test/number_tests.js',
+  '/test/enum_tests.js',
+  '/test/integer_tests.js'
 ]
 
 // Set up the runner
