@@ -60,3 +60,37 @@ var validator = compiler.compile(schema);
 
 Compiles that object hierarchy into `Javascript` code and then uses `eval` to return you a instantiated validation function that is optimized to perform the validation as close to hand-coded validations as possible.
 
+Finally we print the results of a couple of example validations.
+
+```js
+console.dir(validator.validate({name: 'peter'}))
+console.dir(validator.validate({name: 'peter', age: '10'}))
+console.dir(validator.validate({name: 'peter', age: 10}))
+```
+
+## Closure Compiler
+
+The `Vitesse` module also comes with an alternative compiler that leverages the Google Closure compiler. This requires a `Java` runtime to be installed on the system as the module will execute a child process to compile the generated JavaScript with the Closure Compiler to maximize the performance.
+
+Be aware that the Closure Compiler is a magnitude slower than the normal Compiler as it requires to execute Java in a child process each time you call compile.
+
+Let's look at how we can compile the example above using the Closure Compiler. Notice that we require a callback as the operation is Asynchronous.
+
+```js
+var ObjectNode = require('vitesse').ObjectNode,
+  StringNode = require('vitesse').StringNode,
+  IntegerNode = require('vitesse').IntegerNode,
+  ClosureCompiler = require('vitesse').ClosureCompiler;
+
+var schema = new ObjectNode(null, null, {typeCheck:true})
+  .addChild('name', new StringNode(null, null, {typeCheck:true}))
+  .addChild('age', new IntegerNode(null, null, {typeCheck:true}))
+  .requiredFields(['name', 'age']);
+
+var compiler = new ClosureCompiler();
+compiler.compile(schema, function(err, validator) {
+  console.dir(validator.validate({name: 'peter'}))
+  console.dir(validator.validate({name: 'peter', age: '10'}))
+  console.dir(validator.validate({name: 'peter', age: 10}))  
+});
+```
