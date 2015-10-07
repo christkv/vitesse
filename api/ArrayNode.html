@@ -595,7 +595,7 @@
     
         
         <div class="tag-source">
-            <a href="lib_array.js.html">lib/array.js</a>, <a href="lib_array.js.html#line13">line 13</a>
+            <a href="lib_array.js.html">lib/array.js</a>, <a href="lib_array.js.html#line17">line 17</a>
         </div>
         
     </div>
@@ -693,7 +693,7 @@ ArrayNode instance.
     
         
         <div class="tag-source">
-            <a href="lib_array.js.html">lib/array.js</a>, <a href="lib_array.js.html#line104">line 104</a>
+            <a href="lib_array.js.html">lib/array.js</a>, <a href="lib_array.js.html#line108">line 108</a>
         </div>
         
     </div>
@@ -812,7 +812,7 @@ assert = require('assert'),
   StringNode = require('vitesse').StringNode,
   IntegerNode = require('vitesse').IntegerNode,
   ArrayNode = require('vitesse').ArrayNode,
-  CustomNode = require('../../lib/custom');
+  CustomNode = require('../lib/custom');
 var integer = new IntegerNode(null, null, {typeCheck:true});
 var string = new StringNode(null, null, {typeCheck:true});
 var schema = new ArrayNode(null, null, {typeCheck:true})
@@ -866,7 +866,7 @@ assert = require('assert'),
   StringNode = require('vitesse').StringNode,
   IntegerNode = require('vitesse').IntegerNode,
   ArrayNode = require('vitesse').ArrayNode,
-  CustomNode = require('../../lib/custom');
+  CustomNode = require('../lib/custom');
 var integer = new IntegerNode(null, null, {typeCheck:true});
 var string = new StringNode(null, null, {typeCheck:true});
 var schema = new ArrayNode(null, null, {typeCheck:true})
@@ -925,7 +925,7 @@ assert.equal(0, results.length);</code></pre>
     
         
         <div class="tag-source">
-            <a href="lib_array.js.html">lib/array.js</a>, <a href="lib_array.js.html#line141">line 141</a>
+            <a href="lib_array.js.html">lib/array.js</a>, <a href="lib_array.js.html#line145">line 145</a>
         </div>
         
     </div>
@@ -1042,7 +1042,7 @@ assert.equal(0, results.length);</code></pre>
 assert = require('assert'),
   Compiler = require('vitesse').Compiler,
   ArrayNode = require('vitesse').ArrayNode,
-  CustomNode = require('../../lib/custom');
+  CustomNode = require('../lib/custom');
 
 var customValidator = new CustomNode()
   .setContext({ max: 4 })
@@ -1092,7 +1092,7 @@ assert.equal(0, results.length);</code></pre>
     
         
         <div class="tag-source">
-            <a href="lib_array.js.html">lib/array.js</a>, <a href="lib_array.js.html#line116">line 116</a>
+            <a href="lib_array.js.html">lib/array.js</a>, <a href="lib_array.js.html#line120">line 120</a>
         </div>
         
     </div>
@@ -1210,7 +1210,7 @@ assert = require('assert'),
   Compiler = require('vitesse').Compiler,
   StringNode = require('vitesse').StringNode,
   ArrayNode = require('vitesse').ArrayNode,
-  CustomNode = require('../../lib/custom');
+  CustomNode = require('../lib/custom');
 var string = new StringNode(null, null, {typeCheck:true});
 var schema = new ArrayNode(null, null, {typeCheck:true})
   .addItemValidation(string);
@@ -1251,7 +1251,7 @@ assert.equal(0, results.length);</code></pre>
     
         
         <div class="tag-source">
-            <a href="lib_array.js.html">lib/array.js</a>, <a href="lib_array.js.html#line92">line 92</a>
+            <a href="lib_array.js.html">lib/array.js</a>, <a href="lib_array.js.html#line96">line 96</a>
         </div>
         
     </div>
@@ -1393,7 +1393,7 @@ assert = require('assert'),
   StringNode = require('vitesse').StringNode,
   IntegerNode = require('vitesse').IntegerNode,
   ArrayNode = require('vitesse').ArrayNode,
-  CustomNode = require('../../lib/custom');
+  CustomNode = require('../lib/custom');
 var integer = new IntegerNode(null, null, {typeCheck:true});
 var string = new StringNode(null, null, {typeCheck:true});
 var schema = new ArrayNode(null, null, {typeCheck:true})
@@ -1448,7 +1448,7 @@ assert.equal(0, results.length);</code></pre>
     
         
         <div class="tag-source">
-            <a href="lib_array.js.html">lib/array.js</a>, <a href="lib_array.js.html#line54">line 54</a>
+            <a href="lib_array.js.html">lib/array.js</a>, <a href="lib_array.js.html#line58">line 58</a>
         </div>
         
     </div>
@@ -1565,7 +1565,7 @@ assert.equal(0, results.length);</code></pre>
 assert = require('assert'),
   Compiler = require('vitesse').Compiler,
   ArrayNode = require('vitesse').ArrayNode,
-  CustomNode = require('../../lib/custom');
+  CustomNode = require('../lib/custom');
 var schema = new ArrayNode(null, null, {typeCheck:true})
   .addValidation({$gte: 2, $lte: 5});
 var compiler = new Compiler({});
@@ -1605,7 +1605,7 @@ assert.equal(0, results.length);</code></pre>
     
         
         <div class="tag-source">
-            <a href="lib_array.js.html">lib/array.js</a>, <a href="lib_array.js.html#line163">line 163</a>
+            <a href="lib_array.js.html">lib/array.js</a>, <a href="lib_array.js.html#line167">line 167</a>
         </div>
         
     </div>
@@ -1721,7 +1721,7 @@ assert.equal(0, results.length);</code></pre>
     
         
         <div class="tag-source">
-            <a href="lib_array.js.html">lib/array.js</a>, <a href="lib_array.js.html#line152">line 152</a>
+            <a href="lib_array.js.html">lib/array.js</a>, <a href="lib_array.js.html#line156">line 156</a>
         </div>
         
     </div>
@@ -1801,7 +1801,7 @@ array containing the path to this node
     
         
         <div class="tag-source">
-            <a href="lib_array.js.html">lib/array.js</a>, <a href="lib_array.js.html#line71">line 71</a>
+            <a href="lib_array.js.html">lib/array.js</a>, <a href="lib_array.js.html#line75">line 75</a>
         </div>
         
     </div>
@@ -1922,7 +1922,7 @@ array containing the path to this node
     
         
         <div class="tag-source">
-            <a href="lib_array.js.html">lib/array.js</a>, <a href="lib_array.js.html#line129">line 129</a>
+            <a href="lib_array.js.html">lib/array.js</a>, <a href="lib_array.js.html#line133">line 133</a>
         </div>
         
     </div>
@@ -2039,7 +2039,7 @@ array containing the path to this node
 assert = require('assert'),
   Compiler = require('vitesse').Compiler,
   ArrayNode = require('vitesse').ArrayNode,
-  CustomNode = require('../../lib/custom');
+  CustomNode = require('../lib/custom');
 var schema = new ArrayNode(null, null, {typeCheck:true})
   .uniqueItems(true);
 
@@ -2103,7 +2103,7 @@ assert.ok(results[0].rule === schema);</code></pre>
                     
 
                     <footer>
-                        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-beta3</a> on Wed Oct 07 2015 12:33:52 GMT+0200 (CEST)
+                        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-beta3</a> on Wed Oct 07 2015 12:56:24 GMT+0200 (CEST)
                     </footer>
                 </div>
             </td>

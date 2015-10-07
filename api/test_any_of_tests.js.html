@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Source: test/doc_tests/compiler_tests.js</title>
+    <title>Source: test/any_of_tests.js</title>
     
     
     
@@ -566,110 +566,71 @@
             </td>
             <td valign='top'>        
                 <div class="main">
-                    <h1 class="page-title" data-filename="test_doc_tests_compiler_tests.js.html">Source: test/doc_tests/compiler_tests.js</h1>
+                    <h1 class="page-title" data-filename="test_any_of_tests.js.html">Source: test/any_of_tests.js</h1>
                     
 
 
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/**
- * A simple example of compiling a schema
- * @example-class Compiler
- * @example-method compile
+            <pre class="prettyprint source linenums"><code>"use strict";
+
+var f = require('util').format;
+
+/**
+ * Create a AnyOf validator for string validations
+ * @example-class AnyOfNode
+ * @example-method addValidations
  */
-exports['simple compiler example'] = {
+exports['simple anyOf test'] = {
   // The actual test we wish to run
   test: function(configure, test) {
     var assert = require('assert'),
-      Compiler = require('../../lib/compiler').Compiler,
-      ObjectNode = require('../../lib/object'),
-      StringNode = require('../../lib/string');
+      Compiler = require('../lib/compiler').Compiler,
+      AnyOfNode = require('../lib/anyof'),
+      StringNode = require('../lib/string'),
+      IntegerNode = require('../lib/integer');
     // LINE assert = require('assert'),
-    // LINE   StringNode = require('vitesse').StringNode,
     // LINE   Compiler = require('vitesse').Compiler,
-    // LINE   ObjectNode = require('vitesse').ObjectNode,
+    // LINE   StringNode = require('vitesse').StringNode,
+    // LINE   IntegerNode = require('vitesse').IntegerNode,
+    // LINE   AnyOfNode = require('vitesse').AnyOfNode;
     // BEGIN
-    var string = new StringNode(null, null, {typeCheck:true});
-    var schema = new ObjectNode(null, null, {typeCheck:true})
-      .addChild('brand', string);
+
+    var string1 = new StringNode(null, null, {typeCheck:true})
+      .addValidation({$gte: 5, $lte: 100});
+
+    var integer1 = new IntegerNode(null, null, {typeCheck:true})
+      .addValidation({$gte: 100, $lte: 1000});
+
+    var schema = new AnyOfNode()
+      .addValidations([string1, integer1]);
 
     var compiler = new Compiler({});
     // Compile the AST
-    var func = compiler.compile(schema);
+    var func = compiler.compile(schema, {});
 
     // Validate {}
-    var results = func.validate([]);
+    var results = func.validate({});
     assert.equal(1, results.length);
-    assert.equal('field is not an object', results[0].message);
+    assert.equal("value does not match any of the schema's in the anyOf rule", results[0].message);
     assert.deepEqual(['object'], results[0].path);
     assert.ok(results[0].rule === schema);
 
-    // Validate {ca:1}
-    var results = func.validate({brand:100});
+    // Validate ''
+    var results = func.validate('4444');
     assert.equal(1, results.length);
-    assert.equal('field is not a string', results[0].message);
-    assert.deepEqual(['object', 'brand'], results[0].path);
-    assert.ok(results[0].rule === string);
+    assert.equal("value does not match any of the schema's in the anyOf rule", results[0].message);
+    assert.deepEqual(['object'], results[0].path);
+    assert.ok(results[0].rule === schema);
 
-    // Validate {ca:'test'}
-    var results = func.validate({brand:'test'});
+    // Validate string 'xxxxxx'
+    var results = func.validate(200);
     assert.equal(0, results.length);
     // END
     test.done();
   }
-}
-
-/**
- * A simple example of compiling a schema
- * @example-class ClosureCompiler
- * @example-method compile
- */
-exports['simple closure compiler example'] = {
-  // The actual test we wish to run
-  test: function(configure, test) {
-    if(process.env["TRAVIS_JOB_ID"]) return test.done();
-    var assert = require('assert'),
-      ClosureCompiler = require('../../lib/compiler').ClosureCompiler,
-      ObjectNode = require('../../lib/object'),
-      StringNode = require('../../lib/string');
-    // LINE assert = require('assert'),
-    // LINE   StringNode = require('vitesse').StringNode,
-    // LINE   Compiler = require('vitesse').Compiler,
-    // LINE   ObjectNode = require('vitesse').ObjectNode,
-    // REMOVE-LINE test.done();
-    // BEGIN
-    var string = new StringNode(null, null, {typeCheck:true});
-    var schema = new ObjectNode(null, null, {typeCheck:true})
-      .addChild('brand', string);
-
-    var compiler = new ClosureCompiler({});
-    // Compile the AST
-    compiler.compile(schema, function(err, func) {
-      assert.equal(null, err);
-      // Validate {}
-      var results = func.validate([]);
-      assert.equal(1, results.length);
-      assert.equal('field is not an object', results[0].message);
-      assert.deepEqual(['object'], results[0].path);
-      assert.ok(results[0].rule === schema);
-
-      // Validate {ca:1}
-      var results = func.validate({brand:100});
-      assert.equal(1, results.length);
-      assert.equal('field is not a string', results[0].message);
-      assert.deepEqual(['object', 'brand'], results[0].path);
-      assert.ok(results[0].rule === string);
-
-      // Validate {ca:'test'}
-      var results = func.validate({brand:'test'});
-      assert.equal(0, results.length);
-      test.done();
-    });
-    // END
-  }
-}
-</code></pre>
+}</code></pre>
         </article>
     </section>
 
@@ -698,7 +659,7 @@ exports['simple closure compiler example'] = {
                     
 
                     <footer>
-                        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-beta3</a> on Wed Oct 07 2015 12:33:52 GMT+0200 (CEST)
+                        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-beta3</a> on Wed Oct 07 2015 12:56:24 GMT+0200 (CEST)
                     </footer>
                 </div>
             </td>

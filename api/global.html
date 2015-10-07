@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Source: test/doc_tests/enum_tests.js</title>
+    <title>Global</title>
     
     
     
@@ -566,56 +566,294 @@
             </td>
             <td valign='top'>        
                 <div class="main">
-                    <h1 class="page-title" data-filename="test_doc_tests_enum_tests.js.html">Source: test/doc_tests/enum_tests.js</h1>
+                    <h1 class="page-title" data-filename="global.html">Global</h1>
                     
 
 
+
+<section>
     
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>"use strict";
+<header>
+    <h2>
+    
+    </h2>
+    
+</header>  
 
-var f = require('util').format;
+<article>
+    <div class="container-overview">
+    
+    
+    
+        
+        
+        
+<dl class="details">
+    
+        
+    
+    
+    
 
-/**
- * Create an Enum validation that validates the value
- * @example-class EnumNode
- * @example-method addEnums
- */
-exports['simple validator for any node'] = {
-  // The actual test we wish to run
-  test: function(configure, test) {
-    var assert = require('assert'),
-      Compiler = require('../../lib/compiler').Compiler,
-      EnumNode = require('../../lib/enum');
-    // LINE assert = require('assert'),
-    // LINE   Compiler = require('vitesse').Compiler,
-    // LINE   EnumNode = require('vitesse').EnumNode;
-    // BEGIN
-    var enums = [null, 'dog', true, [1, 2, 3]];
-    var schema = new EnumNode(null, null, {typeCheck:true})
-      .addEnums(enums);
-    var compiler = new Compiler({});
-    // Compile the AST
-    var func = compiler.compile(schema, {});
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
 
-    // Validate {}
-    var results = func.validate({});
-    assert.equal(1, results.length);
-    assert.equal('field does not match enumeration [null,"dog",true,[1,2,3]]', results[0].message);
-    assert.deepEqual(['object'], results[0].path);
-    assert.ok(results[0].rule === schema);
+        
+        
+    
+    </div>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+        <h3 class="subsection-title">Methods</h3>
+        
+        <dl>
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="ValidationError">
+            
+            ValidationError<span class="signature">(message, path, rule, value, errors)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="global.html#ValidationError">ValidationError</a>}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="lib_compiler.js.html">lib/compiler.js</a>, <a href="lib_compiler.js.html#line32">line 32</a>
+        </div>
+        
+    </div>
 
-    // Validate [1, 2, 3]
-    var results = func.validate([1, 2, 3]);
-    assert.equal(0, results.length);
-    // END
-    test.done();
-  }
-}</code></pre>
-        </article>
-    </section>
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Validation error returned from validators</p>
+    </div>
+    
 
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>message</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>error validation</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>path</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">array</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>array of strings representing the element in the object that caused the error</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>rule</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>the vitesse object that caused the validation error</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>value</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>the value of the object that caused the failure</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>errors</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">array</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>all the failed child errors associated with the validation errors (allOf, oneOf, etc.)</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+
+
+    
+    
+    
+</dd>
+
+        </dl>
+    
+    
+    
+    
+    
+</article>
+
+</section>  
 
 
 
@@ -641,7 +879,7 @@ exports['simple validator for any node'] = {
                     
 
                     <footer>
-                        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-beta3</a> on Wed Oct 07 2015 12:33:52 GMT+0200 (CEST)
+                        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-beta3</a> on Wed Oct 07 2015 12:56:24 GMT+0200 (CEST)
                     </footer>
                 </div>
             </td>

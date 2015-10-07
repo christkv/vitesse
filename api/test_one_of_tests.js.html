@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Source: lib/null.js</title>
+    <title>Source: test/one_of_tests.js</title>
     
     
     
@@ -566,182 +566,64 @@
             </td>
             <td valign='top'>        
                 <div class="main">
-                    <h1 class="page-title" data-filename="lib_null.js.html">Source: lib/null.js</h1>
+                    <h1 class="page-title" data-filename="test_one_of_tests.js.html">Source: test/one_of_tests.js</h1>
                     
 
 
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>var f = require('util').format,
-  Mark = require("markup-js"),
-  M = require('mstring'),
-  utils = require('./utils'),
-  generatePathAndObject = utils.generatePathAndObject;
+            <pre class="prettyprint source linenums"><code>"use strict";
+
+var f = require('util').format;
 
 /**
- * @fileOverview The NullNode class represents a value that must be null
+ * Create a Not validator for string validations
+ * @example-class OneOfNode
+ * @example-method addValidations
  */
+exports['simple oneOf test'] = {
+  // The actual test we wish to run
+  test: function(configure, test) {
+    var assert = require('assert'),
+      Compiler = require('../lib/compiler').Compiler,
+      OneOfNode = require('../lib/oneof'),
+      StringNode = require('../lib/string'),
+      IntegerNode = require('../lib/integer');
+    // LINE assert = require('assert'),
+    // LINE   Compiler = require('vitesse').Compiler,
+    // LINE   StringNode = require('vitesse').StringNode,
+    // LINE   IntegerNode = require('vitesse').IntegerNode,
+    // LINE   OneOfNode = require('vitesse').OneOfNode;
+    // BEGIN
 
-/**
- * The NullNode class represents a value that must be null
- * 
- * @class
- * @return {NullNode} a NullNode instance.
- */
-var NullNode = function(parent, field, options) {  
-  options = options || {};
-  // Unique id for this node's generated method
-  this.id = utils.generateId();
-  // Link to parent node
-  this.parent = parent;
-  // The field related to this node
-  this.field = field;
-  // Perform type check or not on generation
-  this.typeCheck = typeof options.typeCheck == 'boolean' ? options.typeCheck : false;
-  // Validation language
-  this.validation = options.validation ? options.validation : null;
-  // Any options
-  this.options = options;
-  // Just some metadata
-  this.type = 'null';
+    var string1 = new StringNode(null, null, {typeCheck:true})
+      .addValidation({$gte: 5, $lte: 100});
 
-  // Special validators, custom, pattern, required, prohibited
-  // ----------------------------------------------------------
-  this.customValidators = [];
-}
+    var integer1 = new IntegerNode(null, null, {typeCheck:true})
+      .addValidation({$gte: 100, $lte: 1000});
 
-/**
- * Type check value
- *
- * @method
- * @param {boolean} typeCheck type check value
- * @return {NullNode}
- */
-NullNode.prototype.setTypeCheck = function(typeCheck) {  
-  this.typeCheck = typeCheck;
-}
+    var schema = new OneOfNode()
+      .addValidations([string1, integer1]);
 
-/**
- * @ignore
- */
-NullNode.prototype.setDefault = function(value) {
-  this.defaultValue = value;
-}
+    var compiler = new Compiler({});
+    // Compile the AST
+    var func = compiler.compile(schema, {});
 
-/**
- * Add a custom object validator
- *
- * @method
- * @param {CustomNode} node custom validation node to be used for this field validation
- * @return {NullNode}
- */
-NullNode.prototype.addCustomValidator = function(validator) {
-  this.customValidators.push(validator);
-  return this;
-}
+    // Validate {}
+    var results = func.validate(20);
+    assert.equal(1, results.length);
+    assert.equal("more than one schema matched ofOne rule", results[0].message);
+    assert.deepEqual(['object'], results[0].path);
+    assert.ok(results[0].rule === schema);
 
-/**
- * Return the current object path
- *
- * @method
- * @return {array} an array containing the path to this node
- */
-NullNode.prototype.path = function() {
-  if(this.parent == null) return [];
-  return this.parent.path().concat([this.field]);
-}
-
-var generateCustomValidations = function(self, validations, context) {
-  // Create an inner context
-  var innerContext = {
-    functions: context.functions,
-    functionCalls: [],
-    custom: context.custom,
-    rules: context.rules
+    // Validate string 'xxxxxx'
+    var results = func.validate(200);
+    assert.equal(0, results.length);
+    // END
+    test.done();
   }
-
-  // Generate custom validation functions and call contexts
-  validations.forEach(function(validation) {
-    validation.generate(innerContext);
-  });
-
-  // Return custom validator calls
-  return innerContext.functionCalls.join('\n');
-}
-
-/**
- * Generate the code for this node
- *
- * @method
- * @param {object} context the generation context for this node
- */
-NullNode.prototype.generate = function(context) {
-  // Set self
-  var self = this;
-  // Get the path
-  var path = this.path().join('.');
-  // Push ourselves to the rules array
-  context.rules[this.id] = this;
-  // Validation template
-  var validationTemplate = M(function(){/***
-    function null_validation_{{index}}(path, object, context) {
-      if(object === undefined) return;
-      // We have a type validation
-      {{type}}
-    }
-  ***/});
-
-  // Rendering context
-  var renderingOptions = {
-    custom: '',
-    type: '',
-    index: this.id,
-    ruleIndex: this.id
-  }
-
-  if(this.customValidators.length > 0) {
-    renderingOptions.custom = generateCustomValidations(this, this.customValidators, context);
-  }
-
-  // Generate type validation if needed
-  if(this.typeCheck) {
-    renderingOptions.type = Mark.up(M(function(){/***
-      if(object !== undefined) {
-        if(object != null &amp;&amp; context.failOnFirst) {
-          throw new ValidationError('field is not a null', path, rules[{{ruleIndex}}], object);
-        } else if(object != null) {
-          errors.push(new ValidationError('field is not a null', path, rules[{{ruleIndex}}], object));
-        } else {
-          // Custom validations
-          {{custom}}
-        }
-      }
-    ***/}), renderingOptions);
-  } else {
-    renderingOptions.type = Mark.up(M(function(){/***
-      if(object !== undefined &amp;&amp; object === null) {
-        // Custom validations
-        {{custom}}
-      }
-    ***/}), renderingOptions);
-  }
-
-  // Generate path and objectPath
-  var paths = generatePathAndObject(self, context);
-  // Generate object validation function
-  context.functions.push(Mark.up(validationTemplate, renderingOptions));
-  // Generate function call
-  context.functionCalls.push(Mark.up(M(function(){/***
-      null_validation_{{index}}({{path}}, {{object}}, context);
-    ***/}), {
-      index: this.id,
-      path: paths.path,
-      object: paths.objectPath
-    }));
-}
-
-module.exports = NullNode;</code></pre>
+}</code></pre>
         </article>
     </section>
 
