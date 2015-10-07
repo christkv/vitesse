@@ -187,6 +187,25 @@ $ git checkout -b myNewFeature
     </item>
     
     <item>
+      <title>Getting Started</title>
+      <link>/getting-started/</link>
+      <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
+      
+      <guid>/getting-started/</guid>
+      <description>
+
+&lt;h2 id=&#34;getting-started&#34;&gt;Getting Started&lt;/h2&gt;
+
+&lt;p&gt;To help you get started quickly using vitesse, follow:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/getting-started/installation-guide/&#34;&gt;Installation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/getting-started/quick-tour/&#34;&gt;Quick Tour&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
       <title>index</title>
       <link>/</link>
       <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
@@ -219,6 +238,33 @@ $ git checkout -b myNewFeature
 &lt;li&gt;Avoid maintaining complex and error prone validation code.&lt;/li&gt;
 &lt;li&gt;Leverage it in your own frameworks, ODMs, ORMs etc.&lt;/li&gt;
 &lt;/ol&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Installation Guide</title>
+      <link>/getting-started/installation-guide/</link>
+      <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
+      
+      <guid>/getting-started/installation-guide/</guid>
+      <description>
+
+&lt;h1 id=&#34;installation&#34;&gt;Installation&lt;/h1&gt;
+
+&lt;p&gt;The recommended way to get started using Vitesse is by using the &lt;code&gt;NPM&lt;/code&gt; (Node Package Manager) to install the dependency in your project.&lt;/p&gt;
+
+&lt;h2 id=&#34;vitesse&#34;&gt;Vitesse&lt;/h2&gt;
+
+&lt;p&gt;Given that you have created your own project using &lt;code&gt;npm init&lt;/code&gt; we install the vitesse module and it&amp;rsquo;s dependencies by executing the following &lt;code&gt;NPM&lt;/code&gt; command.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;npm install vitesse --save
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This will download the vitesse module and add a dependency entry in your &lt;code&gt;package.json&lt;/code&gt; file.&lt;/p&gt;
+
+&lt;h2 id=&#34;initial-requirement-for-closurecompiler&#34;&gt;Initial requirement for ClosureCompiler&lt;/h2&gt;
+
+&lt;p&gt;If you want to use the &lt;code&gt;ClosureCompiler&lt;/code&gt; you will need a &lt;code&gt;Java&lt;/code&gt; runtime installed on your machine as the compiler is dependent on it to execute the Google Closure Compiler.&lt;/p&gt;
 </description>
     </item>
     
@@ -311,52 +357,6 @@ compiler.compile(schema, function(err, validator) {
   console.dir(validator.validate({name: &#39;peter&#39;, age: 10}))  
 });
 &lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Getting Started</title>
-      <link>/getting-started/</link>
-      <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
-      
-      <guid>/getting-started/</guid>
-      <description>
-
-&lt;h2 id=&#34;getting-started&#34;&gt;Getting Started&lt;/h2&gt;
-
-&lt;p&gt;To help you get started quickly using vitesse, follow:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/getting-started/installation-guide/&#34;&gt;Installation&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/getting-started/quick-tour/&#34;&gt;Quick Tour&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Installation Guide</title>
-      <link>/getting-started/installation-guide/</link>
-      <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
-      
-      <guid>/getting-started/installation-guide/</guid>
-      <description>
-
-&lt;h1 id=&#34;installation&#34;&gt;Installation&lt;/h1&gt;
-
-&lt;p&gt;The recommended way to get started using Vitesse is by using the &lt;code&gt;NPM&lt;/code&gt; (Node Package Manager) to install the dependency in your project.&lt;/p&gt;
-
-&lt;h2 id=&#34;vitesse&#34;&gt;Vitesse&lt;/h2&gt;
-
-&lt;p&gt;Given that you have created your own project using &lt;code&gt;npm init&lt;/code&gt; we install the vitesse module and it&amp;rsquo;s dependencies by executing the following &lt;code&gt;NPM&lt;/code&gt; command.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;npm install vitesse --save
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This will download the vitesse module and add a dependency entry in your &lt;code&gt;package.json&lt;/code&gt; file.&lt;/p&gt;
-
-&lt;h2 id=&#34;initial-requirement-for-closurecompiler&#34;&gt;Initial requirement for ClosureCompiler&lt;/h2&gt;
-
-&lt;p&gt;If you want to use the &lt;code&gt;ClosureCompiler&lt;/code&gt; you will need a &lt;code&gt;Java&lt;/code&gt; runtime installed on your machine as the compiler is dependent on it to execute the Google Closure Compiler.&lt;/p&gt;
 </description>
     </item>
     
