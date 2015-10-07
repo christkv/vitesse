@@ -17,6 +17,7 @@ data/
 out/
 docs/public
 .idea/
+public/
 api/
 test.js
 .DS_Store

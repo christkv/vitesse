@@ -8,11 +8,12 @@ generate_docs:
 	$(JSDOC) -c conf.json -t docs/jsdoc-template/ -d ./public/api
 
 checkout:
-	git clone https://github.com/christkv/vitesse.git public
-	git --exec-path public checkout gh-pages	
+	rm -rf public
+	git clone git@github.com:christkv/vitesse.git public
+	git --git-dir ./public/.git --work-tree ./public checkout gh-pages
+	rm -rf ./public/*
 
 deploy: checkout generate_docs
-	git add public
-	git commit -a -m "Updated documentation"
-	git --exec-path public push
-	rm -rf public
+	git --git-dir ./public/.git --work-tree ./public add .
+	git --git-dir ./public/.git --work-tree ./public commit -a -m "Updated documentation"
+	git --git-dir ./public/.git --work-tree ./public push origin gh-pages

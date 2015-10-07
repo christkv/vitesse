@@ -1,4 +1,4 @@
-baseurl = "/"
+baseurl = "/vitesse"
 languageCode = "en-us"
 title = "Vitesse"
 theme = "general"
