@@ -4,4 +4,5 @@ JSDOC = jsdoc
 name = all
  
 generate_docs:
-	$(JSDOC) -c conf.json -t docs/jsdoc-template/ -d ./api
+	hugo -d ../../public -s docs/reference/
+	$(JSDOC) -c conf.json -t docs/jsdoc-template/ -d ./public/api
