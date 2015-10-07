@@ -206,42 +206,6 @@ $ git checkout -b myNewFeature
     </item>
     
     <item>
-      <title>index</title>
-      <link>/vitesse/</link>
-      <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
-      
-      <guid>/vitesse/</guid>
-      <description>
-
-&lt;h1 id=&#34;vitesse-the-high-speed-validation-sdk&#34;&gt;Vitesse, the high speed validation SDK&lt;/h1&gt;
-
-&lt;p&gt;&lt;img src=&#39;img/train-161606_640.png&#39; width=&#39;320&#39;/&gt;&lt;/p&gt;
-
-&lt;p&gt;Vitesse is a high speed object validation framework. It&amp;rsquo;s meant as a target for developers to build validation frameworks or DSL (Domain specific languages) while being able to leverage close to hand-coded performance.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Joi test x 139,410 ops/sec ±1.86% (85 runs sampled)&lt;/li&gt;
-&lt;li&gt;Compiler test optimized x 2,555,137 ops/sec ±1.50% (93 runs sampled)&lt;/li&gt;
-&lt;li&gt;Closure compiler test x 2,745,918 ops/sec ±0.86% (83 runs sampled)&lt;/li&gt;
-&lt;li&gt;Manual vitesse test x 2,588,368 ops/sec ±0.83% (92 runs sampled)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;The goal of this module is to allow you to avoid the cost of interpreting a set of validation rules by ahead of time compile it (AOT) using eval, allowing you to get close to the performance of manually writing validation code.&lt;/p&gt;
-
-&lt;p&gt;With Vitesse as your target you can define whatever DSL you want and have Vitesse optimize it for maximum performance&lt;/p&gt;
-
-&lt;h1 id=&#34;why-vitesse&#34;&gt;Why Vitesse&lt;/h1&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Create your own DSL&amp;rsquo;s but gain the performance of hand-crafted optimized validation code.&lt;/li&gt;
-&lt;li&gt;Leave the optimization of code to &lt;code&gt;Vitesse&lt;/code&gt;.&lt;/li&gt;
-&lt;li&gt;Avoid maintaining complex and error prone validation code.&lt;/li&gt;
-&lt;li&gt;Leverage it in your own frameworks, ODMs, ORMs etc.&lt;/li&gt;
-&lt;/ol&gt;
-</description>
-    </item>
-    
-    <item>
       <title>Quick Tour</title>
       <link>/vitesse/getting-started/quick-tour/</link>
       <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
@@ -330,6 +294,42 @@ compiler.compile(schema, function(err, validator) {
   console.dir(validator.validate({name: &#39;peter&#39;, age: 10}))  
 });
 &lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>index</title>
+      <link>/vitesse/</link>
+      <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
+      
+      <guid>/vitesse/</guid>
+      <description>
+
+&lt;h1 id=&#34;vitesse-the-high-speed-validation-sdk&#34;&gt;Vitesse, the high speed validation SDK&lt;/h1&gt;
+
+&lt;p&gt;&lt;img src=&#39;img/train-161606_640.png&#39; width=&#39;320&#39;/&gt;&lt;/p&gt;
+
+&lt;p&gt;Vitesse is a high speed object validation framework. It&amp;rsquo;s meant as a target for developers to build validation frameworks or DSL (Domain specific languages) while being able to leverage close to hand-coded performance.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Joi test x 139,410 ops/sec ±1.86% (85 runs sampled)&lt;/li&gt;
+&lt;li&gt;Compiler test optimized x 2,555,137 ops/sec ±1.50% (93 runs sampled)&lt;/li&gt;
+&lt;li&gt;Closure compiler test x 2,745,918 ops/sec ±0.86% (83 runs sampled)&lt;/li&gt;
+&lt;li&gt;Manual vitesse test x 2,588,368 ops/sec ±0.83% (92 runs sampled)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The goal of this module is to allow you to avoid the cost of interpreting a set of validation rules by ahead of time compile it (AOT) using eval, allowing you to get close to the performance of manually writing validation code.&lt;/p&gt;
+
+&lt;p&gt;With Vitesse as your target you can define whatever DSL you want and have Vitesse optimize it for maximum performance&lt;/p&gt;
+
+&lt;h1 id=&#34;why-vitesse&#34;&gt;Why Vitesse&lt;/h1&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Create your own DSL&amp;rsquo;s but gain the performance of hand-crafted optimized validation code.&lt;/li&gt;
+&lt;li&gt;Leave the optimization of code to &lt;code&gt;Vitesse&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Avoid maintaining complex and error prone validation code.&lt;/li&gt;
+&lt;li&gt;Leverage it in your own frameworks, ODMs, ORMs etc.&lt;/li&gt;
+&lt;/ol&gt;
 </description>
     </item>
     
