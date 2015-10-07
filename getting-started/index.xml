@@ -2,19 +2,19 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Getting-Starteds on Vitesse</title>
-    <link>/getting-started/</link>
+    <link>/vitesse/getting-started/</link>
     <description>Recent content in Getting-Starteds on Vitesse</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 17 Mar 2015 15:36:56 +0000</lastBuildDate>
-    <atom:link href="/getting-started/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/vitesse/getting-started/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Getting Started</title>
-      <link>/getting-started/</link>
+      <link>/vitesse/getting-started/</link>
       <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
       
-      <guid>/getting-started/</guid>
+      <guid>/vitesse/getting-started/</guid>
       <description>
 
 &lt;h2 id=&#34;getting-started&#34;&gt;Getting Started&lt;/h2&gt;
@@ -22,18 +22,18 @@
 &lt;p&gt;To help you get started quickly using vitesse, follow:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/getting-started/installation-guide/&#34;&gt;Installation&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/getting-started/quick-tour/&#34;&gt;Quick Tour&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/vitesse/vitesse/getting-started/installation-guide/&#34;&gt;Installation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/vitesse/vitesse/getting-started/quick-tour/&#34;&gt;Quick Tour&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
     </item>
     
     <item>
       <title>Installation Guide</title>
-      <link>/getting-started/installation-guide/</link>
+      <link>/vitesse/getting-started/installation-guide/</link>
       <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
       
-      <guid>/getting-started/installation-guide/</guid>
+      <guid>/vitesse/getting-started/installation-guide/</guid>
       <description>
 
 &lt;h1 id=&#34;installation&#34;&gt;Installation&lt;/h1&gt;
@@ -57,10 +57,10 @@
     
     <item>
       <title>Quick Tour</title>
-      <link>/getting-started/quick-tour/</link>
+      <link>/vitesse/getting-started/quick-tour/</link>
       <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
       
-      <guid>/getting-started/quick-tour/</guid>
+      <guid>/vitesse/getting-started/quick-tour/</guid>
       <description>
 
 &lt;h1 id=&#34;quickstart&#34;&gt;QuickStart&lt;/h1&gt;

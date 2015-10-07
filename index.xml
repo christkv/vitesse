@@ -2,19 +2,19 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Vitesse</title>
-    <link>/</link>
+    <link>/vitesse/</link>
     <description>Recent content on Vitesse</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 19 Mar 2015 12:53:30 -0400</lastBuildDate>
-    <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/vitesse/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Domain Specific Language</title>
-      <link>/reference/dsl/</link>
+      <link>/vitesse/reference/dsl/</link>
       <pubDate>Thu, 19 Mar 2015 12:53:30 -0400</pubDate>
       
-      <guid>/reference/dsl/</guid>
+      <guid>/vitesse/reference/dsl/</guid>
       <description>
 
 &lt;h1 id=&#34;domain-specific-language&#34;&gt;Domain Specific Language&lt;/h1&gt;
@@ -132,10 +132,10 @@ assert.equal(1, validator.validate({id:&#39;&#39;, users:[{id:&#39;&#39;, permis
     
     <item>
       <title>Issues &amp; Help</title>
-      <link>/issues-help/</link>
+      <link>/vitesse/issues-help/</link>
       <pubDate>Wed, 18 Mar 2015 16:56:14 +0000</pubDate>
       
-      <guid>/issues-help/</guid>
+      <guid>/vitesse/issues-help/</guid>
       <description>
 
 &lt;h1 id=&#34;issues-help&#34;&gt;Issues &amp;amp; Help&lt;/h1&gt;
@@ -187,66 +187,11 @@ $ git checkout -b myNewFeature
     </item>
     
     <item>
-      <title>Getting Started</title>
-      <link>/getting-started/</link>
-      <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
-      
-      <guid>/getting-started/</guid>
-      <description>
-
-&lt;h2 id=&#34;getting-started&#34;&gt;Getting Started&lt;/h2&gt;
-
-&lt;p&gt;To help you get started quickly using vitesse, follow:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/getting-started/installation-guide/&#34;&gt;Installation&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/getting-started/quick-tour/&#34;&gt;Quick Tour&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>index</title>
-      <link>/</link>
-      <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
-      
-      <guid>/</guid>
-      <description>
-
-&lt;h1 id=&#34;vitesse-the-high-speed-validation-sdk&#34;&gt;Vitesse, the high speed validation SDK&lt;/h1&gt;
-
-&lt;p&gt;&lt;img src=&#39;/img/train-161606_640.png&#39; width=&#39;320&#39;/&gt;&lt;/p&gt;
-
-&lt;p&gt;Vitesse is a high speed object validation framework. It&amp;rsquo;s meant as a target for developers to build validation frameworks or DSL (Domain specific languages) while being able to leverage close to hand-coded performance.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Joi test x 139,410 ops/sec ±1.86% (85 runs sampled)&lt;/li&gt;
-&lt;li&gt;Compiler test optimized x 2,555,137 ops/sec ±1.50% (93 runs sampled)&lt;/li&gt;
-&lt;li&gt;Closure compiler test x 2,745,918 ops/sec ±0.86% (83 runs sampled)&lt;/li&gt;
-&lt;li&gt;Manual vitesse test x 2,588,368 ops/sec ±0.83% (92 runs sampled)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;The goal of this module is to allow you to avoid the cost of interpreting a set of validation rules by ahead of time compile it (AOT) using eval, allowing you to get close to the performance of manually writing validation code.&lt;/p&gt;
-
-&lt;p&gt;With Vitesse as your target you can define whatever DSL you want and have Vitesse optimize it for maximum performance&lt;/p&gt;
-
-&lt;h1 id=&#34;why-vitesse&#34;&gt;Why Vitesse&lt;/h1&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Create your own DSL&amp;rsquo;s but gain the performance of hand-crafted optimized validation code.&lt;/li&gt;
-&lt;li&gt;Leave the optimization of code to &lt;code&gt;Vitesse&lt;/code&gt;.&lt;/li&gt;
-&lt;li&gt;Avoid maintaining complex and error prone validation code.&lt;/li&gt;
-&lt;li&gt;Leverage it in your own frameworks, ODMs, ORMs etc.&lt;/li&gt;
-&lt;/ol&gt;
-</description>
-    </item>
-    
-    <item>
       <title>Installation Guide</title>
-      <link>/getting-started/installation-guide/</link>
+      <link>/vitesse/getting-started/installation-guide/</link>
       <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
       
-      <guid>/getting-started/installation-guide/</guid>
+      <guid>/vitesse/getting-started/installation-guide/</guid>
       <description>
 
 &lt;h1 id=&#34;installation&#34;&gt;Installation&lt;/h1&gt;
@@ -270,10 +215,10 @@ $ git checkout -b myNewFeature
     
     <item>
       <title>Quick Tour</title>
-      <link>/getting-started/quick-tour/</link>
+      <link>/vitesse/getting-started/quick-tour/</link>
       <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
       
-      <guid>/getting-started/quick-tour/</guid>
+      <guid>/vitesse/getting-started/quick-tour/</guid>
       <description>
 
 &lt;h1 id=&#34;quickstart&#34;&gt;QuickStart&lt;/h1&gt;
@@ -361,11 +306,66 @@ compiler.compile(schema, function(err, validator) {
     </item>
     
     <item>
-      <title>Reference</title>
-      <link>/reference/</link>
+      <title>Getting Started</title>
+      <link>/vitesse/getting-started/</link>
       <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
       
-      <guid>/reference/</guid>
+      <guid>/vitesse/getting-started/</guid>
+      <description>
+
+&lt;h2 id=&#34;getting-started&#34;&gt;Getting Started&lt;/h2&gt;
+
+&lt;p&gt;To help you get started quickly using vitesse, follow:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/vitesse/vitesse/getting-started/installation-guide/&#34;&gt;Installation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/vitesse/vitesse/getting-started/quick-tour/&#34;&gt;Quick Tour&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>index</title>
+      <link>/vitesse/</link>
+      <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
+      
+      <guid>/vitesse/</guid>
+      <description>
+
+&lt;h1 id=&#34;vitesse-the-high-speed-validation-sdk&#34;&gt;Vitesse, the high speed validation SDK&lt;/h1&gt;
+
+&lt;p&gt;&lt;img src=&#39;/vitesse/img/train-161606_640.png&#39; width=&#39;320&#39;/&gt;&lt;/p&gt;
+
+&lt;p&gt;Vitesse is a high speed object validation framework. It&amp;rsquo;s meant as a target for developers to build validation frameworks or DSL (Domain specific languages) while being able to leverage close to hand-coded performance.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Joi test x 139,410 ops/sec ±1.86% (85 runs sampled)&lt;/li&gt;
+&lt;li&gt;Compiler test optimized x 2,555,137 ops/sec ±1.50% (93 runs sampled)&lt;/li&gt;
+&lt;li&gt;Closure compiler test x 2,745,918 ops/sec ±0.86% (83 runs sampled)&lt;/li&gt;
+&lt;li&gt;Manual vitesse test x 2,588,368 ops/sec ±0.83% (92 runs sampled)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The goal of this module is to allow you to avoid the cost of interpreting a set of validation rules by ahead of time compile it (AOT) using eval, allowing you to get close to the performance of manually writing validation code.&lt;/p&gt;
+
+&lt;p&gt;With Vitesse as your target you can define whatever DSL you want and have Vitesse optimize it for maximum performance&lt;/p&gt;
+
+&lt;h1 id=&#34;why-vitesse&#34;&gt;Why Vitesse&lt;/h1&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Create your own DSL&amp;rsquo;s but gain the performance of hand-crafted optimized validation code.&lt;/li&gt;
+&lt;li&gt;Leave the optimization of code to &lt;code&gt;Vitesse&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Avoid maintaining complex and error prone validation code.&lt;/li&gt;
+&lt;li&gt;Leverage it in your own frameworks, ODMs, ORMs etc.&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Reference</title>
+      <link>/vitesse/reference/</link>
+      <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
+      
+      <guid>/vitesse/reference/</guid>
       <description>
 
 &lt;h2 id=&#34;reference&#34;&gt;Reference&lt;/h2&gt;
@@ -373,7 +373,7 @@ compiler.compile(schema, function(err, validator) {
 &lt;p&gt;The reference documentation the Vitesse module focuses on general use-cases.&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/reference/dsl/&#34;&gt;Custom DSL&lt;/a&gt;: How to build your own custom DSL Validation language leveraging Vitesse.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/vitesse/vitesse/reference/dsl/&#34;&gt;Custom DSL&lt;/a&gt;: How to build your own custom DSL Validation language leveraging Vitesse.&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://github.com/christkv/vitesse-jsonspec&#34;&gt;JSON Schema Validator&lt;/a&gt;: A JSON Schema validator implementation leveraging Vitesse to generate the underlying code.&lt;/li&gt;
 &lt;/ul&gt;
 </description>

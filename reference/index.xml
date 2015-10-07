@@ -2,19 +2,19 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>References on Vitesse</title>
-    <link>/reference/</link>
+    <link>/vitesse/reference/</link>
     <description>Recent content in References on Vitesse</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 19 Mar 2015 12:53:30 -0400</lastBuildDate>
-    <atom:link href="/reference/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/vitesse/reference/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Domain Specific Language</title>
-      <link>/reference/dsl/</link>
+      <link>/vitesse/reference/dsl/</link>
       <pubDate>Thu, 19 Mar 2015 12:53:30 -0400</pubDate>
       
-      <guid>/reference/dsl/</guid>
+      <guid>/vitesse/reference/dsl/</guid>
       <description>
 
 &lt;h1 id=&#34;domain-specific-language&#34;&gt;Domain Specific Language&lt;/h1&gt;
@@ -132,10 +132,10 @@ assert.equal(1, validator.validate({id:&#39;&#39;, users:[{id:&#39;&#39;, permis
     
     <item>
       <title>Reference</title>
-      <link>/reference/</link>
+      <link>/vitesse/reference/</link>
       <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
       
-      <guid>/reference/</guid>
+      <guid>/vitesse/reference/</guid>
       <description>
 
 &lt;h2 id=&#34;reference&#34;&gt;Reference&lt;/h2&gt;
@@ -143,7 +143,7 @@ assert.equal(1, validator.validate({id:&#39;&#39;, users:[{id:&#39;&#39;, permis
 &lt;p&gt;The reference documentation the Vitesse module focuses on general use-cases.&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/reference/dsl/&#34;&gt;Custom DSL&lt;/a&gt;: How to build your own custom DSL Validation language leveraging Vitesse.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/vitesse/vitesse/reference/dsl/&#34;&gt;Custom DSL&lt;/a&gt;: How to build your own custom DSL Validation language leveraging Vitesse.&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://github.com/christkv/vitesse-jsonspec&#34;&gt;JSON Schema Validator&lt;/a&gt;: A JSON Schema validator implementation leveraging Vitesse to generate the underlying code.&lt;/li&gt;
 &lt;/ul&gt;
 </description>
