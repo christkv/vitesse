@@ -1,5 +1,13 @@
 # Vitesse
 
+## Links
+
+| what          | where                                          |
+|---------------|------------------------------------------------|
+| documentation | http://christkv.github.io/vitesse/  |
+| api-doc        | http://christkv.github.io/vitesse/api/  |
+| source        | https://github.com/christkv/vitesse |
+
 ## Description
 
 Vitesse is a high speed object validation framework. It's meant as a target for developers to build validation frameworks or DSL (Domain specific languages) while being able to leverage close to hand-coded performance.
