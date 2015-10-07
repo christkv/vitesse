@@ -295,6 +295,25 @@ compiler.compile(schema, function(err, validator) {
     </item>
     
     <item>
+      <title>Getting Started</title>
+      <link>/vitesse/getting-started/</link>
+      <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
+      
+      <guid>/vitesse/getting-started/</guid>
+      <description>
+
+&lt;h2 id=&#34;getting-started&#34;&gt;Getting Started&lt;/h2&gt;
+
+&lt;p&gt;To help you get started quickly using vitesse, follow:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/vitesse/vitesse/getting-started/installation-guide/&#34;&gt;Installation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/vitesse/vitesse/getting-started/quick-tour/&#34;&gt;Quick Tour&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Installation Guide</title>
       <link>/vitesse/getting-started/installation-guide/</link>
       <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
@@ -318,25 +337,6 @@ compiler.compile(schema, function(err, validator) {
 &lt;h2 id=&#34;initial-requirement-for-closurecompiler&#34;&gt;Initial requirement for ClosureCompiler&lt;/h2&gt;
 
 &lt;p&gt;If you want to use the &lt;code&gt;ClosureCompiler&lt;/code&gt; you will need a &lt;code&gt;Java&lt;/code&gt; runtime installed on your machine as the compiler is dependent on it to execute the Google Closure Compiler.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Getting Started</title>
-      <link>/vitesse/getting-started/</link>
-      <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
-      
-      <guid>/vitesse/getting-started/</guid>
-      <description>
-
-&lt;h2 id=&#34;getting-started&#34;&gt;Getting Started&lt;/h2&gt;
-
-&lt;p&gt;To help you get started quickly using vitesse, follow:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/vitesse/vitesse/getting-started/installation-guide/&#34;&gt;Installation&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/vitesse/vitesse/getting-started/quick-tour/&#34;&gt;Quick Tour&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
 </description>
     </item>
     
