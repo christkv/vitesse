@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Source: lib/array.js</title>
+    
+    
+    
+    
+    
+    <meta property="og:title" content=""/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:image" content=""/>
+    
+    <meta property="og:url" content=""/>
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <script src="scripts/jquery.min.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/jaguar.css">
+    
+    
+    <script>
+    var config = {"monospaceLinks":true,"cleverLinks":true,"default":{"outputSourceFiles":true},"applicationName":"Vitesse","disqus":true,"googleAnalytics":"UA-29229787-1","openGraph":{"title":"","type":"website","image":"","site_name":"","url":""},"meta":{"title":"","description":"","keyword":""},"linenums":true};
+    </script>
+    
+
+    
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', UA-29229787-1, 'auto');
+      ga('send', 'pageview');
+    </script>    
+    
+</head>
+<body>
+<div id="wrap" class="clearfix" style="width:100%;">
+    <table style="height:100%;width:100%">
+        <tr>
+            <td valign='top' width="1px">
+                
+<div class="navigation">
+    <h3 class="applicationName"><a href="index.html">Vitesse</a></h3>
+
+    <div class="search">
+        <input id="search" type="text" class="form-control input-sm" placeholder="Search Documentations">
+    </div>
+    <ul class="list">
+    
+        <li class="item" data-name="AllOfNode">
+            <span class="title">
+                <a href="AllOfNode.html">AllOfNode</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="AllOfNode#addValidations"><a href="AllOfNode.html#addValidations">addValidations</a></li>
+            
+                <li data-name="AllOfNode#generate"><a href="AllOfNode.html#generate">generate</a></li>
+            
+                <li data-name="AllOfNode#path"><a href="AllOfNode.html#path">path</a></li>
+            
+                <li data-name="AllOfNode#setTypeCheck"><a href="AllOfNode.html#setTypeCheck">setTypeCheck</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="AnyNode">
+            <span class="title">
+                <a href="AnyNode.html">AnyNode</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="AnyNode#generate"><a href="AnyNode.html#generate">generate</a></li>
+            
+                <li data-name="AnyNode#path"><a href="AnyNode.html#path">path</a></li>
+            
+                <li data-name="AnyNode#setTypeCheck"><a href="AnyNode.html#setTypeCheck">setTypeCheck</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="AnyOfNode">
+            <span class="title">
+                <a href="AnyOfNode.html">AnyOfNode</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="AnyOfNode#addValidations"><a href="AnyOfNode.html#addValidations">addValidations</a></li>
+            
+                <li data-name="AnyOfNode#generate"><a href="AnyOfNode.html#generate">generate</a></li>
+            
+                <li data-name="AnyOfNode#path"><a href="AnyOfNode.html#path">path</a></li>
+            
+                <li data-name="AnyOfNode#setTypeCheck"><a href="AnyOfNode.html#setTypeCheck">setTypeCheck</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="ArrayNode">
+            <span class="title">
+                <a href="ArrayNode.html">ArrayNode</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="ArrayNode#addAdditionalItemsValidation"><a href="ArrayNode.html#addAdditionalItemsValidation">addAdditionalItemsValidation</a></li>
+            
+                <li data-name="ArrayNode#addCustomValidator"><a href="ArrayNode.html#addCustomValidator">addCustomValidator</a></li>
+            
+                <li data-name="ArrayNode#addItemValidation"><a href="ArrayNode.html#addItemValidation">addItemValidation</a></li>
+            
+                <li data-name="ArrayNode#addPositionalItemValidation"><a href="ArrayNode.html#addPositionalItemValidation">addPositionalItemValidation</a></li>
+            
+                <li data-name="ArrayNode#addValidation"><a href="ArrayNode.html#addValidation">addValidation</a></li>
+            
+                <li data-name="ArrayNode#generate"><a href="ArrayNode.html#generate">generate</a></li>
+            
+                <li data-name="ArrayNode#path"><a href="ArrayNode.html#path">path</a></li>
+            
+                <li data-name="ArrayNode#setTypeCheck"><a href="ArrayNode.html#setTypeCheck">setTypeCheck</a></li>
+            
+                <li data-name="ArrayNode#uniqueItems"><a href="ArrayNode.html#uniqueItems">uniqueItems</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="BooleanNode">
+            <span class="title">
+                <a href="BooleanNode.html">BooleanNode</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="BooleanNode#addCustomValidator"><a href="BooleanNode.html#addCustomValidator">addCustomValidator</a></li>
+            
+                <li data-name="BooleanNode#generate"><a href="BooleanNode.html#generate">generate</a></li>
+            
+                <li data-name="BooleanNode#path"><a href="BooleanNode.html#path">path</a></li>
+            
+                <li data-name="BooleanNode#setTypeCheck"><a href="BooleanNode.html#setTypeCheck">setTypeCheck</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="ClosureCompiler">
+            <span class="title">
+                <a href="ClosureCompiler.html">ClosureCompiler</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="ClosureCompiler#compile"><a href="ClosureCompiler.html#compile">compile</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="Compiler">
+            <span class="title">
+                <a href="Compiler.html">Compiler</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="Compiler#compile"><a href="Compiler.html#compile">compile</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="CustomNode">
+            <span class="title">
+                <a href="CustomNode.html">CustomNode</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="CustomNode#generate"><a href="CustomNode.html#generate">generate</a></li>
+            
+                <li data-name="CustomNode#path"><a href="CustomNode.html#path">path</a></li>
+            
+                <li data-name="CustomNode#setContext"><a href="CustomNode.html#setContext">setContext</a></li>
+            
+                <li data-name="CustomNode#setValidator"><a href="CustomNode.html#setValidator">setValidator</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="EnumNode">
+            <span class="title">
+                <a href="EnumNode.html">EnumNode</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="EnumNode#addEnums"><a href="EnumNode.html#addEnums">addEnums</a></li>
+            
+                <li data-name="EnumNode#generate"><a href="EnumNode.html#generate">generate</a></li>
+            
+                <li data-name="EnumNode#path"><a href="EnumNode.html#path">path</a></li>
+            
+                <li data-name="EnumNode#setTypeCheck"><a href="EnumNode.html#setTypeCheck">setTypeCheck</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="IntegerNode">
+            <span class="title">
+                <a href="IntegerNode.html">IntegerNode</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="IntegerNode#addCustomValidator"><a href="IntegerNode.html#addCustomValidator">addCustomValidator</a></li>
+            
+                <li data-name="IntegerNode#addValidation"><a href="IntegerNode.html#addValidation">addValidation</a></li>
+            
+                <li data-name="IntegerNode#generate"><a href="IntegerNode.html#generate">generate</a></li>
+            
+                <li data-name="IntegerNode#path"><a href="IntegerNode.html#path">path</a></li>
+            
+                <li data-name="IntegerNode#setTypeCheck"><a href="IntegerNode.html#setTypeCheck">setTypeCheck</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="NotNode">
+            <span class="title">
+                <a href="NotNode.html">NotNode</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="NotNode#addValidations"><a href="NotNode.html#addValidations">addValidations</a></li>
+            
+                <li data-name="NotNode#generate"><a href="NotNode.html#generate">generate</a></li>
+            
+                <li data-name="NotNode#path"><a href="NotNode.html#path">path</a></li>
+            
+                <li data-name="NotNode#setTypeCheck"><a href="NotNode.html#setTypeCheck">setTypeCheck</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="NullNode">
+            <span class="title">
+                <a href="NullNode.html">NullNode</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="NullNode#addCustomValidator"><a href="NullNode.html#addCustomValidator">addCustomValidator</a></li>
+            
+                <li data-name="NullNode#generate"><a href="NullNode.html#generate">generate</a></li>
+            
+                <li data-name="NullNode#path"><a href="NullNode.html#path">path</a></li>
+            
+                <li data-name="NullNode#setTypeCheck"><a href="NullNode.html#setTypeCheck">setTypeCheck</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="NumberNode">
+            <span class="title">
+                <a href="NumberNode.html">NumberNode</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="NumberNode#addCustomValidator"><a href="NumberNode.html#addCustomValidator">addCustomValidator</a></li>
+            
+                <li data-name="NumberNode#addValidation"><a href="NumberNode.html#addValidation">addValidation</a></li>
+            
+                <li data-name="NumberNode#generate"><a href="NumberNode.html#generate">generate</a></li>
+            
+                <li data-name="NumberNode#path"><a href="NumberNode.html#path">path</a></li>
+            
+                <li data-name="NumberNode#setTypeCheck"><a href="NumberNode.html#setTypeCheck">setTypeCheck</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="ObjectNode">
+            <span class="title">
+                <a href="ObjectNode.html">ObjectNode</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="ObjectNode#addAdditionalPropertiesValidator"><a href="ObjectNode.html#addAdditionalPropertiesValidator">addAdditionalPropertiesValidator</a></li>
+            
+                <li data-name="ObjectNode#addChild"><a href="ObjectNode.html#addChild">addChild</a></li>
+            
+                <li data-name="ObjectNode#addCustomValidator"><a href="ObjectNode.html#addCustomValidator">addCustomValidator</a></li>
+            
+                <li data-name="ObjectNode#addDependency"><a href="ObjectNode.html#addDependency">addDependency</a></li>
+            
+                <li data-name="ObjectNode#addPatternPropertiesValidator"><a href="ObjectNode.html#addPatternPropertiesValidator">addPatternPropertiesValidator</a></li>
+            
+                <li data-name="ObjectNode#addValidation"><a href="ObjectNode.html#addValidation">addValidation</a></li>
+            
+                <li data-name="ObjectNode#generate"><a href="ObjectNode.html#generate">generate</a></li>
+            
+                <li data-name="ObjectNode#path"><a href="ObjectNode.html#path">path</a></li>
+            
+                <li data-name="ObjectNode#prohibitedFields"><a href="ObjectNode.html#prohibitedFields">prohibitedFields</a></li>
+            
+                <li data-name="ObjectNode#requiredFields"><a href="ObjectNode.html#requiredFields">requiredFields</a></li>
+            
+                <li data-name="ObjectNode#setTypeCheck"><a href="ObjectNode.html#setTypeCheck">setTypeCheck</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="OneOfNode">
+            <span class="title">
+                <a href="OneOfNode.html">OneOfNode</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="OneOfNode#addValidations"><a href="OneOfNode.html#addValidations">addValidations</a></li>
+            
+                <li data-name="OneOfNode#generate"><a href="OneOfNode.html#generate">generate</a></li>
+            
+                <li data-name="OneOfNode#path"><a href="OneOfNode.html#path">path</a></li>
+            
+                <li data-name="OneOfNode#setTypeCheck"><a href="OneOfNode.html#setTypeCheck">setTypeCheck</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="RecursiveNode">
+            <span class="title">
+                <a href="RecursiveNode.html">RecursiveNode</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="RecursiveNode#generate"><a href="RecursiveNode.html#generate">generate</a></li>
+            
+                <li data-name="RecursiveNode#path"><a href="RecursiveNode.html#path">path</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="StringNode">
+            <span class="title">
+                <a href="StringNode.html">StringNode</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="StringNode#addCustomValidator"><a href="StringNode.html#addCustomValidator">addCustomValidator</a></li>
+            
+                <li data-name="StringNode#addValidation"><a href="StringNode.html#addValidation">addValidation</a></li>
+            
+                <li data-name="StringNode#generate"><a href="StringNode.html#generate">generate</a></li>
+            
+                <li data-name="StringNode#path"><a href="StringNode.html#path">path</a></li>
+            
+                <li data-name="StringNode#setTypeCheck"><a href="StringNode.html#setTypeCheck">setTypeCheck</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+    </ul>
+</div>
+            </td>
+            <td valign='top'>        
+                <div class="main">
+                    <h1 class="page-title" data-filename="lib_array.js.html">Source: lib/array.js</h1>
+                    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>var f = require('util').format,
+  Mark = require("markup-js"),
+  M = require('mstring'),
+  utils = require('./utils'),
+  generatePathAndObject = utils.generatePathAndObject;
+
+/**
+ * The ArrayNode class represents a validation of an array value
+ * 
+ * @class
+ * @return {ArrayNode} a ArrayNode instance.
+ */
+var ArrayNode = function(parent, field, options) {  
+  options = options || {};
+  // Unique id for this node's generated method
+  this.id = utils.generateId();
+  // Link to parent node
+  this.parent = parent;
+  // The field related to this node
+  this.field = field;
+  // Perform type check or not on generation
+  this.typeCheck = typeof options.typeCheck == 'boolean' ? options.typeCheck : false;
+  // Validation language
+  this.validation = options.validation ? options.validation : null;
+  // Any options
+  this.options = options;
+  // Just some metadata
+  this.type = 'array';
+
+  // Special validators, custom, pattern, required, prohibited
+  // ----------------------------------------------------------
+  this.customValidators = [];
+
+  // Item specific validations
+  // ----------------------------------------------------------
+  this.positionalItemValidation = {};
+
+  // Item validation
+  // ----------------------------------------------------------
+  this.itemValidation = null;
+
+  // AdditionalItems validation
+  // -----------------------------------------------------------
+  this.additionalItemsValidation = null;
+}
+
+/**
+ * Add a validation language node
+ *
+ * @method
+ * @param {object} validation validation operation valid ones are $gt,$gte,$lt,$lte
+ * @return {ArrayNode}
+ */
+ArrayNode.prototype.addValidation = function(validation) {
+  this.validation = this.validation || {};
+  // Merge in validation
+  for(var name in validation) {
+    this.validation[name] = validation[name];
+  }
+
+  return this;
+}
+
+/**
+ * Type check value
+ *
+ * @method
+ * @param {boolean} typeCheck type check value
+ * @return {ArrayNode}
+ */
+ArrayNode.prototype.setTypeCheck = function(typeCheck) {  
+  this.typeCheck = typeCheck;
+  return this;
+}
+
+/**
+ * @ignore
+ */
+ArrayNode.prototype.setDefault = function(value) {
+  this.defaultValue = value;
+  return this;
+}
+
+/**
+ * Add a array positional validation (say validate item 1 as a string, item 2 as a number)
+ *
+ * @method
+ * @param {number} i the index in the array to validate
+ * @param {object} node validation node for this item
+ * @return {ArrayNode}
+ */
+ArrayNode.prototype.addPositionalItemValidation = function(i, node) {
+  this.positionalItemValidation[i] = node;
+  return this;
+}
+
+/**
+ * Controls whether it’s valid to have additional items in the array beyond what is defined in the schema
+ *
+ * @method
+ * @param {object} node validation node for the additional items
+ * @return {ArrayNode}
+ */
+ArrayNode.prototype.addAdditionalItemsValidation = function(node) {
+  this.additionalItemsValidation = node;
+  return this;
+}
+
+/**
+ * Validate all items in the array against the provided validation
+ *
+ * @method
+ * @param {object} node validation node for the additional items
+ * @return {ArrayNode}
+ */
+ArrayNode.prototype.addItemValidation = function(node) {
+  this.itemValidation = node;
+  this.itemValidation.parent = this;
+  return this;
+}
+
+/**
+ * Type check value
+ *
+ * @method
+ * @param {boolean} uniqueItems all entries in the array should be unique
+ * @return {ArrayNode}
+ */
+ArrayNode.prototype.uniqueItems = function(uniqueItems) {
+  this.uniqueItemsFunction = uniqueItems;
+  return this;
+}
+
+/**
+ * Add a custom object validator
+ *
+ * @method
+ * @param {CustomNode} node custom validation node to be used for this field validation
+ * @return {ArrayNode}
+ */
+ArrayNode.prototype.addCustomValidator = function(validator) {
+  this.customValidators.push(validator);
+  return this;
+}
+
+/**
+ * Return the current object path
+ *
+ * @method
+ * @return {array} an array containing the path to this node
+ */
+ArrayNode.prototype.path = function() {
+  if(this.parent == null) return ['object'];
+  return this.parent.path().concat([this.field]);
+}
+
+/**
+ * Generate the code for this node
+ *
+ * @method
+ * @param {object} context the generation context for this node
+ */
+ArrayNode.prototype.generate = function(context) {
+  // Set self
+  var self = this;
+  // Get the path
+  var path = this.path().join('.');
+  // Push ourselves to the rules array
+  context.rules[this.id] = this;
+  // Validation template
+  var validationTemplate = M(function(){/***
+    function array_validation_{{index}}(path, object, context) {
+      if(object === undefined) return;
+      // We have a type validation
+      {{type}}
+      // Validations
+      {{validations}}
+      // Uniqueness validation
+      {{unique}}
+      // Custom validations
+      {{custom}}
+      // Per item validation
+      {{perItemValidations}}
+      // Additional items validation
+      {{additionalItemsValidation}}
+      // Iterate over all the items
+      {{allItemValidations}}
+    }
+  ***/});
+
+  // Rendering context
+  var renderingOptions = {
+    validations: '',
+    custom: '',
+    type: '',
+    perItemValidations: '',
+    allItemValidations: '',
+    additionalItemsValidation: '',
+    unique: '',
+    index: this.id
+  }
+
+  // Generate type validation if needed
+  if(this.typeCheck) {
+    renderingOptions.type = Mark.up(M(function(){/***
+      if(!Array.isArray(object) &amp;&amp; context.failOnFirst) {
+        throw new ValidationError('field is not an array', path, rules[{{ruleIndex}}], object);
+      } else if(!Array.isArray(object)) {
+        errors.push(new ValidationError('field is not an array', path, rules[{{ruleIndex}}], object));
+        return errors;
+      }
+    ***/}), {
+      ruleIndex: this.id
+    });      
+  } else {
+    renderingOptions.type = M(function(){/***
+      if(!Array.isArray(object)) {
+        return errors;
+      }
+    ***/});         
+  }
+
+  // We have specific validation rules
+  if(this.validation) {
+    renderingOptions.validations = generateValidationLanguage(this, this.validation);
+  }
+
+  if(this.customValidators.length > 0) {
+    renderingOptions.custom = generateCustomValidations(this, this.customValidators, context);
+  }
+
+  // We have a general all items validation
+  if(this.itemValidation) {
+    renderingOptions.allItemValidations = generateAllItemValidation(this, this.itemValidation, context);
+  }
+
+  // We have a uniqueness constraint on the array items
+  if(this.uniqueItemsFunction) {
+    renderingOptions.unique = generateUniqueItems(this);
+  }
+
+  // We have array positional items
+  if(Object.keys(this.positionalItemValidation).length > 0) {
+    renderingOptions.perItemValidations = generatePerItemValidations(this, this.positionalItemValidation, context);
+  }
+
+  // Do we have an additional items validation
+  if(typeof this.additionalItemsValidation == 'boolean' || this.additionalItemsValidation instanceof Object) {
+    renderingOptions.additionalItemsValidation = generateAdditionalItemsValidation(this, this.additionalItemsValidation, this.positionalItemValidation, context);
+  }
+
+  // Generate path and objectPath
+  var paths = generatePathAndObject(self, context);
+  // Generate object validation function
+  context.functions.push(Mark.up(validationTemplate, renderingOptions));
+  // Generate function call
+  context.functionCalls.push(Mark.up(M(function(){/***
+      array_validation_{{index}}({{path}}, {{object}}, context);
+    ***/}), {
+      index: this.id,
+      path: paths.path,
+      object: paths.objectPath
+    }));
+}
+
+var generateCustomValidations = function(self, validations, context) {
+  // Create an inner context
+  var innerContext = {
+    functions: context.functions,
+    functionCalls: [],
+    custom: context.custom,
+    rules: context.rules
+  }
+
+  // Generate custom validation functions and call contexts
+  validations.forEach(function(validation) {
+    validation.generate(innerContext);
+  });
+
+  // Return custom validator calls
+  return innerContext.functionCalls.join('\n');
+}
+
+var generateUniqueItems = function(self) {
+  //
+  // Generate uniqueness validation function
+  // ---------------------------------------------
+  // Validation template
+  var uniqueValidationTemplate = M(function(){/***
+    if(!object.every(testArrays) &amp;&amp; context.failOnFirst) {
+      throw new ValidationError('array contains duplicate values', path, rules[{{ruleIndex}}], object);
+    } else if(!object.every(testArrays)) {      
+      errors.push(new ValidationError('array contains duplicate values', path, rules[{{ruleIndex}}], object));
+    }
+  ***/});
+
+  // Generate uniqueness validation
+  return Mark.up(uniqueValidationTemplate, {
+      ruleIndex: self.id
+    });
+}
+
+var generateAdditionalItemsValidation = function(self, additionalItemsValidation, positionalItemValidation, context) {
+  // No per item validations, just ignore the additional validations option
+  if(Object.keys(positionalItemValidation).length == 0) return '';
+
+  // Locate highest index and then add a statement to ban anything over it
+  var length = -1;
+  for(var i in positionalItemValidation) {
+    if(parseInt(i, 10) > length) length = parseInt(i, 10);
+  }
+
+  // We have perItemValidation and additionalItems == false
+  if(Object.keys(positionalItemValidation).length > 0 &amp;&amp; additionalItemsValidation == false) {
+    // Return validation
+    return Mark.up(M(function(){/***
+      if(object.length > {{length}} &amp;&amp; context.failOnFirst) {
+        throw new ValidationError('array contains invalid items', path, rules[{{ruleIndex}}], object);
+      } else if(object.length > {{length}}) {
+        return errors.push(new ValidationError('array contains invalid items', path, rules[{{ruleIndex}}], object));
+      }
+    ***/}), {
+      ruleIndex: self.id,
+      length: (length + 1)
+    });
+  }
+
+  // We have perItemValidation and additionalItems == Object
+  if(Object.keys(positionalItemValidation).length > 0 &amp;&amp; additionalItemsValidation instanceof Object) {
+    // Create an inner context
+    var innerContext = {
+      functions: context.functions,
+      functionCalls: [],
+      custom: context.custom,
+      rules: context.rules,
+      regexps: context.regexps,
+      inArray:true,
+      regexps: context.regexps,
+      optimize: context.optimize
+    }
+
+    // Generate the code for the validation
+    additionalItemsValidation.generate(innerContext)
+    // Generate the validation
+    return Mark.up(M(function(){/***
+      for(var i = {{length}}; i &lt; object.length; i++) {
+        {{validation}}
+      }
+    ***/}), {
+      validation: innerContext.functionCalls.join('\n'), length: (length + 1)
+    });
+  }
+
+  return '';
+}
+
+var generatePerItemValidations = function(self, validations, context) {
+  var statements = [];
+
+  // Get the indexes
+  for(var index in validations) {
+    // Create an inner context
+    var innerContext = {
+      functions: context.functions,
+      functionCalls: [],
+      custom: context.custom,
+      rules: context.rules,
+      regexps: context.regexps,
+      optimize: context.optimize,
+
+      // Array specific fields
+      inArray:true,
+      inArrayIndex: index
+    }
+
+    // Generate code
+    validations[index].generate(innerContext);
+    // Add to the statements
+    statements = statements.concat(innerContext.functionCalls);
+  }
+
+  return Mark.up(M(function(){/***
+    {{statements}}
+  ***/}), {
+    statements: statements.join('\n')
+  });
+}
+
+var generateAllItemValidation = function(self, validation, context) {
+  // Create an inner context
+  var innerContext = {
+    functions: context.functions,
+    functionCalls: [],
+    custom: context.custom,
+    rules: context.rules,
+    regexps: context.regexps,
+    optimize: context.optimize,
+    inArray:true
+  }
+
+  // Generate the code for the validation
+  validation.generate(innerContext)
+  // Generate the validation
+  return Mark.up(M(function(){/***
+    for(var i = 0; i &lt; object.length; i++) {
+      {{validation}}
+    }
+  ***/}), {
+    validation: innerContext.functionCalls.join('\n')
+  });
+}
+
+var generateValidationLanguage = function(self, validations) {
+  var validationTemplate = M(function(){/***
+    if(({{validation}}) &amp;&amp; context.failOnFirst) {
+      throw new ValidationError('array fails length validation {{rule}}', path, rules[{{ruleIndex}}], object);
+    } else if(({{validation}})) {
+      errors.push(new ValidationError('array fails length validation {{rule}}', path, rules[{{ruleIndex}}], object));
+    }
+  ***/});
+
+  // Store validation string parts
+  var valueValidations = [];
+
+  // Process the validation
+  for(var operator in validations) {
+    if(operator === '$gt') {
+      valueValidations.push(f('object.length &lt;= %s', validations[operator]));
+    } else if(operator === '$gte') {
+      valueValidations.push(f('object.length &lt; %s', validations[operator]));
+    } else if(operator === '$lte') {
+      valueValidations.push(f('object.length > %s', validations[operator]));
+    } else if(operator === '$lt') {
+      valueValidations.push(f('object.length >= %s', validations[operator]));
+    } else {
+      throw new Error(f('validation operator %s is not supported by Array type', operator));
+    }
+  }
+
+  // Generate the validation code
+  return Mark.up(validationTemplate, {
+    ruleIndex: self.id, 
+    rule: JSON.stringify(validations),
+    validation: (valueValidations.length > 0 ? valueValidations.join(' || ') : 'true')
+  }); 
+}
+
+module.exports = ArrayNode;</code></pre>
+        </article>
+    </section>
+
+
+
+
+
+
+                    
+                    <!-- disqus code -->
+                    <div id="disqus_thread"></div>
+                    <script type="text/javascript">
+                        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+                        var disqus_shortname = 'nodejsmongodbdriver'; // required: replace example with your forum shortname
+
+                        /* * * DON'T EDIT BELOW THIS LINE * * */
+                        (function() {
+                            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                        })();
+                    </script>
+                    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>                    
+                    <!-- // disqus code -->
+                    
+
+                    <footer>
+                        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-beta3</a> on Wed Oct 07 2015 12:26:50 GMT+0200 (CEST)
+                    </footer>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+<script src="scripts/main.js"></script>
+</body>
+</html>
