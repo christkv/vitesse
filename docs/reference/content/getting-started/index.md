@@ -9,7 +9,7 @@ title = "Getting Started"
 
 ## Getting Started
 
-To help you get started quickly on the new driver, follow:
+To help you get started quickly using vitesse, follow:
 
   * [Installation]({{< ref "getting-started/installation-guide.md" >}})
   * [Quick Tour]({{< ref "getting-started/quick-tour.md" >}})

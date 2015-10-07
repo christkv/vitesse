@@ -1,12 +1,11 @@
-baseurl = "/node-mongodb-native/2.0"
+baseurl = "/"
 languageCode = "en-us"
-title = "MongoDB Node.js Driver"
-theme = "mongodb"
+title = "Vitesse"
+theme = "general"
 canonifyurls = false
 
 [blackfriday]
   plainIdAnchors = true
-
 
 # Update versions in mongodb.toml as well
 [[menu.main]]
@@ -21,11 +20,11 @@ canonifyurls = false
     pre = "<i class='fa fa-github'></i>"
     weight = 90
     identifier = "githubLink"
-    url = "https://github.com/mongodb/node-mongodb-native"
+    url = "https://github.com/christkv/vitesse"
 
 [[menu.main]]
     name = ""
     pre = "<img src='https://badges.gitter.im/Join Chat.svg'/>"
     weight = 150
     identifier = "gitterLink"
-    url = "https://gitter.im/mongodb/node-mongodb-native?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge"
+    url = "https://gitter.im/christkv/vitesse?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge"

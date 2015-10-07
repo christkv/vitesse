@@ -21,6 +21,7 @@ public/
 api/
 test.js
 .DS_Store
+public/
 
 # Directory for dbs
 db

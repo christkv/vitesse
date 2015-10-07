@@ -4,21 +4,17 @@ title = "index"
 type = "index"
 +++
 
-## MongoDB Node.js Driver Documentation
+# Vitesse
 
-Welcome to the MongoDB Node.js 2.x driver documentation.
+## Description
 
+Vitesse is a high speed object validation framework. It's meant as a target for developers to build validation frameworks or DSL (Domain specific languages) while being able to leverage close to hand-coded performance.
 
-### What's New in 2.0
+* Joi test x 139,410 ops/sec ±1.86% (85 runs sampled)
+* Compiler test optimized x 2,555,137 ops/sec ±1.50% (93 runs sampled)
+* Closure compiler test x 2,745,918 ops/sec ±0.86% (83 runs sampled)
+* Manual vitesse test x 2,588,368 ops/sec ±0.83% (92 runs sampled)
 
-The [What's New]({{< relref "whats-new/index.md" >}}) guide explains the major new features of the driver.
+The goal of this module is to allow you to avoid the cost of interpreting a set of validation rules by ahead of time compile it (AOT) using eval, allowing you to get close to the performance of manually writing validation code.
 
-If you are upgrading from the 1.x series of the driver, consult the [Upgrading]({{< relref "whats-new/upgrading.md" >}}) documentation for
-information on breaking changes.
-
-
-### MongoDB Driver
-
-For MongoDB Driver, the [Getting Started]({{< relref "getting-started/index.md" >}}) guide contains
-installation instructions and a simple tutorial to get up  and running quickly. For more detailed documentation, see the
-[Reference]({{< relref "reference/index.md" >}}) guide.
+With Vitesse as your target you can define whatever DSL you want and have Vitesse optimize it for maximum performance
